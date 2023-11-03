@@ -1,8 +1,8 @@
 .git/
 mariadb_data/
 mariadb_data/*
-themes/base-theme-slug/node_modules/
+themes/tema-conpedi/node_modules/
 *.sql*
-themes/base-theme-slug/dist/app.js
-themes/base-theme-slug/dist/app.css
+themes/tema-conpedi/dist/app.js
+themes/tema-conpedi/dist/app.css
 
