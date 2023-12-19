@@ -1,8 +1,6 @@
 # Tema para o site do Conpedi
 
-Este repositório contém os arquivos iniciais para se ter um projeto WordPress
-nos moldes do Hacklab. Isso significa que as ferramentas de desenvolvimento
-e deploy estão protegidas por um padrão.
+Este repositório contém os arquivos iniciais para se ter um projeto WordPress, as ferramentas de desenvolvimento e deploy estão protegidas por um padrão.
 
 A ideia é que seja feito um fork deste repositório para começar um novo projeto
 WordPress. Os arquivos deverão ser modificados conforme as peculiaridades do
@@ -22,7 +20,7 @@ Para o desenvolvimento recomenda-se a utilização do editor Visual Studio Code 
 - ...
 
 ## Requisitos
-Para o desenvolvimento é requisito ter instaladas ao menos as seguintes ferramtas:
+Para o desenvolvimento é requisito ter instaladas ao menos as seguintes ferramentas:
 
 - **Git**
 - **Docker** e **Docker Compose** - Docker é a ferramenta recomendada para desenvolver localmente. Para instalá-lo siga [estas instruções](https://docs.docker.com/install/#supported-platforms).
@@ -43,7 +41,7 @@ $ git submodule add -f git@gitlab.hacklab.com.br:open-source/hacklab-blocks.git 
 ```
 
 ## Compilando os assets do tema
-Abra um terminar, vá até a a pasta `themes/tema-conpedi/` e execute os comandos abaixo:
+Abra um terminal, vá até a a pasta `themes/tema-conpedi/` e execute os comandos abaixo:
 
 ```
 $ npm install
