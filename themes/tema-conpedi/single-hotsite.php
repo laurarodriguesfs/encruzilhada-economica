@@ -1,5 +1,8 @@
 <?php
 /**
+ * Template Name: Hot site
+ * Template Post Type: post, page
+ *
  * The template for displaying all single posts
  *
  * @link https://developer.wordpress.org/themes/basics/template-hierarchy/#single-post
@@ -15,9 +18,6 @@ get_header();
 
 			<?php
 
-			if ( has_post_format( 'gallery' )) {
-				echo 'Esta é uma galeria de imagens!';
- 			}
 			/* Start the Loop */
 			while ( have_posts() ) :
 				the_post();
@@ -30,22 +30,25 @@ get_header();
 					<header class="entry-header">
 						<?php get_template_part( 'template-parts/header/entry', 'header' ); ?>
 					</header>
-
 				<?php endif; ?>
 
 				<div class="main-content">
 
 					<?php
-					if ( is_active_sidebar( 'article-1' ) ) {
+					if ( is_active_sidebar( 'article-1' ) && is_single() ) {
 						dynamic_sidebar( 'article-1' );
 					}
 
 					// Place smaller featured images inside of 'content' area.
-					if ( 'small' === newspack_featured_image_position() ) :
+					if ( 'small' === newspack_featured_image_position() ) {
 						newspack_post_thumbnail();
-					endif;
+					}
 
-					get_template_part( 'template-parts/content/content-single', 'single' );
+					if ( is_page() ) {
+						get_template_part( 'template-parts/content/content', 'page' );
+					} else {
+						get_template_part( 'template-parts/content/content', 'single' );
+					}
 
 					newspack_previous_next();
 
@@ -53,14 +56,10 @@ get_header();
 					if ( comments_open() || get_comments_number() ) {
 						newspack_comments_template();
 					}
-
 					?>
-				</div><!-- .main-content -->
+				</div>
 
-			<?php
-				endwhile;
-				get_sidebar();
-			?>
+			<?php endwhile; ?>
 
 		</main><!-- #main -->
 	</section><!-- #primary -->
