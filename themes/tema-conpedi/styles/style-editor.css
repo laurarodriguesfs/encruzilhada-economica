@@ -16,7 +16,7 @@ body {
 
 /** === Content Width === */
 .wp-block {
-  max-width: 810px;
+  max-width: 100%;
 }
 
 /** === Base Typography === */

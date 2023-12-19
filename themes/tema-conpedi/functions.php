@@ -7,7 +7,6 @@
  * @package Newspack Scott
  */
 
-
 if ( ! function_exists( 'newspack_scott_setup' ) ) :
 	/**
 	 * Sets up theme defaults and registers support for various WordPress features.
@@ -21,6 +20,13 @@ if ( ! function_exists( 'newspack_scott_setup' ) ) :
 		remove_editor_styles();
 		// Add child theme editor styles, compiled from `style-child-theme-editor.scss`.
 		add_editor_style( 'styles/style-editor.css' );
+
+		register_nav_menus(
+			array(
+				'fixed-menu'   => __( 'Menu fixo', 'newspack' ),
+			)
+		);
+
 	}
 endif;
 add_action( 'after_setup_theme', 'newspack_scott_setup', 12 );
@@ -186,12 +192,57 @@ function evp_customize_register( $wp_customize ){
 			)
 		)
 	);
-    
+
 }
 
 add_action( 'customize_register', 'evp_customize_register' );
 add_action('after_setup_theme', 'remove_admin_bar');
 
 function remove_admin_bar() {
-  show_admin_bar(false);
+  show_admin_bar(true);
 }
+
+add_action( 'init', 'my_unregister_post_type', 999 );
+function my_unregister_post_type(){
+	unregister_post_type('locateanythingmarker');
+}
+
+add_action( 'admin_menu', 'remove_default_post_type' );
+
+function remove_default_post_type() {
+    remove_menu_page( 'edit.php' );
+}
+
+add_action( 'admin_init', 'my_remove_admin_menus' );
+function my_remove_admin_menus() {
+    remove_menu_page( 'edit-comments.php' );
+}
+
+add_action('admin_menu', 'remove_comment_support');
+
+function remove_comment_support() {
+    remove_post_type_support( 'post', 'comments' );
+    remove_post_type_support( 'page', 'comments' );
+}
+
+/**
+ * Add a extra span and class to the_archive_title, for easier styling.
+ */
+function conpedi_update_the_archive_title( $title ) {
+	// Split the title into parts so we can wrap them with spans:
+	$title_parts = explode( '<span class="page-description">', $title, 2 );
+	// Glue it back together again.
+	if ( ! empty( $title_parts[1] ) ) {
+		$title = wp_kses(
+			$title_parts[1],
+			array(
+				'span' => array(
+					'class' => array(),
+				),
+			)
+		);
+		$title = '<span class="page-description">' . $title;
+	}
+	return $title;
+}
+add_filter( 'get_the_archive_title', 'conpedi_update_the_archive_title', 11, 1 );
