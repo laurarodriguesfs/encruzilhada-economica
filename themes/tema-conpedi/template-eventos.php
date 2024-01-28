@@ -1,19 +1,72 @@
 <?php
-/**
- * The template for displaying archive pages
- *
- * @link https://developer.wordpress.org/themes/basics/template-hierarchy/
- *
- * @package Newspack
- */
 get_header();
+/**
+ * Template Name: Archive de eventos do conpedi
+*/
 
-// Get sponsors for this taxonomy archive.
-if ( function_exists( 'newspack_get_all_sponsors' ) ) {
-	$all_sponsors         = newspack_get_all_sponsors( get_queried_object_id() );
-	$native_sponsors      = newspack_get_native_sponsors( $all_sponsors );
-	$underwriter_sponsors = newspack_get_underwriter_sponsors( $all_sponsors );
+$paged = (isset($_GET["pagina"]) && !empty($_GET["pagina"])) ? absint($_GET["pagina"]): 1;
+$hide_empty  = false;
+$orderby     = 'id';
+$order       = 'DESC';
+$per_page= 9;
+$offset      = ($paged - 1) * $per_page;
+
+
+ if (isset($_GET['order']) && !empty($_GET['order'])) {
+
+	$filter_order = sanitize_title($_GET['order']);
+
+	if ($filter_order == 'title_asc') {
+		$orderby = 'title';
+		$order   = 'ASC';
+	} elseif ($filter_order == 'title_desc') {
+		$orderby = 'title';
+		$order   = 'DESC';
+	} elseif ($filter_order == 'date_desc') {
+		$orderby = 'term_id';
+		$order   = 'DESC';
+	} elseif ($filter_order == 'date_asc') {
+		$orderby = 'term_id';
+		$order   = 'ASC';
+	}
 }
+
+
+ $eventos_posts = new WP_Query( array(
+	'post_type'		=> 'hotsite',
+    'no_found_rows' => true,
+	'offset'     => $offset,
+	'orderby'    => $orderby,
+	'order'      => $order,
+	'hide_empty' => $hide_empty,
+	'tax_query' => array(
+		array(
+			'taxonomy' => 'category', //double check your taxonomy name in you dd
+			'field'    => 'id',
+			'terms'    => 35,
+			'operator' => 'NOT IN',
+		),
+	   ),
+	)
+ );
+
+$count_posts = wp_count_posts( $post_type = 'hotsite' );
+
+
+if ( $count_posts ) {
+	$published_posts = $count_posts->publish;
+}
+
+$cat_id = 35;
+$post_type = 'hotsite';
+$args = array(
+    'category' => $cat_id,
+    'post_type' => $post_type,
+);
+$count_posts_cat = get_posts( $args );
+$total_posts_cat = count($count_posts_cat);
+
+$total_published_posts = $published_posts - $total_posts_cat;
 
 $feature_latest_post = get_theme_mod( 'archive_feature_latest_post', true );
 $show_excerpt        = get_theme_mod( 'archive_show_excerpt', false );
@@ -61,27 +114,9 @@ $show_excerpt        = get_theme_mod( 'archive_show_excerpt', false );
 				}
 				?>
 
-				<?php the_archive_title( '<h1 class="page-title">', '</h1>' ); ?>
+				<?php the_title( '<h1 class="page-title">', '</h1>' ); ?>
 
 				<?php do_action( 'newspack_theme_below_archive_title' ); ?>
-
-				<?php
-				if ( ( is_category() || is_tag() ) && ! empty( $native_sponsors ) ) :
-					// Get description for native archive sponsors.
-					newspack_sponsor_archive_description( $native_sponsors );
-				elseif ( '' !== get_the_archive_description() ) :
-					?>
-				<div class="taxonomy-description">
-					<?php echo wp_kses_post( wpautop( get_the_archive_description() ) ); ?>
-				</div>
-				<?php endif; ?>
-
-				<?php
-				if ( ( is_category() || is_tag() ) && ! empty( $underwriter_sponsors ) ) {
-					// Get info for underwriter archive sponsors.
-					newspack_sponsored_underwriters_info( $underwriter_sponsors );
-				}
-			?>
 
 				<?php if ( is_author() ) : ?>
 					<div class="author-meta">
@@ -108,31 +143,33 @@ $show_excerpt        = get_theme_mod( 'archive_show_excerpt', false );
 		<?php do_action( 'before_archive_posts' ); ?>
 
 		<main id="main" class="site-main">
-		<div class="cabeçalho">
-			<div class="coluna-edital">
-				<h5 class="edital">Edital</h5>
-			</div>
-			<h5  class="meta">Publicado por</h5>
-			<h5  class="meta">Data de encerramento</h5>
-		</div>
-		<?php
-		if ( have_posts() ) :
+
+ 		<?php
+
+		the_content();
+
+		?>
+		<div class="archive-session">
+
+		<?
+		if ( $eventos_posts->have_posts() ) :
 			$post_count = 0;
 
 			// Start the Loop.
-			while ( have_posts() ) :
+			while ( $eventos_posts->have_posts() ) :
 				$post_count++;
-				the_post();
+				$eventos_posts->the_post();
 
 				// Check if you're on the first post of the first page and if it should be styled differently, or if excerpts are enabled.
 				if ( ( 1 === $post_count && 0 === get_query_var( 'paged' ) && true === $feature_latest_post ) || true === $show_excerpt ) {
-					get_template_part( 'template-parts/content/content', 'edital' );
+					get_template_part( 'template-parts/content/content', 'evento' );
 				} else {
-					get_template_part( 'template-parts/content/content', 'edital' );
+					get_template_part( 'template-parts/content/content', 'evento' );
 				}
 
 				// End the loop.
 			endwhile;
+
 
 			// If no content, include the "No posts found" template.
 		else :
@@ -140,12 +177,44 @@ $show_excerpt        = get_theme_mod( 'archive_show_excerpt', false );
 
 		endif;
 		?>
+		</div>
 		</main><!-- #main -->
 		<div class="pagination-posts">
-			<?php
-				// Previous/next page navigation.
-				newspack_the_posts_navigation();
-			?>
+		<div class="navigation pagination">
+					<div class="nav-links">
+						<?php
+
+						$total_pages = intval($total_published_posts / $per_page) + 1;
+
+						$arrow_icon = file_get_contents( get_template_directory_uri() . '/assets/images/menu-arrow.svg' );
+
+						echo paginate_links([
+							'base'      => add_query_arg('pagina','%#%'),
+							'format'    => '?pagina=%#%',
+							'total'     => $published_posts / $per_page,
+							'current'   => $paged,
+							'total'     => $total_pages,
+							'mid_size'  => 2,
+							'prev_text' => 'PREV',
+							'next_text' => 'NEXT',
+							'show_all'  => TRUE,
+						]);
+
+						if($paged==$total_pages+1):echo paginate_links([
+							'base'      => add_query_arg('pagina','%#%'),
+							'format'    => '?pagina=%#%',
+							'current'   => $paged,
+							'total'     => $total_pages+1,
+							'mid_size'  => 2,
+							'prev_text' => 'P',
+							'next_text' => 'N',
+						]);
+						endif
+
+						?>
+					</div><!-- .nav-links -->
+				</div><!-- .content-pagination -->
+			</div>
 		</div>
 		<?php
 		$archive_layout = get_theme_mod( 'archive_layout', 'default' );
@@ -155,5 +224,5 @@ $show_excerpt        = get_theme_mod( 'archive_show_excerpt', false );
 		?>
 	</section><!-- #primary -->
 
-<?php
-get_footer();
+
+<?php get_footer();

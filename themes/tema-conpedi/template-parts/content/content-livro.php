@@ -46,10 +46,14 @@ if ( function_exists( 'newspack_get_all_sponsors' ) ) {
 				</div>
 			<?php else : ?>
 				<div class="entry-meta">
-					<?php
-						//newspack_posted_by();
-						// newspack_posted_on();
-					?>
+					<div>
+						<?php
+							newspack_posted_by();
+						?>
+					</div>
+					<div>
+						<?php echo "R$ ".pods_field('livro',get_the_id(),'preco',true); ?>
+					</div>
 				</div><!-- .meta-info -->
 			<?php endif; ?>
 		<?php endif; ?>

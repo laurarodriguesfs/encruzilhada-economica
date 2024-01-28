@@ -246,3 +246,16 @@ function conpedi_update_the_archive_title( $title ) {
 	return $title;
 }
 add_filter( 'get_the_archive_title', 'conpedi_update_the_archive_title', 11, 1 );
+
+/** Busca personalizada para livros */
+function search_livros($template)
+{
+  global $wp_query;
+  $post_type = get_query_var('post_type');
+  if( $wp_query->is_search && $post_type == 'livro' )
+  {
+    return locate_template('archive-search.php');  //  redirect to archive-search.php
+  }
+  return $template;
+}
+add_filter('template_include', 'search_livros');

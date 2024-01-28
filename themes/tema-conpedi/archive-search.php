@@ -1,26 +1,9 @@
 <?php
-/**
- * The template for displaying archive pages
- *
- * @link https://developer.wordpress.org/themes/basics/template-hierarchy/
- *
- * @package Newspack
- */
-get_header();
+/* Template Name: Custom Search */
+get_header(); ?>
 
-// Get sponsors for this taxonomy archive.
-if ( function_exists( 'newspack_get_all_sponsors' ) ) {
-	$all_sponsors         = newspack_get_all_sponsors( get_queried_object_id() );
-	$native_sponsors      = newspack_get_native_sponsors( $all_sponsors );
-	$underwriter_sponsors = newspack_get_underwriter_sponsors( $all_sponsors );
-}
 
-$feature_latest_post = get_theme_mod( 'archive_feature_latest_post', true );
-$show_excerpt        = get_theme_mod( 'archive_show_excerpt', false );
-
-?>
-
-	<section id="primary" class="content-area">
+<section id="primary" class="content-area">
 
 		<header class="page-header">
 			<?php
@@ -65,6 +48,11 @@ $show_excerpt        = get_theme_mod( 'archive_show_excerpt', false );
 
 				<?php do_action( 'newspack_theme_below_archive_title' ); ?>
 
+
+				<input type="hidden" name="post_type" value="livro">
+				<?php get_search_form(); ?>
+
+
 				<?php
 				if ( ( is_category() || is_tag() ) && ! empty( $native_sponsors ) ) :
 					// Get description for native archive sponsors.
@@ -104,56 +92,21 @@ $show_excerpt        = get_theme_mod( 'archive_show_excerpt', false );
 			</span>
 
 		</header><!-- .page-header -->
-
 		<?php do_action( 'before_archive_posts' ); ?>
-
+		<div>
+			<h3>Resultado da busca por: <?php echo htmlentities($s, ENT_QUOTES, 'UTF-8'); ?> </h3>
+		</div>
 		<main id="main" class="site-main">
-		<div class="cabeçalho">
-			<div class="coluna-edital">
-				<h5 class="edital">Edital</h5>
-			</div>
-			<h5  class="meta">Publicado por</h5>
-			<h5  class="meta">Data de encerramento</h5>
-		</div>
-		<?php
-		if ( have_posts() ) :
-			$post_count = 0;
-
-			// Start the Loop.
-			while ( have_posts() ) :
-				$post_count++;
-				the_post();
-
-				// Check if you're on the first post of the first page and if it should be styled differently, or if excerpts are enabled.
-				if ( ( 1 === $post_count && 0 === get_query_var( 'paged' ) && true === $feature_latest_post ) || true === $show_excerpt ) {
-					get_template_part( 'template-parts/content/content', 'edital' );
-				} else {
-					get_template_part( 'template-parts/content/content', 'edital' );
-				}
-
-				// End the loop.
-			endwhile;
-
-			// If no content, include the "No posts found" template.
-		else :
-			get_template_part( 'template-parts/content/content', 'none' );
-
-		endif;
-		?>
-		</main><!-- #main -->
-		<div class="pagination-posts">
-			<?php
-				// Previous/next page navigation.
-				newspack_the_posts_navigation();
-			?>
-		</div>
-		<?php
-		$archive_layout = get_theme_mod( 'archive_layout', 'default' );
-		if ( 'default' === $archive_layout ) {
-			get_sidebar();
-		}
-		?>
-	</section><!-- #primary -->
-
-<?php
-get_footer();
+				<?php if ( have_posts() ) : while ( have_posts() ) : the_post();
+					get_template_part( 'template-parts/content/content', 'livro' ); ?>
+				<?php endwhile; ?>
+				<?php endif; ?>
+		</main><!-- contentarea -->
+<div class="pagination-posts">
+	<?php
+		// Previous/next page navigation.
+		newspack_the_posts_navigation();
+	?>
+</div>
+<?php get_sidebar(); ?>
+<?php get_footer(); ?>

@@ -7,6 +7,8 @@
  * @package Newspack
  */
 
+use Pods\REST\V1\Endpoints\Field;
+
 // Get sponsors for this post.
 if ( function_exists( 'newspack_get_all_sponsors' ) ) {
 	$all_sponsors         = newspack_get_all_sponsors( get_the_id(), null, 'post' );
@@ -47,10 +49,16 @@ if ( function_exists( 'newspack_get_all_sponsors' ) ) {
 			<?php else : ?>
 				<div class="entry-meta">
 					<?php
-						//newspack_posted_by();
-						// newspack_posted_on();
-					?>
+						newspack_posted_by();
+						?>
 				</div><!-- .meta-info -->
+				<div class="entry-meta">
+					<?php
+						echo pods_field('edital',get_the_id(),'data_de_encerramento',true); ?>
+				</div><!-- .meta-info -->
+				<div class="entry-meta">
+						<?php
+						echo sprintf('<a class="button-visualizar" href="%s" rel="bookmark"> Visualizar', esc_url(pods_field('edital',get_the_id(),'link_pdf',true)), '</a>' ); ?>
 			<?php endif; ?>
 		<?php endif; ?>
 	</div><!-- .entry-container -->

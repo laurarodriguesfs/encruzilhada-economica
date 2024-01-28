@@ -61,7 +61,13 @@ $show_excerpt        = get_theme_mod( 'archive_show_excerpt', false );
 				}
 				?>
 
-				<?php the_archive_title( '<h1 class="page-title">', '</h1>' ); ?>
+				<?php single_term_title( '<h1 class="page-title">', '</h1>' ); ?>
+
+				<div class="cabeçalho-editais">
+					<div>
+						<a class="button" href="/">Voltar</a>
+					</div>
+				</div>
 
 				<?php do_action( 'newspack_theme_below_archive_title' ); ?>
 

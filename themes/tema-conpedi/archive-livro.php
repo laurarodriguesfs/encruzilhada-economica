@@ -65,6 +65,11 @@ $show_excerpt        = get_theme_mod( 'archive_show_excerpt', false );
 
 				<?php do_action( 'newspack_theme_below_archive_title' ); ?>
 
+
+				<input type="hidden" name="post_type" value="livro">
+				<?php get_search_form(); ?>
+
+
 				<?php
 				if ( ( is_category() || is_tag() ) && ! empty( $native_sponsors ) ) :
 					// Get description for native archive sponsors.
@@ -108,13 +113,7 @@ $show_excerpt        = get_theme_mod( 'archive_show_excerpt', false );
 		<?php do_action( 'before_archive_posts' ); ?>
 
 		<main id="main" class="site-main">
-		<div class="cabeçalho">
-			<div class="coluna-edital">
-				<h5 class="edital">Edital</h5>
-			</div>
-			<h5  class="meta">Publicado por</h5>
-			<h5  class="meta">Data de encerramento</h5>
-		</div>
+
 		<?php
 		if ( have_posts() ) :
 			$post_count = 0;
@@ -123,13 +122,7 @@ $show_excerpt        = get_theme_mod( 'archive_show_excerpt', false );
 			while ( have_posts() ) :
 				$post_count++;
 				the_post();
-
-				// Check if you're on the first post of the first page and if it should be styled differently, or if excerpts are enabled.
-				if ( ( 1 === $post_count && 0 === get_query_var( 'paged' ) && true === $feature_latest_post ) || true === $show_excerpt ) {
-					get_template_part( 'template-parts/content/content', 'edital' );
-				} else {
-					get_template_part( 'template-parts/content/content', 'edital' );
-				}
+				get_template_part( 'template-parts/content/content', 'livro' );
 
 				// End the loop.
 			endwhile;
