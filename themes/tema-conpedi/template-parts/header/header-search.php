@@ -33,7 +33,7 @@
   </div>
 </div>
 <button class="mainmenubtn">
-	<a href="http://wwww.seudominio.com/pagina1.html">Quero me<br>associar</a>
+	<a href="http://wwww.seudominio.com/pagina1.html">Quero me<br><strong>associar</strong></a>
 </button>
 <div class="dropdown">
 	<div class="item-mainmenu">
