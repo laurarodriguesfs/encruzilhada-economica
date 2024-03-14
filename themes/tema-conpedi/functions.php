@@ -7,6 +7,16 @@
  * @package Newspack Scott
  */
 
+/**
+ * SVG Icons related functions.
+ */
+require get_stylesheet_directory() . '/inc/icon-functions-conpedi.php';
+
+/**
+ * SVG Icons class.
+ */
+require get_stylesheet_directory() . '/classes/class-conpedi-svg-icons.php';
+
 if ( ! function_exists( 'newspack_scott_setup' ) ) :
 	/**
 	 * Sets up theme defaults and registers support for various WordPress features.
@@ -196,10 +206,13 @@ function evp_customize_register( $wp_customize ){
 }
 
 add_action( 'customize_register', 'evp_customize_register' );
+
 add_action('after_setup_theme', 'remove_admin_bar');
 
 function remove_admin_bar() {
-  show_admin_bar(true);
+if (!current_user_can('administrator') && !is_admin()) {
+  show_admin_bar(false);
+}
 }
 
 add_action( 'init', 'my_unregister_post_type', 999 );

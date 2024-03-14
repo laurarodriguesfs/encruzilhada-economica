@@ -56,8 +56,19 @@ get_header();
 			?>
 			<div class="pagination-posts">
 			<?php
-				// Previous/next page navigation.
-				newspack_the_posts_navigation();
+				$args = array(
+					'show_all' => false, // all pages involved in pagination are shown
+					'end_size' => 1,     // number of pages at the ends
+					'mid_size' => 1,     // number of pages around the current page
+					'prev_next' => true, // whether to display 'previous/next page' side links.
+					'prev_text' => 'PREV',
+					'next_text' => 'NEXT',
+					'add_args' => false,  // Array of arguments (query variables) to add to links.
+					'add_fragment' => '', // Text to be added to all links.
+					'screen_reader_text' => __('Posts navigation' ),
+				);
+
+				the_posts_pagination($args);
 			?>
 			</div>
 			<?

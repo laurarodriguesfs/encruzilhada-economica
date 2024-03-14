@@ -213,7 +213,6 @@ $show_excerpt        = get_theme_mod( 'archive_show_excerpt', false );
 							'next_text' => 'NEXT',
 							'show_all'  => TRUE,
 						]);
-
 						if($paged==$total_pages+1):echo paginate_links([
 							'base'      => add_query_arg('pagina','%#%'),
 							'format'    => '?pagina=%#%',

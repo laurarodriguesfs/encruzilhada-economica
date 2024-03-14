@@ -44,7 +44,7 @@ session_start();
 			}
 
 
-		$url="http://conpedi.18.228.224.9.nip.io/api/v1/publicacao/grupoTrabalho/$id_grupo";
+		$url="http://conpedi.18.228.224.9.nip.io/api/v1/publicacao/grupoTrabalho/$id_grupo"; //alterar para não utilizar toda a url
 
 		//  Initiate curl
 			$grupo_conteudo = curl_init();
@@ -61,7 +61,9 @@ session_start();
 			$grupo_conteudo_decode=(json_decode($result, true));
 
 			echo "<h6>".$grupo_conteudo_decode['grupoTrabalho']['descricao']."</h6><br>";
-			echo nl2br("<p>".$grupo_conteudo_decode['grupoTrabalho']['textoApresentacao']."</p>");
+			$texto = str_replace( "\r\n", '<p>', $grupo_conteudo_decode['grupoTrabalho']['textoApresentacao'] );
+
+			echo "<div class=texto-apresentacao><p>".$texto."</div>";
 			echo "<p><strong> ISBN:".$grupo_conteudo_decode['grupoTrabalho']['isbn']."</strong></p>";
 
 			?>
@@ -74,7 +76,7 @@ session_start();
 				<p><strong> Trabalhos publicados neste livro:</strong></p>
 				<?php
 				foreach ($grupo_conteudo_decode['trabalhos'] as $key => $trabalhos_array) {
-					echo "<a class=trabalho href=".$trabalhos_array['caminhoArquivo'].">".$trabalhos_array['titulo']."</a><br>";
+					echo "<div class=div-trabalho><a class=trabalho href=".$trabalhos_array['caminhoArquivo'].">".$trabalhos_array['titulo']."</a><br></div>";
 				}
 				?>
 			</div>

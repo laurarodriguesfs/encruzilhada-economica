@@ -1,6 +1,6 @@
 <?php
 /**
- * Template Name: Archive de publicações: artigos do conpedi
+ * Template Name: Archive de publicações: posters do conpedi
 */
 get_header();
 session_start();
@@ -14,14 +14,14 @@ session_start();
 		</header><!-- .page-header -->
 
 		<div class=div-titulo>
-			<h2 class=titulo-especial>Publicações</h2>
+			<h2 class=titulo-especial>Pôsters Conpedi</h2>
 		</div>
 
 		<main id="main" class="site-main">
 
 		<?php
 
-		$url="http://conpedi.18.228.224.9.nip.io/api/v1/publicacao/evento/ARTIGO/CONPEDI";
+		$url="http://conpedi.18.228.224.9.nip.io/api/v1/publicacao/evento/POSTER/CONPEDI";
 
 		//  Initiate curl
 			$artigo = curl_init();
@@ -38,12 +38,8 @@ session_start();
 			$artigo_decode=(json_decode($result, true));
 
 
-			foreach ($artigo_decode as $key => $value) { ?>
-				<div class=div-principal><?
-					echo "<div class=div-evento-publicacoes><a class=evento-publicacoes href=/grupos-de-trabalho?evento=".$artigo_decode[$key]['id']."&id-evento=".$artigo_decode[$key]['id']."><strong>".$artigo_decode[$key]['titulo']."</strong></a></div>";
-					echo "<div class=div-evento-publicacoes><a class=evento-publicacoes href=/grupos-de-trabalho?evento=".$artigo_decode[$key]['id']."&id-evento=".$artigo_decode[$key]['id'].">".$artigo_decode[$key]['tema']."</a></div>";
-					echo "<div class=div-evento-publicacoes-data><a class=evento-publicacoes href=/grupos-de-trabalho?evento=".$artigo_decode[$key]['id']."&id-evento=".$artigo_decode[$key]['id'].">".$artigo_decode[$key]['textoDataEvento']."</a></div>";
-				?></div><?
+			foreach ($artigo_decode as $key => $value) {
+				echo "<div class=div-evento-publicacoes><a class=evento-publicacoes href=/grupos-de-trabalho?evento=".$artigo_decode[$key]['id']."&id-evento=".$artigo_decode[$key]['id']."><strong>".$artigo_decode[$key]['titulo']."</strong><br>".$artigo_decode[$key]['tema']."<br>".$artigo_decode[$key]['textoDataEvento']."<br></a></div>";
 			}
 
 			foreach ($artigo_decode as $key => $value) {

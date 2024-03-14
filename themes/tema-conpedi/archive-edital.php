@@ -115,36 +115,51 @@ $show_excerpt        = get_theme_mod( 'archive_show_excerpt', false );
 			<h5  class="meta">Publicado por</h5>
 			<h5  class="meta">Data de encerramento</h5>
 		</div>
-		<?php
-		if ( have_posts() ) :
-			$post_count = 0;
+		<div class="articles">
+			<?php
+			if ( have_posts() ) :
+				$post_count = 0;
 
-			// Start the Loop.
-			while ( have_posts() ) :
-				$post_count++;
-				the_post();
+				// Start the Loop.
+				while ( have_posts() ) :
+					$post_count++;
+					the_post();
 
-				// Check if you're on the first post of the first page and if it should be styled differently, or if excerpts are enabled.
-				if ( ( 1 === $post_count && 0 === get_query_var( 'paged' ) && true === $feature_latest_post ) || true === $show_excerpt ) {
-					get_template_part( 'template-parts/content/content', 'edital' );
-				} else {
-					get_template_part( 'template-parts/content/content', 'edital' );
-				}
+					// Check if you're on the first post of the first page and if it should be styled differently, or if excerpts are enabled.
+					if ( ( 1 === $post_count && 0 === get_query_var( 'paged' ) && true === $feature_latest_post ) || true === $show_excerpt ) {
+						get_template_part( 'template-parts/content/content', 'edital' );
+					} else {
+						get_template_part( 'template-parts/content/content', 'edital' );
+					}
 
-				// End the loop.
-			endwhile;
+					// End the loop.
+				endwhile;
 
-			// If no content, include the "No posts found" template.
-		else :
-			get_template_part( 'template-parts/content/content', 'none' );
+				// If no content, include the "No posts found" template.
+			else :
+				get_template_part( 'template-parts/content/content', 'none' );
 
-		endif;
-		?>
+			endif;
+			?>
+		</div>
 		</main><!-- #main -->
 		<div class="pagination-posts">
+
 			<?php
-				// Previous/next page navigation.
-				newspack_the_posts_navigation();
+				$args = array(
+					'show_all' => false, // all pages involved in pagination are shown
+					'end_size' => 1,     // number of pages at the ends
+					'mid_size' => 1,     // number of pages around the current page
+					'prev_next' => true, // whether to display 'previous/next page' side links.
+					'prev_text' => 'PREV',
+					'next_text' => 'NEXT',
+					'add_args' => false,  // Array of arguments (query variables) to add to links.
+					'add_fragment' => '', // Text to be added to all links.
+					'screen_reader_text' => __('Posts navigation' ),
+				);
+
+				the_posts_pagination($args);
+
 			?>
 		</div>
 		<?php

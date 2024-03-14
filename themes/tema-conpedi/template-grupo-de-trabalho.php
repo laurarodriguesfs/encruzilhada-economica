@@ -65,7 +65,7 @@ session_start();
 			<div class=trabalhos>
 			<?
 			foreach ($grupo_decode as $key => $value) {
-				echo "<a class=trabalho href=./grupo-de-trabalho?grupo=".$grupo_decode[$key]['id']."&id-evento=".$id_evento.">".$grupo_decode[$key]['descricao']."<br></a>";
+				echo "<div class=div-trabalho><a class=trabalho href=./grupo-de-trabalho?grupo=".$grupo_decode[$key]['id']."&id-evento=".$id_evento.">".$grupo_decode[$key]['descricao']."<br></a></div>";
             }
 			?>
 			</div>

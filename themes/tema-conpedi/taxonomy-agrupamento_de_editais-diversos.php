@@ -65,10 +65,10 @@ $show_excerpt        = get_theme_mod( 'archive_show_excerpt', false );
 
 				<div class="cabeçalho-editais">
 					<div>
-						<a class="button" href="/">Voltar</a>
+						<a class="button voltar" href="/">Voltar para a home</a>
 					</div>
 					<div>
-					<a class="button" href="/editais/conpedi-publica-direito">Editais Conpedi</a>
+						<a class="button" href="/editais/conpedi-publica-direito">Editais Conpedi</a>
 						<a class="button" href="/editais/parceiros-publica-direito/">Editais Parceiros</a>
 					</div>
 				</div>
@@ -152,8 +152,19 @@ $show_excerpt        = get_theme_mod( 'archive_show_excerpt', false );
 		</main><!-- #main -->
 		<div class="pagination-posts">
 			<?php
-				// Previous/next page navigation.
-				newspack_the_posts_navigation();
+				$args = array(
+					'show_all' => false, // all pages involved in pagination are shown
+					'end_size' => 1,     // number of pages at the ends
+					'mid_size' => 1,     // number of pages around the current page
+					'prev_next' => true, // whether to display 'previous/next page' side links.
+					'prev_text' => 'PREV',
+					'next_text' => 'NEXT',
+					'add_args' => false,  // Array of arguments (query variables) to add to links.
+					'add_fragment' => '', // Text to be added to all links.
+					'screen_reader_text' => __('Posts navigation' ),
+				);
+
+				the_posts_pagination($args);
 			?>
 		</div>
 		<?php

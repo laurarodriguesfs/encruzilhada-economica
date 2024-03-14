@@ -18,13 +18,13 @@ if ( ! is_active_sidebar( 'sidebar-1' ) ) {
 		/**
 		 * Displays social links menu; create a function for the wp_nav_menu settings to reduce duplication.
 		 */
-		function newspack_fixed_menu_settings() {
+		function newspack_menu_settings() {
 			wp_nav_menu(
 				array(
 					'theme_location' => 'fixed-menu',
 					'menu_class'     => 'fixed-links-menu',
 					'container'      => false,
-					'link_before'    => '<span>'  . newspack_get_icon_svg( 'link' ),
+					'link_before'    => '<span>'  . conpedi_get_icon_svg( 'link' ),
 					'link_after'     => '</span>',
 					'depth'          => 1,
 					'items_wrap'     => '<ul id="%1$s" class="%2$s">%3$s</ul>',
@@ -33,7 +33,7 @@ if ( ! is_active_sidebar( 'sidebar-1' ) ) {
 		}
 		?>
 		<nav class="fixed-navigation" aria-label="<?php esc_attr_e( 'Fixed Links Menu', 'newspack' ); ?>" <?php echo $toolbar_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
-		<?php newspack_fixed_menu_settings(); ?>
+		<?php newspack_menu_settings(); ?>
 		</nav><!-- .social-navigation -->
 
 		<?
