@@ -819,6 +819,10 @@ body.home{
 
 .single-hotsite{
 
+	img:hover{
+		max-width: 12px !important;
+	}
+
 	.entry-header{
 		display: none !important;
 	}
@@ -832,6 +836,23 @@ body.home{
 	}
 
 	.entry .entry-content {
+
+		.ancora:target {
+			scroll-margin-top: 5em;
+			background-color: #ddd;
+			border: solid 1px #ccc;
+			border-radius: 3px;
+		}
+
+		.wp-block-columns{
+			.ancora{
+				padding: 10px;
+			}
+		}
+
+		a {
+			text-decoration: none !important;
+		}
 
 		.alignfull {
 			margin-left: calc( 50% - 50vw );
@@ -868,6 +889,45 @@ body.home{
 		}
 	}
 
+
+
+	.eb-advanced-navigation-wrapper.is-vertical.vertical-preset-2 .wp-block-navigation{
+		box-shadow: none;
+		padding: 0 !important;
+
+
+
+		li{
+			width: 100% !important;
+			border-radius: 15px !important;
+			margin: 5px 0 !important;
+			border: solid 1px $c_azul_petroleo;
+
+		}
+
+		ul{
+			box-shadow: none;
+		}
+
+		ul:first-child{
+			padding: 0 !important;
+			box-shadow: none !important;
+			border: none !important;
+		}
+
+	}
+
+	.eb-advanced-navigation-tcdzj.eb-advanced-navigation-wrapper {
+		:hover{
+			width: 100% !important;
+		}
+	}
+
+	.eb-advanced-navigation-tcdzj.eb-advanced-navigation-wrapper .current-menu-item{
+		width: 100% !important;
+	}
+
+
 	.coluna-fixa{
 		align-items: center;
 		display: flex;
@@ -875,18 +935,13 @@ body.home{
 		bottom: 0;
 		top:30%;
 		right: 0;
-		left: calc(50vw - 699px);
-		height: 100px;
+		left: 10px;
+		height:min-content;
 		width: 300px;
+		margin-left: 5px;
+		padding: 10px;
+		width: 100% !important;
 
-
-		.wp-block-navigation{
-			align-items: flex-start;
-			position: relative;
-			display: flex;
-			flex-direction: column;
-
-		}
 	}
 }
 
@@ -943,7 +998,16 @@ body.home{
 .archive:not(.paged) article.has-post-thumbnail:first-of-type .post-thumbnail {
 	margin-bottom:unset;
 }
+
 .archive{
+
+	.post-thumbnail{
+		img{
+			height: 300px !important;
+			margin: 0 auto !important;
+			object-fit: contain;
+		}
+	}
 
 	.page-header h1{
 		margin-top: 30px !important;
@@ -1061,7 +1125,22 @@ body.home{
 
 }
 
+.search{
+	.page-header{
+		width: 90% !important;
+	}
+}
+
 .post-type-archive-livro{
+
+	.post-thumbnail{
+		img {
+			height: 300px !important;
+			margin: 0 auto !important;
+			object-fit: contain;
+		}
+	}
+
 	#main{
 		width: 100%;
 		display:inline-grid;
@@ -1456,20 +1535,37 @@ body.home{
 .em.em-calendar .em-cal-nav .month input[type="text"] {
 	color: #fff;
 }
+
+.em-cal-day-date.colored div.ring{
+	padding:0px !important;
+}
+
+.em-cal-day-date.colored div.ring.one{
+	border: none;
+	--date-border-color : transparent !important;
+}
+
 .colored{
 	background-color: $c_azul_petroleo !important;
 	border-radius: 20px !important;
 	--date-border-color : transparent !important;
-	height: 32px !important;
-	width: 32px !important;
+	height: 36px !important;
+	width: 36px !important;
+
 
 	.ring{
-		padding:0px;
-		height: 32px !important;
-		width: 32px !important;
+		padding:0px !important;
 		.one{
+			padding:0px !important;
 			border: none !important;
 			border-color: transparent !important;
+			text-align: center;
+
+			a{
+				width: 20px !important;
+				height: 30px !important;
+				text-align: center;
+			}
 		}
 	}
 }
@@ -1503,7 +1599,7 @@ body.home{
 				text-decoration: none !important;
 				background: transparent !important;
 				padding: 0px !important;
-				width: 28px !important;
+				width: 20px !important;
 				opacity: 100% !important;
 			}
 		}
@@ -1805,6 +1901,12 @@ body.home{
 			margin-right:0px;
 		}
 
+		img {
+			height: 100% !important;
+			margin: 0 auto !important;
+			object-fit: contain;
+		}
+
 		.entry-title{
 			color:white;
 			font-size: 12px !important;
@@ -1882,6 +1984,10 @@ body.home{
 		@media (max-width: 768px) {
 			display: none;
 		}
+	}
+
+	.gallery-item-container img{
+		object-fit: contain !important;
 	}
 }
 
@@ -2219,6 +2325,21 @@ body.home{
 .page-template-template-publicacoes, .page-template-template-poster-conpedi, .page-template-template-publicacoes-parceiros{
 	.site-main{
 		margin-top:30px;
+	}
+
+
+	.titulo-centralizado{
+		text-align: center;
+		width: 100%;
+		border-top-style:  solid;
+  		border-right-style: none;
+  		border-bottom-style: solid;
+  		border-left-style: none;
+		border-color: #d3d3d3;
+		border-width: thin;
+		padding: 5px;
+		font-size: 26px;
+		margin: 30px 0px;
 	}
 
 	#main{

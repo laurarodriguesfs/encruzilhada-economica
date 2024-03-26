@@ -14,7 +14,7 @@ session_start();
 		</header><!-- .page-header -->
 
 		<div class=div-titulo>
-			<h2 class=titulo-especial>Publicações</h2>
+			<h2 class=titulo-centralizado>Publicações</h2>
 		</div>
 
 		<main id="main" class="site-main">
