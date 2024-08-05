@@ -20,8 +20,10 @@ session_start();
 		//Using GET
 		$evento= $_GET["evento"];
 		$id_evento= $_GET["id-evento"];
+		$tipo=$_GET["tipo"];
 
-		$url_evento="http://conpedi.18.228.224.9.nip.io/api/v1/publicacao/evento/TODOS/TODOS";
+
+		$url_evento="http://conpedi-api-wp.18.228.224.9.nip.io/api/publicacao/evento/$tipo";
 
 		//  Initiate curl
 			$artigo = curl_init();
@@ -44,8 +46,7 @@ session_start();
 				}
 			}
 
-
-		$url="http://conpedi.18.228.224.9.nip.io/api/v1/publicacao/evento/grupoTrabalho/$id_evento";
+		$url="http://conpedi-api-wp.18.228.224.9.nip.io/api/publicacao/grupoTrabalho/$tipo/$id_evento";
 
 		//  Initiate curl
 			$grupo = curl_init();
@@ -65,7 +66,7 @@ session_start();
 			<div class=trabalhos>
 			<?
 			foreach ($grupo_decode as $key => $value) {
-				echo "<div class=div-trabalho><a class=trabalho href=./grupo-de-trabalho?grupo=".$grupo_decode[$key]['id']."&id-evento=".$id_evento.">".$grupo_decode[$key]['descricao']."<br></a></div>";
+				echo "<div class=div-trabalho><a class=trabalho href=./grupo-de-trabalho?tipo=".$tipo."&grupo=".$grupo_decode[$key]['id']."&id-evento=".$id_evento.">".$grupo_decode[$key]['descricao']."<br></a></div>";
             }
 			?>
 			</div>

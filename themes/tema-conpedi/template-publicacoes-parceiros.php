@@ -21,7 +21,7 @@ session_start();
 
 		<?php
 
-		$url="http://conpedi.18.228.224.9.nip.io/api/v1/publicacao/evento/TODOS/PARCEIRO";
+		$url="http://conpedi-api-wp.18.228.224.9.nip.io/api/publicacao/evento/PUBLICACAO_PARCEIRO";
 
 		//  Initiate curl
 			$artigo = curl_init();
@@ -40,9 +40,9 @@ session_start();
 
 			foreach ($artigo_decode as $key => $value) { ?>
 				<div class=div-principal><?
-					echo "<div class=div-evento-publicacoes><a class=evento-publicacoes href=/grupos-de-trabalho?evento=".$artigo_decode[$key]['id']."&id-evento=".$artigo_decode[$key]['id']."><strong>".$artigo_decode[$key]['titulo']."</strong></a></div>";
-					echo "<div class=div-evento-publicacoes><a class=evento-publicacoes href=/grupos-de-trabalho?evento=".$artigo_decode[$key]['id']."&id-evento=".$artigo_decode[$key]['id'].">".$artigo_decode[$key]['tema']."</a></div>";
-					echo "<div class=div-evento-publicacoes-data><a class=evento-publicacoes href=/grupos-de-trabalho?evento=".$artigo_decode[$key]['id']."&id-evento=".$artigo_decode[$key]['id'].">".$artigo_decode[$key]['textoDataEvento']."</a></div>";
+					echo "<div class=div-evento-publicacoes><a class=evento-publicacoes href=/grupos-de-trabalho?tipo=PUBLICACAO_PARCEIRO&evento=".$artigo_decode[$key]['id']."&id-evento=".$artigo_decode[$key]['id']."><strong>".$artigo_decode[$key]['titulo']."</strong></a></div>";
+					echo "<div class=div-evento-publicacoes><a class=evento-publicacoes href=/grupos-de-trabalho?tipo=PUBLICACAO_PARCEIRO&evento=".$artigo_decode[$key]['id']."&id-evento=".$artigo_decode[$key]['id'].">".$artigo_decode[$key]['tema']."</a></div>";
+					echo "<div class=div-evento-publicacoes-data><a class=evento-publicacoes href=/grupos-de-trabalho?tipo=PUBLICACAO_PARCEIRO&evento=".$artigo_decode[$key]['id']."&id-evento=".$artigo_decode[$key]['id'].">".$artigo_decode[$key]['textoDataEvento']."</a></div>";
 				?></div><?
 
 			}
