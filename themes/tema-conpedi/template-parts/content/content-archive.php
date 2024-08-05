@@ -16,7 +16,12 @@ if ( function_exists( 'newspack_get_all_sponsors' ) ) {
 ?>
 
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-	<?php newspack_post_thumbnail( 'newspack-featured-image' ); ?>
+
+	<?php if ( has_post_thumbnail() ) : ?>
+		<?php newspack_post_thumbnail( 'newspack-featured-image' ); ?>
+	<?php else : ?>
+		<img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/default.png" alt="<?php the_title(); ?>">
+	<?php endif; ?>
 
 	<div class="entry-container">
 		<?php

@@ -48,11 +48,25 @@ if ( function_exists( 'newspack_get_all_sponsors' ) ) {
 				<div class="entry-meta">
 					<div>
 						<?php
-							newspack_posted_by();
-						?>
+						if(strlen(pods_field('livro',get_the_id(),'autores',true)) > 30){
+							echo "por ".substr(pods_field('livro',get_the_id(),'autores',true), 0, 30)."...";
+						}
+						// senão exibe o texto completo
+						else{
+							echo "por ".pods_field('livro',get_the_id(),'autores',true);
+						}
+					?>
 					</div>
 					<div>
-						<?php echo "R$ ".pods_field('livro',get_the_id(),'preco',true); ?>
+						<?php
+						if(strlen(pods_field('livro',get_the_id(),'preco',true)) < 1){
+
+						}
+						// senão exibe o texto completo
+						else{
+							echo "R$ ".pods_field('livro',get_the_id(),'preco',true); 
+						}
+						?>
 					</div>
 				</div><!-- .meta-info -->
 			<?php endif; ?>
