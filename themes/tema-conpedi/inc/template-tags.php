@@ -570,7 +570,7 @@ function newspack_tertiary_menu() {
 /**
  * Displays fixed links menu; create a function for the wp_nav_menu settings to reduce duplication.
  */
-function newspack_fixed_menu_settings() {
+function newspack_menu_settings() {
 	wp_nav_menu(
 		array(
 			'theme_location' => 'fixed-menu',
@@ -607,7 +607,7 @@ function newspack_fixed_menu_header() {
 	}
 	?>
 	<nav class="fixed-navigation" aria-label="<?php esc_attr_e( 'fixed Links Menu', 'newspack' ); ?>" <?php echo $toolbar_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
-		<?php newspack_fixed_menu_settings(); ?>
+		<?php newspack_menu_settings(); ?>
 	</nav><!-- .fixed-navigation -->
 <?php
 }
@@ -621,7 +621,7 @@ function newspack_fixed_menu_footer() {
 	}
 	?>
 	<nav class="fixed-navigation" aria-label="<?php esc_attr_e( 'fixed Links Menu', 'newspack' ); ?>">
-		<?php newspack_fixed_menu_settings(); ?>
+		<?php newspack_menu_settings(); ?>
 	</nav><!-- .fixed-navigation -->
 <?php
 }
