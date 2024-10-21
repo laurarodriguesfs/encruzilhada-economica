@@ -52,6 +52,11 @@ $color__highlight: #fed850;
 	margin:32px 0;
 }
 
+.the-excerpt{
+	padding: 10px;
+	font-size: 12px;
+}
+
 //header
 
 .entry-header{
@@ -466,6 +471,10 @@ input[type='submit'] {
 	//mapa dos ppgds
 
 	.mapa-ppgds{
+
+		.map-nav-pagination{
+			display: none;
+		}
 		.wp-block-column{
 			margin-top: 0px !important;
 		}
@@ -527,7 +536,7 @@ input[type='submit'] {
 				background-color: transparent;
 				color: $color__primary;
 				text-decoration: underline;
-				margin: -40px 0px 0px 0px;
+				margin: -40px -30px 0px 0px;
 				font-size:10px;
 			}
 		}
@@ -586,7 +595,7 @@ input[type='submit'] {
 	}
 
 	.coluna-video{
-		flex-basis: 1000px !important;
+		flex-basis: 1100px !important;
 		margin-left: auto !important;
 		margin-right: auto !important;
 	}
@@ -625,6 +634,7 @@ input[type='submit'] {
 			background-color: $c_salmao;
 			border-radius: 0px;
 			font-weight: bolder !important;
+			font-size: 12px;
 
 				&.button{
 					color: $c_azul_petroleo !important;
@@ -911,7 +921,14 @@ input[type='submit'] {
 //footer
 
 .footer-branding .wrapper{
-	margin-left: 220px;
+	margin-left: 300px;
+	margin-top:160px;
+	position: absolute;
+
+	.social-navigation{
+		position: absolute;
+		right: 0;
+	}
 }
 
 .coluna-sem-margem{
@@ -1026,7 +1043,14 @@ input[type='submit'] {
 
 				.entry-title{
 					margin: 10px;
+					margin-bottom: 0px;
 				}
+			}
+
+			.posted-on{
+				margin: 10px;
+				margin-top: 0px;
+				font-size: 12px;
 			}
 
 			.entry-container{
@@ -1155,7 +1179,7 @@ input[type='submit'] {
 			display: inline-grid;
 			grid-template-rows:auto;
 			justify-content:stretch;
-			margin: 5px 0px;
+			margin: 5px 0px;		
 	
 			&:nth-child(even) {
 				background: #e3e3e3;
@@ -1294,6 +1318,12 @@ input[type='submit'] {
 
 		.entry-meta{
 			float: left;
+
+			.publicado-por{
+				color: $c_azul_petroleo;
+				font-weight: bold;
+				margin: 0;
+			}
 
 			@media (max-width: 768px) {
 				width: 100%;
@@ -1953,7 +1983,7 @@ input[type='submit'] {
 		display: none;
 	}
 
-	.wp-block-column{
+	.content .wp-block-column{
 		padding: 0 15%;
 
 		@media (max-width: 768px) {
@@ -2627,7 +2657,7 @@ input[type='submit'] {
 
 	.wp-block-columns .wp-block-column > *{
 		margin-bottom: 10px !important;
-		margin-top: -20px !important;
+		margin-top: 0px !important;
 		display: grid;
 
 		.wp-block-button{

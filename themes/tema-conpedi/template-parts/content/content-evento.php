@@ -55,9 +55,5 @@ if ( function_exists( 'newspack_get_all_sponsors' ) ) {
 				</div><!-- .meta-info -->
 			<?php endif; ?>
 		<?php endif; ?>
-
-		<div class="entry-content">
-			<?php the_excerpt(); ?>
-		</div><!-- .entry-content -->
 	</div><!-- .entry-container -->
 </article><!-- #post-${ID} -->

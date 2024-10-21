@@ -23,7 +23,7 @@ session_start();
 		$tipo=$_GET["tipo"];
 
 
-		$url_evento="http://conpedi-api-wp.18.228.224.9.nip.io/api/publicacao/evento/$tipo";
+		$url_evento="$api_campo_4/api/publicacao/evento/$tipo";
 
 		//  Initiate curl
 			$artigo = curl_init();
@@ -46,7 +46,7 @@ session_start();
 				}
 			}
 
-		$url="http://conpedi-api-wp.18.228.224.9.nip.io/api/publicacao/grupoTrabalho/$tipo/$id_evento";
+		$url="$api_campo_4/api/publicacao/grupoTrabalho/$tipo/$id_evento";
 
 		//  Initiate curl
 			$grupo = curl_init();

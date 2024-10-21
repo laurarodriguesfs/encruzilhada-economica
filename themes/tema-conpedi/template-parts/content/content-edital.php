@@ -48,8 +48,7 @@ if ( function_exists( 'newspack_get_all_sponsors' ) ) {
 					</div>
 				<?php else : ?>
 					<div class="entry-meta">
-							<p class=mobile>Publicado</p><?php newspack_posted_by();
-							?>
+							<p class=mobile>Publicado</p><p class=publicado-por><?php echo pods_field('edital',get_the_id(),'publicado_por',true); ?></p>
 					</div><!-- .meta-info -->
 					<div class="entry-meta">
 							<p class="mobile data">Data de encerramento:</p><?php echo pods_field('edital',get_the_id(),'data_de_encerramento',true); ?>

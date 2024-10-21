@@ -20,8 +20,8 @@ session_start();
 		<main id="main" class="site-main">
 
 		<?php
-
-		$url="http://conpedi-api-wp.18.228.224.9.nip.io/api/publicacao/evento/POSTER_CONPEDI";
+	
+		$url=$api_campo_1;
 
 		//  Initiate curl
 			$artigo = curl_init();

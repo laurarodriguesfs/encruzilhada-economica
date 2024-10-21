@@ -67,7 +67,7 @@ $subtitle = get_post_meta( $post->ID, 'newspack_post_subtitle', true );
 			<div class="entry-meta">
 				<?php
 					// newspack_posted_by();
-					// newspack_posted_on();
+					newspack_posted_on();
 					do_action( 'newspack_theme_entry_meta' );
 				?>
 			</div><!-- .meta-info -->

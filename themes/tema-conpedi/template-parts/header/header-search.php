@@ -42,12 +42,20 @@
 	</div>
 		<div class="dropdown-child">
 		<div id=coluna-unica>
+		<div class="linha">
+				<div class="linha-interna">
+					<img class="" src="/wp-content/uploads/2024/10/telefone.png" alt="Minha Figura">
+					<p><strong>Telefone:</strong></p>
+				</div>
+				<p>(48) 3334-3077</p>
+			</div>
+			<hr/>
 			<div class="linha">
 				<div class="linha-interna">
 					<img class="" src="/wp-content/uploads/2023/12/whatsapp.png" alt="Minha Figura">
 					<p><strong>Whatsapp:</strong></p>
 				</div>
-			<a href="http://wwww.seudominio.com/whatsapp.html">(11)9999-9999</a>
+				<a href="https://wa.me/5548999600140">(48) 99960-0140</a>
 			</div>
 			<hr/>
 			<div class="linha">
@@ -55,7 +63,7 @@
 					<img class="" src="/wp-content/uploads/2023/12/mail.png" alt="Minha Figura">
 					<p><strong>Email:</strong></p>
 				</div>
-			<a href="http://wwww.seudominio.com/pagina2.html">endereco@gmail.com</a>
+				<a href="http://wwww.seudominio.com/pagina2.html">secretaria@conpedi.org.br</a>
 			</div>
 			<hr/>
 			<div class="linha">
@@ -63,7 +71,7 @@
 					<img class="" src="/wp-content/uploads/2023/12/wall-clock.png" alt="Minha Figura">
 					<p><strong>Horário de atendimento</strong></p>
 				</div>
-				<p>Das 8h às 19h</p>
+				<p>Seg a Sex das 09h às 12h e das 13h às 18h</p>
 			</div>
 		</div>
   	</div>

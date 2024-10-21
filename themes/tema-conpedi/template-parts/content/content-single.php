@@ -48,6 +48,7 @@ if ( function_exists( 'newspack_get_all_sponsors' ) ) {
 			)
 		);
 
+
 		wp_link_pages(
 			array(
 				'before' => '<div class="page-links">' . __( 'Pages:', 'newspack' ),

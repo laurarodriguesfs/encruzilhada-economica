@@ -16,11 +16,17 @@ if ( function_exists( 'newspack_get_all_sponsors' ) ) {
 ?>
 
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-
 	<?php if ( has_post_thumbnail() ) : ?>
 		<?php newspack_post_thumbnail( 'newspack-featured-image' ); ?>
-	<?php else : ?>
-		<img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/default.png" alt="<?php the_title(); ?>">
+	<?php else : 
+		global $post;
+   		$post_slug = $post->post_name;
+		?>
+		<figure class="post-thumbnail">
+			<a class="post-thumbnail-inner" href="<?php echo get_permalink().$post_slug ?>">
+				<img class= "attachment-newspack-featured-image size-newspack-featured-image wp-post-image" src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/default.png" alt="<?php the_title(); ?>">
+			</a>
+		</figure>
 	<?php endif; ?>
 
 	<div class="entry-container">
@@ -53,7 +59,7 @@ if ( function_exists( 'newspack_get_all_sponsors' ) ) {
 				<div class="entry-meta">
 					<?php
 						//newspack_posted_by();
-						// newspack_posted_on();
+						//newspack_posted_on();
 					?>
 				</div><!-- .meta-info -->
 			<?php endif; ?>

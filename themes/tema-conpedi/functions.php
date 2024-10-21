@@ -260,15 +260,140 @@ function conpedi_update_the_archive_title( $title ) {
 }
 add_filter( 'get_the_archive_title', 'conpedi_update_the_archive_title', 11, 1 );
 
-/** Busca personalizada para livros */
-function search_livros($template)
+/** Busca personalizada para qualquer post type */
+function search_custom_post_type($template)
 {
   global $wp_query;
-  $post_type = get_query_var('post_type');
-  if( $wp_query->is_search && $post_type == 'livro' )
-  {
-    return locate_template('archive-search.php');  //  redirect to archive-search.php
+
+  // Verifica se é uma busca
+  if ($wp_query->is_search) {
+    return locate_template('archive-search.php');  // Redireciona para archive-search.php
   }
+
   return $template;
 }
-add_filter('template_include', 'search_livros');
+add_filter('template_include', 'search_custom_post_type');
+
+function adicionar_menu_api() {
+    add_menu_page(
+        'Configurações de API', 
+        'Configurações da API', 
+        'manage_options', 
+        'configuracao-api', 
+        'render_configuracao_api',
+        'dashicons-admin-generic'
+    );
+}
+add_action('admin_menu', 'adicionar_menu_api');
+
+//Função que renderiza a página de configurações
+function render_configuracao_api() {
+    ?>
+    <div class="wrap">
+        <h1><?php _e('Configurações de Api'); ?></h1>
+        <form method="post" action="options.php">
+            <?php
+            settings_fields('api_settings');
+            do_settings_sections('configuracao-api');
+            submit_button();
+            ?>
+        </form>
+    </div>
+    <?php
+}
+
+function registrar_configuracoes_api() {
+    // Registrar a configuração 'api'
+    register_setting('api_settings', 'api');
+
+    add_settings_section(
+        'api_section',
+        __('Insira aqui os links para consumo da API'),
+        null,
+        'configuracao-api'
+    );
+
+    add_settings_field(
+        'campo_1',
+        __('Posterês do Conpedi'),
+        'render_input_campo_1',
+        'configuracao-api',
+        'api_section'
+    );
+
+    add_settings_field(
+        'campo_2',
+        __('Publicações do Conpedi'),
+        'render_input_campo_2',
+        'configuracao-api',
+        'api_section'
+    );
+
+    add_settings_field(
+        'campo_3',
+        __('Publicações de parceiros'),
+        'render_input_campo_3',
+        'configuracao-api',
+        'api_section'
+    );
+
+	add_settings_field(
+        'campo_4',
+        __('Url da api sem caminho'),
+        'render_input_campo_4',
+        'configuracao-api',
+        'api_section'
+    );
+
+}
+add_action('admin_init', 'registrar_configuracoes_api');
+
+function render_input_campo_1() {
+    $value1 = get_option('api')['campo_1'] ?? '';
+    echo '<input type="text" name="api[campo_1]" value="' . esc_attr($value1) . '" />';
+}
+
+function render_input_campo_2() {
+    $value2 = get_option('api')['campo_2'] ?? '';
+    echo '<input type="text" name="api[campo_2]" value="' . esc_attr($value2) . '" />';
+}
+
+function render_input_campo_3() {
+    $value3 = get_option('api')['campo_3'] ?? '';
+    echo '<input type="text" name="api[campo_3]" value="' . esc_attr($value3) . '" />';
+}
+
+function render_input_campo_4() {
+    $value4 = get_option('api')['campo_4'] ?? '';
+    echo '<input type="text" name="api[campo_4]" value="' . esc_attr($value4) . '" />';
+}
+
+// Recuperar as faixas de desconto configuradas pelo cliente
+$apis_configuradas = get_option('api', array());
+
+$apis = array(
+    1 => isset( $apis_configuradas['campo_1'] ) ? $apis_configuradas['campo_1'] : null,
+    2 => isset( $apis_configuradas['campo_2'] ) ? $apis_configuradas['campo_2'] : null,
+    3 => isset( $apis_configuradas['campo_3'] ) ? $apis_configuradas['campo_3'] : null,
+	4 => isset( $apis_configuradas['campo_4'] ) ? $apis_configuradas['campo_4'] : null,
+);
+
+function carregar_configuracoes_api() {
+    // Recupera as opções salvas no banco de dados
+    $apis_configuradas = get_option('api', array());
+
+    // Define os valores para as variáveis com fallback caso não estejam configuradas
+    $campo_1 = isset( $apis_configuradas['campo_1'] ) ? $apis_configuradas['campo_1'] : null;
+    $campo_2 = isset( $apis_configuradas['campo_2'] ) ? $apis_configuradas['campo_2'] : null;
+    $campo_3 = isset( $apis_configuradas['campo_3'] ) ? $apis_configuradas['campo_3'] : null;
+    $campo_4 = isset( $apis_configuradas['campo_4'] ) ? $apis_configuradas['campo_4'] : null;
+
+    // Torna os valores acessíveis globalmente
+    global $api_campo_1, $api_campo_2, $api_campo_3, $api_campo_4;
+    $api_campo_1 = $campo_1;
+    $api_campo_2 = $campo_2;
+    $api_campo_3 = $campo_3;
+	$api_campo_4 = $campo_4;
+}
+
+add_action('wp_head', 'carregar_configuracoes_api');

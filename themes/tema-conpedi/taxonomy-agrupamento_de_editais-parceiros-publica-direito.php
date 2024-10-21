@@ -64,7 +64,7 @@ $show_excerpt        = get_theme_mod( 'archive_show_excerpt', false );
 				<?php single_term_title( '<h1 class="page-title">', '</h1>' ); ?>
 				<div class="cabeçalho-editais">
 					<div>
-						<a class="button" href="/">Voltar</a>
+						<a class="button" href="/">Voltar para a home</a>
 					</div>
 					<div>
 						<a class="button" href="/editais/diversos">Editais Diversos</a>

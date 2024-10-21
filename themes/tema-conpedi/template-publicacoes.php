@@ -21,7 +21,7 @@ session_start();
 
 		<?php
 
-		$url="http://conpedi-api-wp.18.228.224.9.nip.io/api/publicacao/evento/ARTIGO_CONPEDI";
+		$url=$api_campo_2;
 
 		//  Initiate curl
 			$artigo = curl_init();

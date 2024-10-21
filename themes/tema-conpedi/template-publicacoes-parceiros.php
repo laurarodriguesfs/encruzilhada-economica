@@ -4,7 +4,6 @@
 */
 get_header();
 session_start();
-
 ?>
 
 	<section id="primary" class="content-area">
@@ -21,7 +20,7 @@ session_start();
 
 		<?php
 
-		$url="http://conpedi-api-wp.18.228.224.9.nip.io/api/publicacao/evento/PUBLICACAO_PARCEIRO";
+		$url=$api_campo_3;
 
 		//  Initiate curl
 			$artigo = curl_init();
