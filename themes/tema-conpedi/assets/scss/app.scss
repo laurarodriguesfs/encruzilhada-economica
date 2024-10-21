@@ -1303,7 +1303,6 @@ input[type='submit'] {
 			}
 
 			@media (max-width: 768px) {
-				width: 100%;
 
 				.entry-title{
 					margin: 0px !important;
@@ -1323,6 +1322,10 @@ input[type='submit'] {
 				color: $c_azul_petroleo;
 				font-weight: bold;
 				margin: 0;
+
+				@media (max-width: 768px) {
+				margin: 10px 5px;	
+				}
 			}
 
 			@media (max-width: 768px) {
