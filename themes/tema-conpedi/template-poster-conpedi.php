@@ -14,7 +14,7 @@ session_start();
 		</header><!-- .page-header -->
 
 		<div class=div-titulo>
-			<h2 class=titulo-centralizado>Pôsters Conpedi</h2>
+			<h2 class=titulo-centralizado>Pôsteres Conpedi</h2>
 		</div>
 
 		<main id="main" class="site-main">

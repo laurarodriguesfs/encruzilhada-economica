@@ -397,3 +397,23 @@ function carregar_configuracoes_api() {
 }
 
 add_action('wp_head', 'carregar_configuracoes_api');
+
+add_action( 'pre_get_posts', 'ordenar_edital_por_data_de_encerramento_taxonomia' );
+function ordenar_edital_por_data_de_encerramento_taxonomia( $query ) {
+    // Verifique se estamos na query principal, no arquivo de taxonomia e no front-end
+    if ( $query->is_main_query() && ! is_admin() ) {
+        
+        // Verifica se estamos em uma das taxonomias específicas
+        if ( is_tax( 'agrupamento_de_editais-conpedi-publica-direito' ) || 
+             is_tax( 'agrupamento_de_editais-diversos' ) || 
+             is_tax( 'agrupamento_de_editais-parceiros-publica-direito' ) || 
+             is_tax( 'agrupamento_de_editais' ) ) {
+            
+            // Adiciona os parâmetros para ordenar pelo campo 'data_de_encerramento'
+            $query->set( 'meta_key', 'data_de_encerramento' ); // Nome do campo no Pods
+            $query->set( 'orderby', 'meta_value' ); // Ordenar pelo valor do meta field
+            $query->set( 'meta_type', 'DATE' ); // Indica que o campo é do tipo data
+            $query->set( 'order', 'DESC' ); // Ordenação crescente (use 'DESC' para decrescente)
+        }
+    }
+}

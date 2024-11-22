@@ -51,8 +51,18 @@ if ( function_exists( 'newspack_get_all_sponsors' ) ) {
 							<p class=mobile>Publicado</p><p class=publicado-por><?php echo pods_field('edital',get_the_id(),'publicado_por',true); ?></p>
 					</div><!-- .meta-info -->
 					<div class="entry-meta">
-							<p class="mobile data">Data de encerramento:</p><?php echo pods_field('edital',get_the_id(),'data_de_encerramento',true); ?>
+						<p class="mobile data">Data de encerramento:</p>
+						<?php 
+						$data_raw = pods_field('edital', get_the_ID(), 'data_de_encerramento', true); 
+						if ($data_raw) {
+							$data_obj = new DateTime($data_raw);
+							echo $data_obj->format("d/m/Y"); // Formato desejado
+						} else {
+							echo 'Não informado'; // Mensagem caso não haja data
+						}
+						?>
 					</div><!-- .meta-info -->
+
 					<div class="entry-meta">
 							<?php
 							$url=esc_url(pods_field('edital',get_the_id(),'link_pdf',true));
