@@ -1,4 +1,4 @@
-# Tema para o site do Conpedi
+# Tema para o site do cemj
 
 Este repositório contém os arquivos iniciais para se ter um projeto WordPress, as ferramentas de desenvolvimento e deploy estão protegidas por um padrão.
 
@@ -41,7 +41,7 @@ $ git submodule add -f git@gitlab.hacklab.com.br:open-source/hacklab-blocks.git 
 ```
 
 ## Compilando os assets do tema
-Abra um terminal, vá até a a pasta `themes/tema-conpedi/` e execute os comandos abaixo:
+Abra um terminal, vá até a a pasta `themes/tema-cemj/` e execute os comandos abaixo:
 
 ```
 $ npm install
@@ -76,7 +76,7 @@ docker-compose up
 ```
 
 ## Substituir strings e renomear arquivos/pastas:
-- **tema-conpedi** pela slug nova ex: fpa-theme
+- **tema-cemj** pela slug nova ex: fpa-theme
 - **base-theme-name** pelo nome (exemplo Tema FPA )
 - alterar nome da pasta para corresponder ao slug
 - alterar nome do arquivo /languages/*.pot

@@ -1,0 +1,371 @@
+@import '2-atoms/a-mixins';
+
+/* ----- 5: PAGES ------- */
+@import '5-pages/p-home';
+@import '5-pages/p-footer';
+
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Fira+Code:wght@300..700&family=Space+Grotesk:wght@300..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Fira+Code:wght@300..700&family=Space+Grotesk:wght@300..700&display=swap');
+@font-face {
+    font-family: 'Neue Kaine';
+    src: url('/wp-content/themes/tema-cemj/assets/fonts/NeueKaine-Black.ttf') format('truetype');
+    font-weight: 900;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Neue Kaine';
+    src: url('/wp-content/themes/tema-cemj/assets/fonts/NeueKaine-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Neue Kaine';
+    src: url('/wp-content/themes/tema-cemj/assets/fonts/NeueKaine-ExtraBold.ttf') format('truetype');
+    font-weight: 800;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Neue Kaine';
+    src: url('/wp-content/themes/tema-cemj/assets/fonts/NeueKaine-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Neue Kaine';
+    src: url('/wp-content/themes/tema-cemj/assets/fonts/NeueKaine-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Neue Kaine';
+    src: url('/wp-content/themes/tema-cemj/assets/fonts/NeueKaine-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Neue Kaine';
+    src: url('/wp-content/themes/tema-cemj/assets/fonts/NeueKaine-SemiBold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+}
+
+/* Caso deseje usar a fonte variável */
+@font-face {
+    font-family: 'Neue Kaine';
+    src: url('/wp-content/themes/tema-cemj/assets/fonts/Neue Kaine Variable.ttf') format('truetype');
+    font-weight: 300 900;
+    font-style: normal;
+}@font-face {
+    font-family: 'Neue Kaine';
+    src:url('/wp-content/themes/tema-cemj/assets/fonts/NeueKaine-ExtraBold.ttf') format('truetype');
+}
+
+/*Cores
+.has-azul-escuro-color {
+}
+.has-azul-escuro-background-color {
+    background-color: #001d51 !important;
+}
+
+.has-cinza-claro-color {
+    color: #cfcfea !important;
+}
+.has-cinza-claro-background-color {
+    background-color: #cfcfea !important;
+}
+
+.has-vermelho-escuro-color {
+    color: #831d1c !important;
+}
+.has-vermelho-escuro-background-color {
+    background-color: #831d1c !important;
+}
+
+.has-cinza-medio-color {
+    color: #a89b9d !important;
+}
+.has-cinza-medio-background-color {
+    background-color: #a89b9d !important;
+}
+
+.has-bege-claro-color {
+    color: #f3e7de !important;
+}
+.has-bege-claro-background-color {
+    background-color: #f3e7de !important;
+}
+
+//Tipografia
+h1, h2, h3, h4, h5,h6 {
+    font-family: 'Neue Kaine', sans-serif !important;
+}
+
+a, input, p{
+    font-family: "Bricolage Grotesque", serif !important;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
+
+ p code{
+    font-family: "Space Grotesk", serif !important;
+    font-optical-sizing: auto;
+    font-style: normal;
+}*/
+
+.texto-margem{
+	margin-top: -10% !important;
+	position: sticky;
+	z-index: 9999999;
+}
+
+@media (max-width: 768px) {
+		
+	.entry .entry-content>*.aligncenter,
+    .newspack-inline-popup>*.aligncenter,
+    .banner-cidades .wp-block-cover__inner-container,
+    .footer-branding, .footer-widgets,
+    .wp-block-cover__inner-container{
+        margin-left: 0px !important;
+        margin-right: 0px !important;
+	}
+}
+
+@media (min-width: 768px) {
+    .clearfix {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2%; /* Espaço entre as colunas */
+    }
+
+    #left, #center, #right {
+        width: 40%; /* 3 colunas com gap */
+        box-sizing: border-box;
+    }
+
+    #right {
+        width: 10%; /* 3 colunas com gap */
+        box-sizing: border-box;
+
+        p{
+            margin-top: 50px;
+        }
+    }
+
+    label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .wpcf7-form-control-wrap, input[type="text"], input[type="email"] {
+        max-width: 100%;
+        width: 100%; /* Preencher a coluna */
+        display: inline-block;
+        box-sizing: border-box;
+    }
+}
+
+.custom-logo-lr{
+    height: 70px;
+}
+
+.site-info .site-info-contain .desenvolvido-por{
+    color:#f3e7de !important;
+}
+
+/* Fixar ambos os headers no topo */
+.middle-header-contain, 
+.bottom-header-contain {
+    position: fixed;
+    left: 0;
+    width: 100%;
+    background: white;
+    z-index: 1000;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+}
+
+.middle-header-contain {
+    top: 0;
+}
+
+.bottom-header-contain {
+    top: 110px; /* Ajuste conforme altura real do header superior */
+}
+
+/* Espaço para o conteúdo não ficar escondido */
+
+body {
+    padding-top: 100px; /* Ajuste conforme necessário */
+}
+
+/* Ajustes para menus dropdown */
+.main-navigation ul ul {
+    z-index: 1001 !important;
+    top: 100%;
+}
+
+/* Mobile */
+@media (max-width: 781px) {
+    .middle-header-contain {
+        top: 0;
+    }
+    
+    .bottom-header-contain {
+        display: none; /* Esconde menu inferior em mobile */
+    }
+    
+    body {
+        padding-top: 100px; /* Ajuste apenas para header superior */
+    }
+}
+
+/* Garantir que elementos fixos tenham largura completa */
+.wrapper {
+    max-width: 96%;
+    margin: auto;
+}
+
+//home
+.home{
+    .entry-header{
+        margin: 0;
+        display: none;
+    }
+
+    .entry .entry-content > *{
+        margin: 0;
+    }
+
+    #secondary{
+        display: none;
+    }
+
+    
+    .video-gallery-block-title {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .video-gallery-block-title h2 {
+        margin: 0;
+        flex: 1;
+        text-align: left;
+    }
+    
+    .video-gallery-block-title h6 {
+        margin: 0 auto;
+        flex: 2;
+        text-align: center;
+    }
+    
+    
+    .video-gallery-wrapper{
+        margin-left: 0px !important;
+        width: 100% !important;
+    }
+    
+}
+
+.menos-espaco{
+    h2,h3{
+        margin-bottom: -20px;
+    }
+}
+
+.radius{
+    border-radius: 20px !important ;
+
+    img{
+        border-radius: 20px !important ;
+    }
+}
+
+.radius-top{
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    margin-bottom: -130px;
+}
+
+.bottom-header-contain .wrapper {
+    border-bottom:none;
+    border-top: none;
+}
+
+.button, .wp-element-button{
+    border-radius: 30px !important;
+    padding-top: 0.667em;
+    padding-right: 1.33em;
+    padding-bottom: 0.667em;
+    padding-left: 1.33em;
+
+}
+
+/* Estilização do submenu */
+ul.sub-menu {
+    background-color: #f39c12; /* Fundo laranja */
+    border-radius: 10px; /* Bordas arredondadas */
+    padding: 10px; /* Espaçamento interno */
+    list-style: none; /* Remove marcadores de lista */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+    margin: 0;
+    padding: 5px 0;
+}
+
+/* Remove qualquer pseudo-elemento estranho */
+ul.sub-menu::after, ul.sub-menu::before {
+    content: none !important;
+}
+
+/* Estilo dos itens do submenu */
+ul.sub-menu li {
+    margin: 5px 0; /* Espaçamento entre itens */
+}
+
+/* Links do submenu */
+ul.sub-menu li a {
+    display: block;
+    padding: 8px 15px;
+    color: #ffffff; /* Cor do texto */
+    text-decoration: none; /* Remove sublinhado */
+    border-radius: 8px; /* Bordas arredondadas nos links */
+    transition: background 0.3s ease;
+    background-color: transparent;
+}
+
+/* Hover nos links */
+ul.sub-menu li a:hover {
+    background-color: #d35400; /* Tom mais escuro de laranja ao passar o mouse */
+}
+
+.site-header .dd-menu .sub-menu a{
+    background-color: transparent;
+
+    &:hover{
+        background-color: transparent;
+        text-decoration: underline;
+    }
+}
+
+.page{
+    .entry-header{
+        margin: 0;
+        display: none;
+    }
+
+    .entry .entry-content > *{
+        margin: 0;
+    }
+
+    #secondary{
+        display: none;
+    }
+
+}
