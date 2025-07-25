@@ -291,3 +291,131 @@ function add_post_to_admin_menu() {
     );
 }
 add_action('admin_menu', 'add_post_to_admin_menu');
+
+// Adiciona suporte para páginas do Tainacan
+function tainacan_pages_support() {
+    add_post_type_support( 'page', 'editor' );
+}
+add_action( 'init', 'tainacan_pages_support' );
+
+function my_custom_flush_rewrite_rules() {
+    flush_rewrite_rules();
+}
+add_action('after_switch_theme', 'my_custom_flush_rewrite_rules');
+
+/**
+ * Tainacan Functions to use with the Tainacan Plugins
+ */
+
+ function tainacan_collections_viewmode($public_query_vars){
+    $public_query_vars[] = "tainacan_collections_viewmode";
+    return $public_query_vars;
+}
+add_filter( 'query_vars', 'tainacan_collections_viewmode');
+
+function tainacan_active($selected, $current = true, $echo = true) {
+
+    $return = $selected == $current ? 'active' : '';
+
+    if ($echo)
+        echo $return;
+
+    return $return;
+
+}
+
+function tainacan_theme_collection_title($title){
+    if (is_post_type_archive('tainacan-collection')) {
+        return 'Coleções';
+    }
+    return $title;
+}
+add_filter('get_the_archive_title', 'tainacan_theme_collection_title');
+
+function tainacan_theme_collection_query($query){
+    if ($query->is_main_query() && $query->is_post_type_archive('tainacan-collection')) {
+        $query->set('posts_per_page', 12);
+    }
+}
+add_action('pre_get_posts', 'tainacan_theme_collection_query');
+
+function tainacan_meta_date_author( $echo = true ) {
+	$time = '<time class="entry-date published" datetime="%1$s">%2$s</time>';
+
+	$time_string = sprintf( $time,
+		esc_attr( get_the_date( 'c' ) ),
+		get_the_date()
+	);
+
+	$string = $time_string;
+	$string .= '&nbsp;por&nbsp;';
+	$string .= get_the_author_posts_link();
+
+	$string = apply_filters( 'tainacan-meta-date-author', $string );
+
+	if ( $echo ) {
+		echo $string;
+	} else {
+		return $string;
+	}
+}
+
+add_filter( 'jpeg_quality', 'rhs_image_full_quality' );
+add_filter( 'wp_editor_set_quality', 'rhs_image_full_quality' );
+
+function rhs_image_full_quality( $quality ) {
+	return 100;
+}
+
+function meu_tema_filho_custom_palette() {
+    // Substitua 'seu-tema-filho' pelo textdomain do seu tema filho
+    add_theme_support( 'editor-color-palette', array(
+        array(
+            'name'  => __( 'Amarelo Principal', 'child' ),
+            'slug'  => 'amarelo-principal',
+            'color' => '#F5D536',
+        ),
+        array(
+            'name'  => __( 'Azul Escuro', 'child' ),
+            'slug'  => 'azul-escuro',
+            'color' => '#1C154D',
+        ),
+        array(
+            'name'  => __( 'Verde Vibrante', 'child' ),
+            'slug'  => 'verde-vibrante',
+            'color' => '#0D8432',
+        ),
+        array(
+            'name'  => __( 'Azul Médio', 'child' ),
+            'slug'  => 'azul-medio',
+            'color' => '#4083BD',
+        ),
+        array(
+            'name'  => __( 'Preto', 'child' ),
+            'slug'  => 'preto',
+            'color' => '#000000',
+        ),
+        array(
+            'name'  => __( 'Branco', 'child' ),
+            'slug'  => 'branco',
+            'color' => '#FFFFFF',
+        ),
+    ) );
+
+}
+add_action( 'after_setup_theme', 'meu_tema_filho_custom_palette', 20 );
+
+function cemj_customizer_register( $wp_customize ) {
+    // Exemplo: adicionar uma cor para a paleta
+    $wp_customize->add_setting( 'primary_color', array(
+        'default'   => '#F5D536',
+        'transport' => 'refresh',
+    ) );
+
+    $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'primary_color', array(
+        'label'    => __( 'Amarelo Principal', 'child' ),
+        'section'  => 'colors',
+        'settings' => 'primary_color',
+    ) ) );
+}
+add_action( 'customize_register', 'cemj_customizer_register' );

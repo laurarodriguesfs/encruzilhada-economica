@@ -1,26 +1,35 @@
 <?php
-get_header();
-?>
+/**
+ * Template para exibir um item específico do Tainacan
+ *
+ * @link https://developer.wordpress.org/themes/basics/template-hierarchy/
+ *
+ * @package tema-cemj
+ */
 
-<main id="tainacan-single-item">
-    <?php if (have_posts()) : while (have_posts()) : the_post(); ?>
-        <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-            <header class="entry-header">
-                <h1 class="entry-title"><?php the_title(); ?></h1>
-            </header>
+get_header(); ?>
 
-            <div class="entry-content">
-                <?php the_content(); ?>
-            </div>
-
-            <footer class="entry-footer">
-                <p><?php esc_html_e('Publicado em:', 'seu-tema'); ?> <?php the_date(); ?></p>
-                <p><?php esc_html_e('Coleção:', 'seu-tema'); ?> <?php echo get_the_terms(get_the_ID(), 'tainacan-collection')[0]->name; ?></p>
-            </footer>
-        </article>
-    <?php endwhile; endif; ?>
-</main>
+<section id="primary" class="content-area">
+    <main id="main" class="site-main">
+        <?php
+        if (have_posts()) :
+            while (have_posts()) : the_post();
+                // Exibir o conteúdo do item
+                ?>
+                <div class="item-detail">
+                    <h1><?php the_title(); ?></h1>
+                    <div class="item-content">
+                        <?php the_content(); ?>
+                    </div>
+                </div>
+                <?php
+            endwhile;
+        else :
+            echo '<p>' . __('Item não encontrado.', 'seu-tema') . '</p>';
+        endif;
+        ?>
+    </main><!-- #main -->
+</section><!-- #primary -->
 
 <?php
 get_footer();
-?>

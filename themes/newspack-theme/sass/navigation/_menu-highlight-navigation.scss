@@ -1,8 +1,10 @@
+@use "../variables-site/structure";
+
 .highlight-menu-contain {
-	margin-top: #{0.25 * $size__spacing-unit};
+	margin-top: #{0.25 * structure.$size__spacing-unit};
 	.wrapper {
-		font-family: $font__heading;
-		font-size: $font__size-xs;
+		font-family: var(--newspack-theme-font-heading);
+		font-size: var(--newspack-theme-font-size-xs);
 		height: 1.5em;
 		overflow: hidden;
 		word-wrap: break-word;
@@ -25,17 +27,17 @@
 	li {
 		display: inline-block;
 		height: 1.5em;
-		margin-right: #{0.5 * $size__spacing-unit};
+		margin-right: #{0.5 * structure.$size__spacing-unit};
 	}
 
 	.menu-label {
-		color: $color__primary;
+		color: var(--newspack-theme-color-secondary-against-white);
 		font-weight: bold;
 	}
 
 	a,
 	a:visited {
-		color: $color__link;
+		color: var(--newspack-theme-color-text-light);
 	}
 }
 

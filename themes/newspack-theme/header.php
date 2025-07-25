@@ -17,7 +17,7 @@
 	<?php wp_head(); ?>
 </head>
 
-<body <?php body_class(); ?>>
+<body <?php body_class(); ?> data-amp-auto-lightbox-disable>
 <?php
 
 do_action( 'wp_body_open' );
@@ -29,6 +29,7 @@ $header_center_logo    = get_theme_mod( 'header_center_logo', false );
 $show_slideout_sidebar = get_theme_mod( 'header_show_slideout', false );
 $slideout_sidebar_side = get_theme_mod( 'slideout_sidebar_side', 'left' );
 $header_sub_simplified = get_theme_mod( 'header_sub_simplified', false );
+$header_sticky         = get_theme_mod( 'header_sticky', false );
 
 // Even if 'Show Slideout Sidebar' is checked, don't show it if no widgets are assigned.
 if ( ! is_active_sidebar( 'header-1' ) ) {
@@ -44,7 +45,15 @@ endif;
 ?>
 
 <div id="page" class="site">
-	<a class="skip-link screen-reader-text" href="#content"><?php _e( 'Skip to content', 'newspack' ); ?></a>
+	<a class="skip-link screen-reader-text" href="#main"><?php _e( 'Skip to content', 'newspack' ); ?></a>
+
+	<?php if ( is_active_sidebar( 'header-2' ) ) : ?>
+		<div class="header-widget above-header-widgets">
+			<div class="wrapper">
+				<?php dynamic_sidebar( 'header-2' ); ?>
+			</div><!-- .wrapper -->
+		</div><!-- .above-header-widgets -->
+	<?php endif; ?>
 
 	<header id="masthead" class="site-header hide-header-search" [class]="searchVisible ? 'show-header-search site-header ' : 'hide-header-search site-header'">
 
@@ -211,12 +220,16 @@ endif;
 
 					<?php newspack_mobile_cta(); ?>
 
+					<?php do_action( 'newspack_header_before_mobile_toggle' ); ?>
+
 					<?php if ( newspack_has_menus() ) : ?>
 						<button class="mobile-menu-toggle" on="tap:mobile-sidebar.toggle">
 							<?php echo wp_kses( newspack_get_icon_svg( 'menu', 20 ), newspack_sanitize_svgs() ); ?>
 							<span><?php esc_html_e( 'Menu', 'newspack' ); ?></span>
 						</button>
 					<?php endif; ?>
+
+					<?php do_action( 'newspack_header_after_mobile_toggle' ); ?>
 
 				</div><!-- .wrapper -->
 			</div><!-- .middle-header-contain -->
@@ -271,6 +284,9 @@ endif;
 			<?php endif; ?>
 		<?php endif; ?>
 
+		<?php if ( $header_sticky ) : ?>
+			<div class="sticky-bg"></div>
+		<?php endif; ?>
 	</header><!-- #masthead -->
 
 	<?php
@@ -280,5 +296,13 @@ endif;
 	?>
 
 	<?php do_action( 'after_header' ); ?>
+
+	<?php if ( is_active_sidebar( 'header-3' ) ) : ?>
+		<div class="header-widget below-header-widgets">
+			<div class="wrapper">
+				<?php dynamic_sidebar( 'header-3' ); ?>
+			</div><!-- .wrapper -->
+		</div><!-- .above-header-widgets -->
+	<?php endif; ?>
 
 	<div id="content" class="site-content">

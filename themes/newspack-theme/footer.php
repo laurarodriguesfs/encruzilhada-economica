@@ -9,7 +9,21 @@
  * @package Newspack
  */
 
+
+$show_footer_branding = get_theme_mod( 'footer_show_branding', true );
+$has_footer_logo = false;
+if ( '' !== get_theme_mod( 'newspack_footer_logo', '' ) && 0 !== get_theme_mod( 'newspack_footer_logo', '' ) ) {
+	$has_footer_logo = true;
+}
 ?>
+
+	<?php if ( is_active_sidebar( 'footer-3' ) ) : ?>
+		<div class="above-footer-widgets">
+			<div class="wrapper">
+				<?php dynamic_sidebar( 'footer-3' ); ?>
+			</div><!-- .wrapper -->
+		</div><!-- .above-footer-widgets -->
+	<?php endif; ?>
 
 	<?php do_action( 'before_footer' ); ?>
 
@@ -34,11 +48,11 @@
 					}
 				?>
 				<?php if ( ! empty( $copyright_info ) ) : ?>
-					<span class="copyright">&copy; <?php echo esc_html( date( 'Y' ) ); ?> <?php echo esc_html( $copyright_info ); ?>.</span>
+					<span class="copyright">&copy; <?php echo esc_html( date( 'Y' ) ); ?> <?php echo esc_html( $copyright_info ); ?></span>
 				<?php endif; ?>
 
-				<a href="<?php echo esc_url( __( 'https://newspack.pub/', 'newspack' ) ); ?>" class="imprint">
-					<?php echo esc_html__( 'Proudly powered by Newspack by Automattic', 'newspack' ); ?>
+				<a target="_blank" href="<?php echo esc_url( __( 'https://newspack.com/', 'newspack' ) ); ?>" class="imprint">
+					<?php echo esc_html__( 'Powered by Newspack', 'newspack' ); ?>
 				</a>
 
 				<?php
@@ -46,7 +60,8 @@
 					the_privacy_policy_link( '', '' );
 				}
 
-				if ( ! is_active_sidebar( 'footer-1' ) || ( ! has_custom_logo() ) ) {
+
+				if ( ( ! is_active_sidebar( 'footer-1' ) || ! ( has_custom_logo() || $has_footer_logo ) ) || ! $show_footer_branding ) {
 					newspack_social_menu_footer();
 				}
 				?>

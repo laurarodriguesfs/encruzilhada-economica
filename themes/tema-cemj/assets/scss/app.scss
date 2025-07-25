@@ -1,122 +1,124 @@
 @import '2-atoms/a-mixins';
+@import 'variables';
 
 /* ----- 5: PAGES ------- */
 @import '5-pages/p-home';
 @import '5-pages/p-footer';
 
-@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Fira+Code:wght@300..700&family=Space+Grotesk:wght@300..700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Fira+Code:wght@300..700&family=Space+Grotesk:wght@300..700&display=swap');
 @font-face {
-    font-family: 'Neue Kaine';
-    src: url('/wp-content/themes/tema-cemj/assets/fonts/NeueKaine-Black.ttf') format('truetype');
-    font-weight: 900;
-    font-style: normal;
+  font-family: "Noka Black";
+  src: url("/wp-content/themes/tema-cemj/assets/fonts/Noka_Black.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}
+  
+@font-face {
+  font-family: "Owners Text";
+  src: url("/wp-content/themes/tema-cemj/assets/fonts/OwnersTextMedium.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
 }
 
-@font-face {
-    font-family: 'Neue Kaine';
-    src: url('/wp-content/themes/tema-cemj/assets/fonts/NeueKaine-Bold.ttf') format('truetype');
-    font-weight: 700;
-    font-style: normal;
+// Variáveis de fontes
+$titles: "Noka Black", sans-serif;
+$text: "Owners Text", sans-serif;
+  
+// Aplicação global
+body, p, a, .link {
+  font-family: $text;
 }
 
-@font-face {
-    font-family: 'Neue Kaine';
-    src: url('/wp-content/themes/tema-cemj/assets/fonts/NeueKaine-ExtraBold.ttf') format('truetype');
-    font-weight: 800;
-    font-style: normal;
+// Títulos com a fonte de destaque
+h1, h2, h3, h4, h5, h6, nav a{
+    font-family: $titles;
+    color: var(--azul-escuro);
 }
 
-@font-face {
-    font-family: 'Neue Kaine';
-    src: url('/wp-content/themes/tema-cemj/assets/fonts/NeueKaine-Light.ttf') format('truetype');
-    font-weight: 300;
-    font-style: normal;
+//Padrnização dos títulos
+h1 {
+    font-size: 40px !important; /* título principal */
+  }
+  
+  h2 {
+    font-size: 32px !important; /* subtítulo principal */
+  }
+  
+  h3 {
+    font-size: 28px !important; /* seção */
+  }
+  
+  h4 {
+    font-size: 24px !important; /* subseção */
+  }
+  
+  h5 {
+    font-size: 20px !important; /* título pequeno */
+  }
+  
+  h6 {
+    font-size: 16px !important; /* o menor título */
+  }
+  
+  p{
+    font-size: 12px;
+  }         
+
+//Header
+
+.middle-header-contain .wrapper{
+    padding: 10px 0px;
 }
 
-@font-face {
-    font-family: 'Neue Kaine';
-    src: url('/wp-content/themes/tema-cemj/assets/fonts/NeueKaine-Medium.ttf') format('truetype');
-    font-weight: 500;
-    font-style: normal;
+nav a{
+    color: var(--azul-escuro) !important;
+}
+/* Amarelo Principal */
+.has-amarelo-principal-color {
+    color: var(--amarelo-principal) !important;
+}
+.has-amarelo-principal-background-color {
+    background-color: var(--amarelo-principal) !important;
 }
 
-@font-face {
-    font-family: 'Neue Kaine';
-    src: url('/wp-content/themes/tema-cemj/assets/fonts/NeueKaine-Regular.ttf') format('truetype');
-    font-weight: 400;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Neue Kaine';
-    src: url('/wp-content/themes/tema-cemj/assets/fonts/NeueKaine-SemiBold.ttf') format('truetype');
-    font-weight: 600;
-    font-style: normal;
-}
-
-/* Caso deseje usar a fonte variável */
-@font-face {
-    font-family: 'Neue Kaine';
-    src: url('/wp-content/themes/tema-cemj/assets/fonts/Neue Kaine Variable.ttf') format('truetype');
-    font-weight: 300 900;
-    font-style: normal;
-}@font-face {
-    font-family: 'Neue Kaine';
-    src:url('/wp-content/themes/tema-cemj/assets/fonts/NeueKaine-ExtraBold.ttf') format('truetype');
-}
-
-/*Cores
+/* Azul Escuro */
 .has-azul-escuro-color {
+    color: var(--azul-escuro) !important;
 }
 .has-azul-escuro-background-color {
-    background-color: #001d51 !important;
+    background-color: var(--azul-escuro) !important;
 }
 
-.has-cinza-claro-color {
-    color: #cfcfea !important;
+/* Verde Vibrante */
+.has-verde-vibrante-color {
+    color: var(--verde-vibrante) !important;
 }
-.has-cinza-claro-background-color {
-    background-color: #cfcfea !important;
-}
-
-.has-vermelho-escuro-color {
-    color: #831d1c !important;
-}
-.has-vermelho-escuro-background-color {
-    background-color: #831d1c !important;
+.has-verde-vibrante-background-color {
+    background-color: var(--verde-vibrante) !important;
 }
 
-.has-cinza-medio-color {
-    color: #a89b9d !important;
+/* Azul Médio */
+.has-azul-medio-color {
+    color: var(--azul-medio) !important;
 }
-.has-cinza-medio-background-color {
-    background-color: #a89b9d !important;
-}
-
-.has-bege-claro-color {
-    color: #f3e7de !important;
-}
-.has-bege-claro-background-color {
-    background-color: #f3e7de !important;
+.has-azul-medio-background-color {
+    background-color: var(--azul-medio) !important;
 }
 
-//Tipografia
-h1, h2, h3, h4, h5,h6 {
-    font-family: 'Neue Kaine', sans-serif !important;
+/* Preto */
+.has-preto-color {
+    color: var(--preto) !important;
+}
+.has-preto-background-color {
+    background-color: var(--preto) !important;
 }
 
-a, input, p{
-    font-family: "Bricolage Grotesque", serif !important;
-    font-optical-sizing: auto;
-    font-style: normal;
+/* Branco */
+.has-branco-color {
+    color: var(--branco) !important;
 }
-
- p code{
-    font-family: "Space Grotesk", serif !important;
-    font-optical-sizing: auto;
-    font-style: normal;
-}*/
+.has-branco-background-color {
+    background-color: var(--branco) !important;
+}
 
 .texto-margem{
 	margin-top: -10% !important;
@@ -172,7 +174,7 @@ a, input, p{
 }
 
 .custom-logo-lr{
-    height: 70px;
+    height: 40px !important;
 }
 
 .site-info .site-info-contain .desenvolvido-por{
@@ -195,13 +197,11 @@ a, input, p{
 }
 
 .bottom-header-contain {
-    top: 110px; /* Ajuste conforme altura real do header superior */
+    top: 80px; //Ajuste conforme altura real do header superior */
 }
 
-/* Espaço para o conteúdo não ficar escondido */
-
-body {
-    padding-top: 100px; /* Ajuste conforme necessário */
+.content-area{
+    margin-top: 50px !important;
 }
 
 /* Ajustes para menus dropdown */
@@ -210,7 +210,7 @@ body {
     top: 100%;
 }
 
-/* Mobile */
+//Mobile 
 @media (max-width: 781px) {
     .middle-header-contain {
         top: 0;
@@ -367,5 +367,226 @@ ul.sub-menu li a:hover {
     #secondary{
         display: none;
     }
+
+}
+
+.wrapper.site-info-contain {
+    display: flex;
+    justify-content: space-between; /* Divide a área em duas colunas */
+    flex-wrap: wrap; /* Garante que a layout seja responsivo */
+    align-items: flex-start; /* Alinha os itens no topo */
+}
+
+.left-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column; /* Organiza os itens verticalmente */
+    align-items: flex-start;
+    margin-right: 20px;
+}
+
+.right-column {
+    flex: 0 0 200px; /* Ajusta o tamanho fixo da coluna à direita (pode mudar conforme necessário) */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 10px;
+}
+
+.left-column .desenvolvido-por,
+.left-column .imprint,
+.left-column .copyright,
+.left-column .privacy-policy {
+    margin-bottom: 10px; /* Espaçamento entre os elementos */
+}
+
+.right-column a {
+    margin-bottom: 10px; /* Espaçamento entre os itens de redes sociais */
+}
+
+.custom-logo-lr {
+    max-width: 100%; /* Garante que a logo se ajuste corretamente */
+    height: auto;
+}
+
+//archive
+
+.archive #main{
+    width: 90%;
+    margin: auto;
+}
+.archive-posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.archive-posts-grid .post-item {
+    border: 1px solid #ccc;
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.archive-posts-grid .post-item:hover {
+    transform: translateY(-5px);
+}
+
+
+//tainacan
+
+/* Contêiner do grid */
+.tainacan-list-collection--container-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Define a quantidade de colunas e o tamanho mínimo das células */
+    gap: 16px; /* Espaçamento entre os itens */
+    padding: 20px; /* Padding geral ao redor do contêiner */
+}
+
+/* Estilo dos itens no grid */
+.tainacan-collection-item {
+    background: #fff; /* Fundo branco para os itens */
+    border-radius: 8px; /* Bordas arredondadas */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra leve nos itens */
+    overflow: hidden; /* Garante que o conteúdo não transborde */
+    transition: transform 0.3s ease; /* Transição suave para o hover */
+}
+
+/* Efeito de hover nos itens */
+.tainacan-collection-item:hover {
+    transform: scale(1.05); /* Aumenta um pouco o item quando passar o mouse */
+}
+
+/* Estilo do link dentro do item */
+.tainacan-collection-item-link {
+    display: block; /* Faz o link ocupar todo o espaço do item */
+    text-decoration: none; /* Remove a sublinha do link */
+}
+
+/* Título do item */
+.tainacan-collection-title {
+    font-size: 1.2rem; /* Tamanho do título */
+    font-weight: bold; /* Deixa o título em negrito */
+    color: #333; /* Cor do texto */
+    margin-bottom: 0.5rem; /* Margem abaixo do título */
+}
+
+/* Imagem da coleção */
+.tainacan-collection-thumbnail {
+    position: relative; /* Para permitir a sobreposição do texto */
+    width: 100%; /* Garante que a imagem ocupe toda a largura */
+    height: 200px; /* Tamanho fixo da imagem */
+    overflow: hidden; /* Esconde partes da imagem que saem da área */
+}
+
+.tainacan-collection-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Faz a imagem cobrir todo o espaço da caixa */
+}
+
+/* Placeholder de imagem quando não houver imagem */
+.image-placeholder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    background-color: #f0f0f0; /* Cor de fundo quando não há imagem */
+    font-size: 2rem; /* Tamanho do texto */
+    color: #777; /* Cor do texto */
+}
+
+/* Descrição do item */
+.tainacan-collection-description {
+    font-size: 0.9rem;
+    color: #777; /* Cor do texto */
+    padding: 1rem; /* Espaçamento interno */
+}
+
+/* Estilo de texto quando não houver descrição */
+.tainacan-collection-description p[style="font-style: italic;"] {
+    font-style: italic;
+    color: #aaa; /* Cor para o texto "Descrição não informada" */
+}
+
+.tainacan-collection-description-especial {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f9f9f9;
+    border-left: 5px solid var(--verde-vibrante); /* Usa a cor da sua identidade visual */
+}
+
+.tainacan-collection-description-especial h1 {
+    color: var(--verde-vibrante);
+}
+
+.tainacan-collection-description-especial p {
+    font-size: 16px;
+    color: #224d26;
+}
+
+//single
+.single #main{
+    width: 90%;
+    margin: auto;
+
+    .row{
+        width: 100%;
+    }
+}
+
+//search
+
+.search-form input {
+    padding-right: 2.5rem;
+    width: 100%;
+    border: 1px solid var(--azul-escuro);
+    border-radius: 20px;
+
+    input[type="search"]:focus{
+        border-color: var(--azul-escuro);
+    }
+}
+
+#header-search{
+    top:0px !important;
+}
+
+.video-gallery-wrapper .scroll-ratio .sidebar-itens button{
+    width: 100% !important;
+    height: 100% !important;
+    
+}
+
+.embed-template-block figure .wp-block-embed__wrapper{
+    height: 190px !important;
+}
+
+.iframe-container {
+    font-size: 8px !important; /* Altera o tamanho da fonte ao redor do iframe */
+}
+
+//single tainacan item
+
+.tainacan-single-post article .single-item-collection .single-item-collection--information .s-item-collection--metadata{
+    column-count: 2;
+    column-gap: 4rem;
+    column-rule: none;
+}
+
+.tainacan-title .tainacan-title-page ul.list-inline {
+    align-items: flex-end;
+    display: flex;
+    justify-content: space-between;
+    margin: 0;
+}
+.tainacan-title .tainacan-title-page ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.tainacan-title{
+    border-color: transparent !important;
 
 }

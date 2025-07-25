@@ -1,34 +1,43 @@
 <?php
-get_header();
-?>
+/**
+ * Template para página de categoria das coleções do Tainacan
+ *
+ * @link https://developer.wordpress.org/themes/basics/template-hierarchy/
+ *
+ * @package tema-cemj
+ */
 
-<main id="tainacan-taxonomy-category">
+get_header(); ?>
+
+<section id="primary" class="content-area">
     <header class="page-header">
-        <h1 class="page-title">
-            <?php single_term_title(); ?>
-        </h1>
-    </header>
+        <h1 class="page-title"><?php single_term_title(); ?></h1>
+    </header><!-- .page-header -->
 
-    <?php if (have_posts()) : ?>
-        <div class="tainacan-items-list">
-            <?php while (have_posts()) : the_post(); ?>
-                <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-                    <h2 class="entry-title">
-                        <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-                    </h2>
-                    <div class="entry-summary">
+    <main id="main" class="site-main">
+        <?php
+        if (have_posts()) :
+            while (have_posts()) : the_post();
+                // Exibir cada item da categoria
+                ?>
+                <div class="category-item">
+                    <h2><?php the_title(); ?></h2>
+                    <div class="category-item-excerpt">
                         <?php the_excerpt(); ?>
                     </div>
-                </article>
-            <?php endwhile; ?>
-        </div>
+                    <a href="<?php the_permalink(); ?>" class="read-more">Leia mais</a>
+                </div>
+                <?php
+            endwhile;
 
-        <?php the_posts_pagination(); ?>
-    <?php else : ?>
-        <p><?php esc_html_e('Nenhum item encontrado nesta categoria.', 'seu-tema'); ?></p>
-    <?php endif; ?>
-</main>
+            // Paginação
+            the_posts_pagination();
+        else :
+            echo '<p>' . __('Nenhum item encontrado para esta categoria.', 'seu-tema') . '</p>';
+        endif;
+        ?>
+    </main><!-- #main -->
+</section><!-- #primary -->
 
 <?php
 get_footer();
-?>

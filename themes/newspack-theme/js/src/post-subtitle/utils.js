@@ -9,27 +9,23 @@ export const META_FIELD_NAME = 'newspack_post_subtitle';
 /**
  * Appends subtitle to DOM, below the Title in the Editor.
  *
- * @param  {string} subtitle Subtitle text
+ * @param {string} subtitle Subtitle text
  */
-export const appendSubtitleToTitleDOMElement = ( subtitle, isInCodeEditor ) => {
-	const titleEl = document.querySelector( '.editor-post-title__block' );
+export const appendSubtitleToTitleDOMElement = subtitle => {
+	const titleEl = document.querySelector( '.edit-post-visual-editor__post-title-wrapper' );
+
 	if ( titleEl && typeof subtitle === 'string' ) {
 		let subtitleEl = document.getElementById( SUBTITLE_ID );
+		const titleParent = titleEl.parentNode;
 		if ( ! subtitleEl ) {
 			subtitleEl = document.createElement( 'div' );
 			subtitleEl.id = SUBTITLE_ID;
-			// special style for the code (raw text) editor
-			if ( isInCodeEditor ) {
-				subtitleEl.style.paddingLeft = '14px';
-				subtitleEl.style.marginBottom = '4px';
-			}
-			titleEl.appendChild( subtitleEl );
+			titleParent.insertBefore( subtitleEl, titleEl.nextSibling );
 		}
-		subtitleEl.innerText = subtitle;
+		subtitleEl.innerHTML = subtitle;
 	}
 };
 
 export const connectWithSelect = withSelect( select => ( {
 	subtitle: select( 'core/editor' ).getEditedPostAttribute( 'meta' )[ META_FIELD_NAME ],
-	mode: select( 'core/edit-post' ).getEditorMode(),
 } ) );

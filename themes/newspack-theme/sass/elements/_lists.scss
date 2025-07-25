@@ -1,6 +1,8 @@
+@use "../variables-site/structure";
+
 ul,
 ol {
-	padding-left: ( 1 * $size__spacing-unit );
+	padding-left: structure.$size__spacing-unit;
 }
 
 ul {
@@ -9,6 +11,27 @@ ul {
 	ul {
 		list-style-type: circle;
 	}
+
+	&.is-style-checked {
+		list-style-type: none;
+		padding-left: calc(24px + 0.25em);
+
+		li {
+			position: relative;
+
+			&::before {
+				background: currentcolor;
+				clip-path: polygon(69.5833% 29.5834%, 43.3333% 65%, 29.5833% 54.5834%, 25.8333% 59.5834%, 44.5833% 73.75%, 74.5833% 33.3334%, 69.5833% 29.5834%);
+				content: "";
+				display: block;
+				height: 24px;
+				left: calc(-24px - 0.25em);
+				position: absolute;
+				top: calc(( 1em * var(--newspack-theme-font-line-height-body) - 24px ) / 2);
+				width: 24px;
+			}
+		}
+	}
 }
 
 ol {
@@ -16,12 +39,12 @@ ol {
 }
 
 li {
-	line-height: $font__line-height-body;
+	line-height: var(--newspack-theme-font-line-height-body);
 }
 
 li > ul,
 li > ol {
-	padding-left: ( 2 * $size__spacing-unit );
+	padding-left: ( 2 * structure.$size__spacing-unit );
 }
 
 dt {
@@ -29,5 +52,5 @@ dt {
 }
 
 dd {
-	margin: 0 $size__spacing-unit $size__spacing-unit;
+	margin: 0 structure.$size__spacing-unit structure.$size__spacing-unit;
 }

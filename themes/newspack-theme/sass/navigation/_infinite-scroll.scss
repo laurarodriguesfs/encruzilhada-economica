@@ -1,3 +1,6 @@
+@use "../mixins/utilities";
+@use "../variables-site/structure";
+
 /* Infinite scroll */
 
 /* Globally hidden elements when Infinite Scroll is supported and in use. */
@@ -14,7 +17,7 @@
 }
 
 .infinite-loader {
-	margin: calc( 3 * 1rem ) auto;
+	margin: calc(3 * 1rem) auto;
 }
 
 .infinite-loader .spinner {
@@ -23,34 +26,35 @@
 }
 
 .site-main #infinite-handle {
-	margin: calc( 2 * 1rem ) auto;
+	margin: calc(2 * 1rem) auto;
 }
 
 .site-main #infinite-handle span {
 	background: transparent;
 	display: block;
-	font-size: $font__size-sm;
+	font-size: var(--newspack-theme-font-size-sm);
 	text-align: center;
 }
 
 .site-main #infinite-handle span button,
 .site-main #infinite-handle span button:hover,
 .site-main #infinite-handle span button:focus {
-	@include button-transition;
-	background: $color__background-button;
-	color: $color__background-body;
-	font-family: $font__heading;
+	@include utilities.button-transition;
+
+	background: var(--newspack-theme-color-secondary);
+	color: var(--newspack-theme-color-bg-body);
+	font-family: var(--newspack-theme-font-heading);
 	font-weight: 700;
-	line-height: $font__line-height-heading;
-	padding: ( $size__spacing-unit * 0.76 ) $size__spacing-unit;
+	line-height: var(--newspack-theme-font-line-height-heading);
+	padding: ( structure.$size__spacing-unit * 0.76 ) structure.$size__spacing-unit;
 
 	&:hover {
-		background: $color__background-button-hover;
+		background: var(--newspack-theme-color-bg-button-hover);
 		cursor: pointer;
 	}
 
 	&:focus {
-		background: $color__background-button-hover;
+		background: var(--newspack-theme-color-bg-button-hover);
 		outline: thin dotted;
 		outline-offset: -4px;
 	}

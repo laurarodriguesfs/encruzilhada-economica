@@ -1,11 +1,13 @@
+/* globals newspackScreenReaderText */
+
 /**
  * File amp-fallback.js.
  *
  * AMP fallback JavaScript.
  */
 
-( function() {
-	// Search toggle.
+( function () {
+	// Shared variables
 	const headerContain = document.getElementById( 'masthead' ),
 		searchToggle = document.getElementById( 'search-toggle' );
 
@@ -17,7 +19,7 @@
 
 		searchToggle.addEventListener(
 			'click',
-			function() {
+			function () {
 				// Toggle the search visibility.
 				headerContain.classList.toggle( 'hide-header-search' );
 
@@ -40,14 +42,10 @@
 
 	// Menu toggle variables.
 	const mobileToggle = document.getElementsByClassName( 'mobile-menu-toggle' ),
-		body = document.getElementsByTagName( 'body' )[ 0 ],
+		body = document.body,
 		mobileSidebar = document.getElementById( 'mobile-sidebar-fallback' ),
-		mobileOpenButton = headerContain.getElementsByClassName( 'mobile-menu-toggle' )[ 0 ],
-		mobileCloseButton = mobileSidebar.getElementsByClassName( 'mobile-menu-toggle' )[ 0 ],
 		desktopToggle = document.getElementsByClassName( 'desktop-menu-toggle' ),
 		desktopSidebar = document.getElementById( 'desktop-sidebar-fallback' ),
-		desktopOpenButton = headerContain.getElementsByClassName( 'desktop-menu-toggle' )[ 0 ],
-		desktopCloseButton = desktopSidebar.getElementsByClassName( 'desktop-menu-toggle' )[ 0 ],
 		subpageToggle = document.getElementsByClassName( 'subpage-toggle' );
 
 	/**
@@ -86,7 +84,7 @@
 	 * @description Closes specifed slide-out menu.
 	 * @param {string} menuClass  The class to remove from the body to toggle menu visibility.
 	 * @param {string} openButton The button used to open the menu.
-	 * @param {string} maskId The ID to use for the overlay.
+	 * @param {string} maskId     The ID to use for the overlay.
 	 */
 	function closeMenu( menuClass, openButton, maskId ) {
 		body.classList.remove( menuClass );
@@ -96,9 +94,12 @@
 
 	// Mobile menu fallback.
 	for ( let i = 0; i < mobileToggle.length; i++ ) {
+		const mobileOpenButton = headerContain.querySelector( '.mobile-menu-toggle' ),
+			mobileCloseButton = mobileSidebar.querySelector( '.mobile-menu-toggle' );
+
 		mobileToggle[ i ].addEventListener(
 			'click',
-			function() {
+			function () {
 				if ( body.classList.contains( 'mobile-menu-opened' ) ) {
 					closeMenu( 'mobile-menu-opened', mobileOpenButton, 'mask-mobile' );
 				} else {
@@ -111,9 +112,12 @@
 
 	// Desktop menu (AKA slide-out sidebar) fallback.
 	for ( let i = 0; i < desktopToggle.length; i++ ) {
+		const desktopOpenButton = headerContain.querySelector( '.desktop-menu-toggle' ),
+			desktopCloseButton = desktopSidebar.querySelector( '.desktop-menu-toggle' );
+
 		desktopToggle[ i ].addEventListener(
 			'click',
-			function() {
+			function () {
 				if ( body.classList.contains( 'desktop-menu-opened' ) ) {
 					closeMenu( 'desktop-menu-opened', desktopOpenButton, 'mask-desktop' );
 				} else {
@@ -125,15 +129,15 @@
 	}
 
 	// 'Subpage' menu fallback.
-	if ( 0 < subpageToggle.length ) {
+	if ( 0 < subpageToggle.length && headerContain ) {
 		const subpageSidebar = document.getElementById( 'subpage-sidebar-fallback' ),
-			subpageOpenButton = headerContain.getElementsByClassName( 'subpage-toggle' )[ 0 ],
-			subpageCloseButton = subpageSidebar.getElementsByClassName( 'subpage-toggle' )[ 0 ];
+			subpageOpenButton = headerContain.querySelector( '.subpage-toggle' ),
+			subpageCloseButton = subpageSidebar.querySelector( '.subpage-toggle' );
 
 		for ( let i = 0; i < subpageToggle.length; i++ ) {
 			subpageToggle[ i ].addEventListener(
 				'click',
-				function() {
+				function () {
 					if ( body.classList.contains( 'subpage-menu-opened' ) ) {
 						closeMenu( 'subpage-menu-opened', subpageOpenButton, 'mask-subpage' );
 					} else {
@@ -146,7 +150,7 @@
 	}
 
 	// Add listener to the menu overlays, so they can be closed on click.
-	document.addEventListener( 'click', function( e ) {
+	document.addEventListener( 'click', function ( e ) {
 		if ( e.target && e.target.className === 'overlay-mask' ) {
 			const maskId = e.target.id;
 			const menu = maskId.split( '-' );
@@ -155,6 +159,73 @@
 			removeOverlay( maskId );
 		}
 	} );
+
+	// Menu toggle variables.
+	if ( headerContain ) {
+		const dropdownToggle = headerContain.getElementsByClassName( 'submenu-expand' );
+		if ( 0 < dropdownToggle.length ) {
+			for ( let i = 0; i < dropdownToggle.length; i++ ) {
+				const dropdownToggleLabel = dropdownToggle[ i ].querySelector( 'span.screen-reader-text' );
+
+				dropdownToggle[ i ].addEventListener(
+					'click',
+					function () {
+						if ( dropdownToggle[ i ].classList.contains( 'open-dropdown' ) ) {
+							dropdownToggle[ i ].classList.remove( 'open-dropdown' );
+							dropdownToggle[ i ].setAttribute( 'aria-expanded', 'false' );
+							dropdownToggleLabel.innerText = newspackScreenReaderText.close_dropdown_menu;
+						} else {
+							dropdownToggle[ i ].classList.add( 'open-dropdown' );
+							dropdownToggle[ i ].setAttribute( 'aria-expanded', 'true' );
+							dropdownToggleLabel.innerText = newspackScreenReaderText.open_dropdown_menu;
+						}
+					},
+					false
+				);
+			}
+		}
+	}
+
+	// Sticky header fallback animation
+	if (
+		body.classList.contains( 'h-stk' ) &&
+		body.classList.contains( 'h-sub' ) &&
+		( body.classList.contains( 'single-featured-image-behind' ) ||
+			body.classList.contains( 'single-featured-image-beside' ) )
+	) {
+		let scrollTimer,
+			lastScrollFireTime = 0;
+
+		window.onscroll = function () {
+			toggleHeaderClass();
+		};
+
+		/**
+		 * @description Limit onscroll checkes and add CSS class when scrolled least 200px down the page.
+		 */
+		function toggleHeaderClass() {
+			const scrollBarPosition = window.pageYOffset,
+				minScrollTime = 100,
+				now = new Date().getTime();
+
+			if ( ! scrollTimer ) {
+				if ( now - lastScrollFireTime > 3 * minScrollTime ) {
+					lastScrollFireTime = now;
+				}
+				scrollTimer = setTimeout( function () {
+					scrollTimer = null;
+					lastScrollFireTime = new Date().getTime();
+				}, minScrollTime );
+			}
+
+			// At specifiv position do what you want
+			if ( 200 >= scrollBarPosition ) {
+				headerContain.classList.remove( 'head-scroll' );
+			} else {
+				headerContain.classList.add( 'head-scroll' );
+			}
+		}
+	}
 
 	// Comments toggle fallback.
 	const commentsToggle = document.getElementById( 'comments-toggle' );
@@ -166,7 +237,7 @@
 
 		commentsToggle.addEventListener(
 			'click',
-			function() {
+			function () {
 				if ( commentsWrapper.classList.contains( 'comments-hide' ) ) {
 					commentsWrapper.classList.remove( 'comments-hide' );
 					commentsToggleTextContain.innerText = newspackScreenReaderText.collapse_comments;
@@ -185,48 +256,24 @@
 	// Make sure checkout details exist before going any further.
 	if ( null !== orderDetailToggle ) {
 		const orderDetailWrapper = document.getElementById( 'order-details-wrapper' ),
-			orderDetailToggleTextContain = orderDetailToggle.getElementsByTagName( 'span' )[ 0 ];
+			orderDetailToggleTextContain = orderDetailToggle.getElementsByTagName( 'span' )[ 0 ],
+			hideOrderDetails = newspackScreenReaderText.hide_order_details,
+			showOrderDetails = newspackScreenReaderText.show_order_details;
 
 		orderDetailToggle.addEventListener(
 			'click',
-			function() {
+			function () {
 				if ( orderDetailWrapper.classList.contains( 'order-details-hidden' ) ) {
 					orderDetailWrapper.classList.remove( 'order-details-hidden' );
 					orderDetailToggle.classList.remove( 'order-details-hidden' );
-					orderDetailToggleTextContain.innerText = newspackScreenReaderText.hide_order_details;
+					orderDetailToggleTextContain.innerText = hideOrderDetails;
 				} else {
 					orderDetailWrapper.classList.add( 'order-details-hidden' );
 					orderDetailToggle.classList.add( 'order-details-hidden' );
-					orderDetailToggleTextContain.innerText = newspackScreenReaderText.show_order_details;
+					orderDetailToggleTextContain.innerText = showOrderDetails;
 				}
 			},
 			false
 		);
-	}
-
-	// AMP sticky ad polyfills.
-	const stickyAdClose = document.querySelector( '.newspack_sticky_ad__close' );
-	const stickyAd = document.querySelector( '.newspack_global_ad.sticky' );
-
-	if ( stickyAdClose && stickyAd && window.googletag ) {
-		const initialBodyPadding = body.style.paddingBottom;
-
-		// Add padding to body to accommodate the sticky ad.
-		window.googletag.pubads().addEventListener( 'slotRenderEnded', event => {
-			const renderedSlotId = event.slot.getSlotElementId();
-			const stickyAdSlot = stickyAd.querySelector( '#' + renderedSlotId );
-
-			if ( stickyAdSlot ) {
-				stickyAd.classList.add( 'active' );
-				body.style.paddingBottom = stickyAd.clientHeight + 'px';
-			}
-		} );
-
-		stickyAdClose.addEventListener( 'click', () => {
-			stickyAd.parentElement.removeChild( stickyAd );
-
-			// Reset body padding.
-			body.style.paddingBottom = initialBodyPadding;
-		} );
 	}
 } )();

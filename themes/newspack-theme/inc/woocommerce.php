@@ -26,18 +26,23 @@ function newspack_woocommerce_setup() {
 }
 add_action( 'after_setup_theme', 'newspack_woocommerce_setup' );
 
-
 /**
  * Add theme's WooCommerce styles.
  *
  * @return void
  */
 function newspack_woocommerce_scripts() {
-	wp_enqueue_style( 'newspack-woocommerce-style', get_template_directory_uri() . '/styles/woocommerce.css', array( 'newspack-style' ), wp_get_theme()->get( 'Version' ) );
-	wp_style_add_data( 'newspack-woocommerce-style', 'rtl', 'replace' );
+	if (
+		function_exists( 'is_woocommerce' ) && is_woocommerce()
+		|| function_exists( 'is_cart' ) && is_cart()
+		|| function_exists( 'is_checkout' ) && is_checkout()
+		|| function_exists( 'is_account_page' ) && is_account_page()
+	) {
+		wp_enqueue_style( 'newspack-woocommerce-style', get_template_directory_uri() . '/styles/woocommerce.css', array( 'newspack-style' ), wp_get_theme()->get( 'Version' ) );
+		wp_style_add_data( 'newspack-woocommerce-style', 'rtl', 'replace' );
+	}
 }
 add_action( 'wp_enqueue_scripts', 'newspack_woocommerce_scripts' );
-
 
 /**
  * Remove WooCommerce general styles.
@@ -47,32 +52,6 @@ function newspack_dequeue_styles( $enqueue_styles ) {
 	return $enqueue_styles;
 }
 add_filter( 'woocommerce_enqueue_styles', 'newspack_dequeue_styles' );
-
-
-/**
- * Use theme's custom color for WooCommerce elements.
- */
-function newspack_woo_custom_colors_css( $css, $primary_color ) {
-	if ( function_exists( 'register_block_type' ) && is_admin() ) {
-		return $css;
-	}
-	$css      .= '
-		.onsale,
-		.woocommerce-store-notice {
-			background-color: ' . $primary_color . ';
-		}
-		.woocommerce-tabs ul li.active a {
-			color:  ' . $primary_color . ';
-			box-shadow: 0 2px 0 ' . $primary_color . ';
-		}
-		.woocommerce-tabs ul li a:hover {
-			color: ' . newspack_adjust_brightness( $primary_color, -40 ) . ';
-		}
-	';
-	return $css;
-}
-add_filter( 'newspack_custom_colors_css', 'newspack_woo_custom_colors_css', 10, 2 );
-
 
 /**
  * Remove WooCommerce sidebar - this theme doesn't have a traditional sidebar.
@@ -94,11 +73,6 @@ function newspack_woo_payment_heading() {
 	<?php
 }
 add_action( 'woocommerce_review_order_before_payment', 'newspack_woo_payment_heading' );
-
-/**
- * Disable order notes field because it's not useful for digital products.
- */
-add_filter( 'woocommerce_enable_order_notes_field', '__return_false' );
 
 /**
  * Add heading above checkout account creation form.
@@ -130,7 +104,8 @@ if ( ! function_exists( 'newspack_woocommerce_wrapper_before' ) ) {
 	 *
 	 * @return void
 	 */
-	function newspack_woocommerce_wrapper_before() { ?>
+	function newspack_woocommerce_wrapper_before() {
+		?>
 		<section id="primary" class="content-area">
 			<main id="main" class="site-main">
 		<?php
@@ -156,48 +131,6 @@ if ( ! function_exists( 'newspack_woocommerce_wrapper_after' ) ) {
 add_action( 'woocommerce_after_main_content', 'newspack_woocommerce_wrapper_after' );
 
 /**
- * Replace .form-row-wide classes with classes to style fields narrower.
- */
-function newspack_checkout_fields_styling( $fields ) {
-	$fields['billing']['billing_city']['class'][0]     = 'form-row-first';
-	$fields['billing']['billing_postcode']['class'][0] = 'form-row-first';
-	$fields['billing']['billing_state']['class'][0]    = 'form-row-last';
-	$fields['billing']['billing_phone']['class'][0]    = 'form-row-last';
-	return $fields;
-}
-add_filter( 'woocommerce_checkout_fields', 'newspack_checkout_fields_styling', 9999 );
-
-/**
- * Filters the page title for the Thank You page.
- */
-function newspack_thankyou_page_title( $title, $id ) {
-	if ( function_exists( 'is_order_received_page' ) &&
-		is_order_received_page() && get_the_ID() === $id ) {
-		$title = get_theme_mod( 'woocommerce_thank_you_title', esc_html__( 'Order received', 'newspack' ) );
-	}
-	return wp_kses_post( $title );
-}
-add_filter( 'the_title', 'newspack_thankyou_page_title', 10, 2 );
-
-/**
- * Filters the 'message' for the Thank You page.
- */
-function newspack_thankyou_order_message() {
-	$thank_you_msg = get_theme_mod( 'woocommerce_thank_you_message', esc_html__( 'Thank you. Your order has been received.', 'newspack' ) );
-	return esc_html( $thank_you_msg );
-}
-add_filter( 'woocommerce_thankyou_order_received_text', 'newspack_thankyou_order_message' );
-
-/**
- * Remove the subscription 'thank you' message.
- */
-function newspack_subscription_thank_you() {
-	return '';
-}
-add_filter( 'woocommerce_subscriptions_thank_you_message', 'newspack_subscription_thank_you' );
-
-
-/**
  * Override the Woo function that prints the shop page content.
  */
 function woocommerce_product_archive_description() {
@@ -209,7 +142,46 @@ function woocommerce_product_archive_description() {
 	if ( is_post_type_archive( 'product' ) && in_array( absint( get_query_var( 'paged' ) ), array( 0, 1 ), true ) ) {
 		$shop_page = get_post( wc_get_page_id( 'shop' ) );
 		if ( $shop_page ) {
-			echo $shop_page->post_content;
+			echo wp_kses_post( wc_format_content( $shop_page->post_content ) );
 		}
 	}
 }
+
+/**
+ * Change the products per column in the shop.
+ */
+function woocommerce_loop_columns() {
+	return 4;
+}
+add_filter( 'loop_shop_columns', 'woocommerce_loop_columns', 999 );
+
+
+/**
+ * Open a div to wrap the sort dropdown and results count in a container.
+ */
+function woocommerce_before_shop_loop_wrapper_open() {
+	echo '<div class="woocommerce-results-wrapper">';
+}
+add_action( 'woocommerce_before_shop_loop', 'woocommerce_before_shop_loop_wrapper_open', 15 );
+
+/**
+ * Close a div to wrap the sort dropdown and results count in a container.
+ */
+function woocommerce_before_shop_loop_wrapper_close() {
+	echo '</div><!-- .woocommerce-results-order-wrapper -->';
+}
+add_action( 'woocommerce_before_shop_loop', 'woocommerce_before_shop_loop_wrapper_close', 40 );
+
+/**
+ * Improve appearance of WooCommerce checkout.
+ *
+ * @param array $fields Array of WooCommerce address fields.
+ */
+function newspack_address_fields_styling( $fields ) {
+	$fields['city']['class']     = array( 'form-row-first' );
+	$fields['state']['class']    = array( 'form-row-last' );
+	$fields['postcode']['class'] = array( 'form-row-first' );
+
+	return $fields;
+}
+add_filter( 'woocommerce_default_address_fields', 'newspack_address_fields_styling', 9999 );

@@ -30,7 +30,7 @@ function newspack_sponsors_enqueue_scripts() {
 		);
 
 		wp_enqueue_script( 'newspack-amp-fallback-sponsors', get_theme_file_uri( '/js/dist/amp-fallback-newspack-sponsors.js' ), array(), wp_get_theme()->get( 'Version' ), true );
-		wp_localize_script( 'newspack-amp-fallback-sponsors', 'newspackScreenReaderText', $newspack_l10n );
+		wp_localize_script( 'newspack-amp-fallback-sponsors', 'newspackScreenReaderTextSponsors', $newspack_l10n );
 	}
 }
 add_action( 'wp_enqueue_scripts', 'newspack_sponsors_enqueue_scripts' );
@@ -65,6 +65,18 @@ function newspack_get_native_sponsors( $sponsors = [] ) {
 		return false;
 	}
 
+	$scope_override = get_post_meta( get_the_ID(), 'newspack_sponsor_sponsorship_scope', true );
+
+	// Scope override: if post is set to display as native-sponsored, return all sponsors.
+	if ( 'native' === $scope_override ) {
+		return $sponsors;
+	}
+
+	// Scope override: if post is set to display as underwritten, return nothing.
+	if ( 'underwritten' === $scope_override ) {
+		return [];
+	}
+
 	return array_values(
 		array_filter(
 			$sponsors,
@@ -86,6 +98,18 @@ function newspack_get_underwriter_sponsors( $sponsors = [] ) {
 		return false;
 	}
 
+	$scope_override = get_post_meta( get_the_ID(), 'newspack_sponsor_sponsorship_scope', true );
+
+	// Scope override: if post is set to display as native-sponsored, return nothing.
+	if ( 'native' === $scope_override ) {
+		return [];
+	}
+
+	// Scope override: if post is set to display as underwritten, return all sponsors.
+	if ( 'underwritten' === $scope_override ) {
+		return $sponsors;
+	}
+
 	return array_values(
 		array_filter(
 			$sponsors,
@@ -97,12 +121,55 @@ function newspack_get_underwriter_sponsors( $sponsors = [] ) {
 }
 
 /**
+ * If at least one native sponsor is set to display both sponsors and authors, show the authors.
+ *
+ * @param array $sponsors Array of sponsors.
+ *
+ * @return boolean True if we should display both sponsors and categories, false if we should display only sponsors.
+ */
+function newspack_display_sponsors_and_authors( $sponsors ) {
+	if ( function_exists( '\Newspack_Sponsors\newspack_display_sponsors_and_authors' ) ) {
+		return \Newspack_Sponsors\newspack_display_sponsors_and_authors( $sponsors );
+	}
+	return false;
+}
+
+/**
+ * If at least one native sponsor is set to display both sponsors and categories, show the categories.
+ *
+ * @param array $sponsors Array of sponsors.
+ *
+ * @return boolean True if we should display both sponsors and categories, false if we should display only sponsors.
+ */
+function newspack_display_sponsors_and_categories( $sponsors ) {
+	if ( function_exists( '\Newspack_Sponsors\newspack_display_sponsors_and_categories' ) ) {
+		return \Newspack_Sponsors\newspack_display_sponsors_and_categories( $sponsors );
+	}
+	return false;
+}
+
+/**
  * Add classes to sponsored posts.
  */
 function newspack_sponsor_body_classes( $classes ) {
 	if ( ( is_category() || is_tag() ) && newspack_get_all_sponsors( get_queried_object_id(), 'native', 'archive' ) ) {
 		$classes[] = 'sponsored-archive';
 	}
+
+	if ( is_single() && newspack_get_all_sponsors( get_queried_object_id(), 'native' ) ) {
+		$native_sponsors                 = newspack_get_all_sponsors( get_queried_object_id(), 'native' );
+		$display_sponsors_and_categories = newspack_display_sponsors_and_categories( $native_sponsors );
+		$display_sponsors_and_authors    = newspack_display_sponsors_and_authors( $native_sponsors );
+
+		if ( $display_sponsors_and_authors ) {
+			$classes[] = 'sponsors-show-authors';
+		}
+
+		if ( $display_sponsors_and_categories ) {
+			$classes[] = 'sponsors-show-cats';
+		}
+	}
+
 	return $classes;
 }
 add_filter( 'body_class', 'newspack_sponsor_body_classes' );
@@ -128,7 +195,7 @@ if ( ! function_exists( 'newspack_sponsor_byline' ) ) :
 			?>
 			<span class="byline sponsor-byline">
 				<?php
-				echo esc_html( $sponsors[0]['sponsor_byline'] ) . ' ';
+				echo '<span>' . esc_html( $sponsors[0]['sponsor_byline'] ) . '</span> ';
 
 				foreach ( $sponsors as $sponsor ) {
 					$i++;
@@ -154,7 +221,7 @@ if ( ! function_exists( 'newspack_sponsor_byline' ) ) :
 				}
 				?>
 			</span><!-- .byline -->
-		<?php
+			<?php
 		}
 	}
 endif;
@@ -209,7 +276,7 @@ if ( ! function_exists( 'newspack_sponsor_label' ) ) :
 					</span>
 				<?php endif; ?>
 			</span><!-- .sponsor-label -->
-		<?php
+			<?php
 		endif;
 	}
 endif;
@@ -230,19 +297,19 @@ if ( ! function_exists( 'newspack_sponsor_logo_list' ) ) :
 
 		if ( ! empty( $sponsors ) ) {
 			echo '<span class="sponsor-logos">';
-				foreach ( $sponsors as $sponsor ) {
-					if ( ! empty( $sponsor['sponsor_logo'] ) ) :
-						if ( '' !== $sponsor['sponsor_url'] ) {
-							echo '<a href="' . esc_url( $sponsor['sponsor_url'] ) . '" target="_blank">';
-						}
-						?>
+			foreach ( $sponsors as $sponsor ) {
+				if ( ! empty( $sponsor['sponsor_logo'] ) ) :
+					if ( '' !== $sponsor['sponsor_url'] ) {
+						echo '<a href="' . esc_url( $sponsor['sponsor_url'] ) . '" target="_blank">';
+					}
+					?>
 							<img src="<?php echo esc_url( $sponsor['sponsor_logo']['src'] ); ?>" width="<?php echo esc_attr( $sponsor['sponsor_logo']['img_width'] ); ?>" height="<?php echo esc_attr( $sponsor['sponsor_logo']['img_height'] ); ?>">
 						<?php if ( '' !== $sponsor['sponsor_url'] ) : ?>
 							</a>
 						<?php endif; ?>
 					<?php
 					endif;
-				}
+			}
 			echo '</span>';
 		}
 	}
@@ -251,6 +318,8 @@ endif;
 if ( ! function_exists( 'newspack_sponsor_footer_bio' ) ) :
 	/**
 	 * Outputs the 'bio' for the sponsor.
+	 * Appends it to post content to ensure that it appears before other injected modules,
+	 * such as Jetpack's Related Posts module.
 	 */
 	function newspack_sponsor_footer_bio( $sponsors = null, $id = null, $scope = 'native', $type = 'post' ) {
 		$sponsors = newspack_get_all_sponsors(
@@ -262,59 +331,71 @@ if ( ! function_exists( 'newspack_sponsor_footer_bio' ) ) :
 				'maxheight' => 100,
 			)
 		);
-		if ( ! empty( $sponsors ) ) {
-			foreach ( $sponsors as $sponsor ) {
-			?>
+		add_filter(
+			'the_content',
+			function( $content ) use ( $sponsors ) {
+				ob_start();
+				if ( ! empty( $sponsors ) ) {
+					foreach ( $sponsors as $sponsor ) {
+						?>
 
-				<div class="author-bio sponsor-bio">
+						<div class="author-bio sponsor-bio">
 
-					<?php
-					if ( ! empty( $sponsor['sponsor_logo'] ) ) {
-						if ( '' !== $sponsor['sponsor_url'] ) {
-							echo '<a href="' . esc_url( $sponsor['sponsor_url'] ) . '" class="avatar" target="_blank">';
-						}
-						echo '<img src="' . esc_url( $sponsor['sponsor_logo']['src'] ) . '" width="' . esc_attr( $sponsor['sponsor_logo']['img_width'] ) . '" height="' . esc_attr( $sponsor['sponsor_logo']['img_height'] ) . '">';
-						if ( '' !== $sponsor['sponsor_url'] ) {
-							echo '</a>';
-						}
-					}
-					?>
-
-					<div class="author-bio-text">
-						<div class="author-bio-header">
-							<h2 class="accent-header">
-								<?php
-								echo esc_html( $sponsor['sponsor_byline'] ) . ' ';
+							<?php
+							if ( ! empty( $sponsor['sponsor_logo'] ) ) {
+								echo '<figure class="avatar">';
 								if ( '' !== $sponsor['sponsor_url'] ) {
-									echo '<a target="_blank" href="' . esc_url( $sponsor['sponsor_url'] ) . '">';
+									echo '<a href="' . esc_url( $sponsor['sponsor_url'] ) . '" target="_blank">';
 								}
-								echo esc_html( $sponsor['sponsor_name'] );
+								echo '<img src="' . esc_url( $sponsor['sponsor_logo']['src'] ) . '" width="' . esc_attr( $sponsor['sponsor_logo']['img_width'] ) . '" height="' . esc_attr( $sponsor['sponsor_logo']['img_height'] ) . '">';
 								if ( '' !== $sponsor['sponsor_url'] ) {
 									echo '</a>';
 								}
-								?>
-							</h2>
-						</div><!-- .author-bio-header -->
+								echo '</figure>';
+							}
+							?>
 
-						<?php echo wp_kses_post( $sponsor['sponsor_blurb'] ); ?>
+							<div class="author-bio-text">
+								<div class="author-bio-header">
+									<h2 class="accent-header">
+										<?php
+										if ( '' !== $sponsor['sponsor_url'] ) {
+											echo '<a target="_blank" href="' . esc_url( $sponsor['sponsor_url'] ) . '">';
+										}
+										echo esc_html( $sponsor['sponsor_byline'] ) . ' ';
+										echo esc_html( $sponsor['sponsor_name'] );
+										if ( '' !== $sponsor['sponsor_url'] ) {
+											echo '</a>';
+										}
+										?>
+									</h2>
+								</div><!-- .author-bio-header -->
 
-						<?php if ( '' !== $sponsor['sponsor_url'] ) : ?>
-							<a class="author-link" target="_blank" href="<?php echo esc_url( $sponsor['sponsor_url'] ); ?>">
-								<?php
-									printf(
-										/* translators: %s is the post's sponsor's name. */
-										esc_html__( 'Learn more about %s', 'newspack' ),
-										esc_html( $sponsor['sponsor_name'] )
-									);
-								?>
-							</a>
-						<?php endif; ?>
+								<?php echo wp_kses_post( $sponsor['sponsor_blurb'] ); ?>
 
-					</div><!-- .author-bio-text -->
-				</div><!-- .author-bio -->
-			<?php
+								<?php if ( '' !== $sponsor['sponsor_url'] ) : ?>
+									<a class="author-link" target="_blank" href="<?php echo esc_url( $sponsor['sponsor_url'] ); ?>">
+										<?php
+											printf(
+												/* translators: %s is the post's sponsor's name. */
+												esc_html__( 'Learn more about %s', 'newspack' ),
+												esc_html( $sponsor['sponsor_name'] )
+											);
+										?>
+									</a>
+								<?php endif; ?>
+
+							</div><!-- .author-bio-text -->
+						</div><!-- .author-bio -->
+						<?php
+					}
+				}
+
+				$content .= "\n" . ob_get_clean();
+
+				return $content;
 			}
-		}
+		);
 	}
 endif;
 
@@ -366,7 +447,7 @@ function newspack_sponsor_archive_description( $sponsors = null, $id = null, $sc
 					<?php echo wp_kses_post( $sponsor['sponsor_blurb'] ); ?>
 				</div><!-- .info -->
 			</div><!-- .sponsor-archive -->
-		<?php
+			<?php
 		}
 	}
 }
@@ -374,7 +455,7 @@ function newspack_sponsor_archive_description( $sponsors = null, $id = null, $sc
 /**
  * Outputs the 'underwriters' information for the top of single posts.
  */
-function newspack_sponsored_underwriters_info( $sponsors = null, $id = null, $scope = 'native', $type = 'post' ) {
+function newspack_sponsored_underwriters_info( $sponsors = null, $id = null, $scope = 'underwritten', $type = 'post' ) {
 	if ( null === $sponsors ) {
 		if ( empty( $id ) ) {
 			return;
@@ -383,29 +464,94 @@ function newspack_sponsored_underwriters_info( $sponsors = null, $id = null, $sc
 	}
 
 	if ( ! empty( $sponsors ) ) {
-		foreach ( $sponsors as $sponsor ) {
-			?>
-			<div class="sponsor-uw-info">
-				<span class="logo">
-					<?php if ( ! empty( $sponsor['sponsor_logo'] ) ) : ?>
-						<?php
-						if ( '' !== $sponsor['sponsor_url'] ) {
-							echo '<a href="' . esc_url( $sponsor['sponsor_url'] ) . '" target="_blank">';
+		// If the post has overrides set, all underwriters will be shown with those settings.
+		$override_style     = get_post_meta( get_the_ID(), 'newspack_sponsor_underwriter_style', true );
+		$override_placement = get_post_meta( get_the_ID(), 'newspack_sponsor_underwriter_placement', true );
+
+		add_filter(
+			'the_content',
+			function( $content ) use ( $sponsors, $override_style, $override_placement ) {
+				$underwriters_top    = array_filter(
+					$sponsors,
+					function( $sponsor ) use ( $override_placement ) {
+						if ( 'top' === $override_placement ) {
+							return true;
 						}
-						echo '<img src="' . esc_url( $sponsor['sponsor_logo']['src'] ) . '" width="' . esc_attr( $sponsor['sponsor_logo']['img_width'] ) . '" height="' . esc_attr( $sponsor['sponsor_logo']['img_height'] ) . '" alt="' . esc_attr( $sponsor['sponsor_name'] ) . '">';
-						if ( '' !== $sponsor['sponsor_url'] ) {
-							echo '</a>';
+						if ( 'bottom' === $override_placement ) {
+							return false;
 						}
-						?>
-					<?php endif; ?>
-				</span>
-				<div class="info">
-					<?php echo wp_kses_post( $sponsor['sponsor_blurb'] ); ?>
-				</div>
-			</div>
-		<?php
-		}
+
+						return isset( $sponsor['sponsor_underwriter_placement'] ) ? 'top' === $sponsor['sponsor_underwriter_placement'] || 'inherit' === $sponsor['sponsor_underwriter_placement'] : true;
+					}
+				);
+				$underwriters_bottom = array_filter(
+					$sponsors,
+					function( $sponsor ) use ( $override_placement ) {
+						if ( 'bottom' === $override_placement ) {
+							return true;
+						}
+						if ( 'top' === $override_placement ) {
+							return false;
+						}
+
+						return isset( $sponsor['sponsor_underwriter_placement'] ) ? 'bottom' === $sponsor['sponsor_underwriter_placement'] : false;
+					}
+				);
+
+				$prepend = '';
+				foreach ( $underwriters_top as $underwriter_top ) {
+					$prepend .= newspack_sponsors_get_underwriter_content( $underwriter_top, $override_style );
+				}
+				$append = '';
+				foreach ( $underwriters_bottom as $underwriter_bottom ) {
+					$append .= newspack_sponsors_get_underwriter_content( $underwriter_bottom, $override_style );
+				}
+
+				return $prepend . $content . $append;
+			}
+		);
 	}
+}
+
+function newspack_sponsors_get_underwriter_content( $sponsor, $style = 'standard' ) {
+	ob_start();
+	if (
+		( 'simple' === $style ) ||
+		( 'standard' !== $style && isset( $sponsor['sponsor_underwriter_style'] ) && 'simple' === $sponsor['sponsor_underwriter_style'] )
+	) :
+		?>
+		<div class="sponsor-uw-info__simple">
+			<?php if ( ! empty( $sponsor['sponsor_url'] ) ) : ?>
+				<a href="<?php echo esc_url( $sponsor['sponsor_url'] ); ?>" target="_blank">
+			<?php endif; ?>
+				<em><?php echo wp_kses_post( $sponsor['sponsor_blurb'] ); ?></em>
+			<?php if ( ! empty( $sponsor['sponsor_url'] ) ) : ?>
+				</a>
+			<?php endif; ?>
+		</div>
+	<?php else : ?>
+		<div class="sponsor-uw-info">
+			<span class="logo">
+				<?php if ( ! empty( $sponsor['sponsor_logo'] ) ) : ?>
+					<?php
+					if ( '' !== $sponsor['sponsor_url'] ) {
+						echo '<a href="' . esc_url( $sponsor['sponsor_url'] ) . '" target="_blank">';
+					}
+					echo '<img src="' . esc_url( $sponsor['sponsor_logo']['src'] ) . '" width="' . esc_attr( $sponsor['sponsor_logo']['img_width'] ) . '" height="' . esc_attr( $sponsor['sponsor_logo']['img_height'] ) . '" alt="' . esc_attr( $sponsor['sponsor_name'] ) . '">';
+					if ( '' !== $sponsor['sponsor_url'] ) {
+						echo '</a>';
+					}
+					?>
+				<?php endif; ?>
+			</span>
+			<div class="info">
+				<?php echo wp_kses_post( $sponsor['sponsor_blurb'] ); ?>
+			</div>
+		</div>
+		<?php
+	endif;
+
+	return ob_get_clean();
 }
 
 /**

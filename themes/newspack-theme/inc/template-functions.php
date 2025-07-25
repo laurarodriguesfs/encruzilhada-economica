@@ -17,35 +17,45 @@ if ( ! function_exists( 'newspack_featured_image_position' ) ) :
 			return '';
 		}
 
-		// Get thumbnail
-		$thumbnail_info = wp_get_attachment_metadata( get_post_thumbnail_id() );
-		$img_width      = $thumbnail_info['width'];
+		$position = is_single() ? get_theme_mod( 'featured_image_default', 'large' ) : get_theme_mod( 'page_featured_image_default', 'small' );
 
 		// Get per-post image position setting.
 		$image_pos = get_post_meta( get_the_ID(), 'newspack_featured_image_position', true );
-
-		// Set a position value to return.
-		$position = '';
-
-		// First, check for a per-post image setting.
 		if ( '' !== $image_pos ) {
 			$position = $image_pos;
-		// If this post doesn't have a setting, fall back to the default.
-		} else {
-			if ( is_single() ) {
-				// Set default if a post:
-				$position = get_theme_mod( 'featured_image_default', 'large' );
-			} elseif ( is_page() ) {
-				// Set default if a page:
-				$position = get_theme_mod( 'page_featured_image_default', 'small' );
-			}
 		}
 
-		if ( ( 'large' === $position && 1200 > $img_width ) || ! in_array( get_post_type(), newspack_get_featured_image_post_types() ) ) {
+		// Get thumbnail
+		$thumbnail_info = wp_get_attachment_metadata( get_post_thumbnail_id() );
+		if ( $thumbnail_info === false ) {
+			return $position;
+		}
+
+		$image_wide_width = 1200;
+		if ( (
+			'large' === $position && $image_wide_width > $thumbnail_info['width'] )
+			|| ! in_array( get_post_type(), newspack_get_featured_image_post_types() )
+		) {
 			$position = 'small';
 		}
 
 		return $position;
+	}
+endif;
+
+if ( ! function_exists( 'newspack_is_default_template' ) ) :
+	/**
+	 * Returns whether or not the current post/page is using hte default template.
+	 *
+	 * @return bool
+	 */
+	function newspack_is_default_template() {
+		$default_template = true;
+		// Check against templates assigned in the Newspack theme, to rule out any other non-default _wp_page_template values.
+		if ( is_page_template( array( 'no-header-footer.php', 'single-feature.php', 'single-wide.php' ) ) ) {
+			$default_template = false;
+		}
+		return $default_template;
 	}
 endif;
 
@@ -84,12 +94,12 @@ function newspack_body_classes( $classes ) {
 	// Hide specific page title.
 	$page_id         = get_queried_object_id();
 	$page_hide_title = get_post_meta( $page_id, 'newspack_hide_page_title', true );
-	if ( $page_hide_title ) {
+	if ( $page_hide_title && is_page() ) {
 		$classes[] = 'hide-page-title';
 	}
 
 	$show_tagline = get_theme_mod( 'header_display_tagline', true );
-	if ( false === $show_tagline ) {
+	if ( ! ( $show_tagline ) ) {
 		$classes[] = 'hide-site-tagline';
 	} else {
 		$classes[] = 'show-site-tagline';
@@ -124,10 +134,19 @@ function newspack_body_classes( $classes ) {
 		$classes[] = 'h-dh'; // Header default height.
 	}
 
-	$cta_show = get_theme_mod( 'show_header_cta', false );
-	$cta_url  = get_theme_mod( 'header_cta_url', '' );
+	$header_sticky = get_theme_mod( 'header_sticky', false );
+	if ( true === $header_sticky ) {
+		$classes[] = 'h-stk'; // Header sticky.
+	}
+
+	$cta_show  = get_theme_mod( 'show_header_cta', false );
+	$cta_url   = get_theme_mod( 'header_cta_url', '' );
+	$cta_in_sh = get_theme_mod( 'cta_in_simplified_header', false );
 	if ( true === $cta_show && '' !== $cta_url ) {
 		$classes[] = 'h-cta'; // Mobile CTA is showing.
+		if ( true === $cta_in_sh && true === $header_sub_simplified && ! is_front_page() ) {
+			$classes[] = 'h-sub-cta'; // Mobile CTA is showing always in simplified subheader.
+		}
 	}
 
 	// Adds classes if menus are assigned
@@ -139,9 +158,38 @@ function newspack_body_classes( $classes ) {
 		$classes[] = 'has-highlight-menu';
 	}
 
-	// Adds a class of has-sidebar when there is a sidebar present.
-	if ( is_active_sidebar( 'sidebar-1' ) && ! ( is_front_page() && 'posts' !== get_option( 'show_on_front' ) ) ) {
+	// Adds a class of has-sidebar when there is a sidebar present and populated.
+	if ( is_active_sidebar( 'sidebar-1' )
+		&& ( ( ! is_archive() && newspack_is_default_template() && ! ( is_front_page() && 'posts' !== get_option( 'show_on_front' ) ) )
+		|| ( is_archive() && 'default' === get_theme_mod( 'archive_layout', 'default' ) ) )
+	) {
 		$classes[] = 'has-sidebar';
+	} else {
+		$classes[] = 'no-sidebar';
+	}
+
+	// Adds a class of has-afw when there is an above footer widget.
+	if ( is_active_sidebar( 'footer-3' ) ) {
+		$classes[] = 'af-widget';
+	}
+
+	// Add a class for each category assigned to a single post.
+	if ( is_single() ) {
+		foreach ( ( get_the_category( $page_id ) ) as $category ) {
+			$classes[] = 'cat-' . $category->category_nicename;
+		}
+	}
+
+	// Add a special class for the single post's primary category.
+	if ( is_single() && class_exists( 'WPSEO_Primary_Term' ) ) {
+		$primary_term = new WPSEO_Primary_Term( 'category', $page_id );
+		$category_id = $primary_term->get_primary_term();
+		if ( $category_id ) {
+			$category = get_term( $category_id );
+			if ( $category ) {
+				$classes[] = 'primary-cat-' . $category->slug;
+			}
+		}
 	}
 
 	// Adds class if singular post or page has a featured image.
@@ -165,14 +213,14 @@ function newspack_body_classes( $classes ) {
 		$classes[] = 'has-large-featured-image';
 	}
 
-	// Add a class to determine whether it has a sidebar.
-	if ( ! is_active_sidebar( 'sidebar-1' ) ) {
-		$classes[] = 'no-sidebar';
-	}
-
 	// Add a class if updated date should display
 	if ( newspack_should_display_updated_date() ) {
 		$classes[] = 'show-updated';
+	}
+
+	// Add a class if the post has a summary.
+	if ( '' !== newspack_has_post_summary() ) {
+		$classes[] = 'has-summary';
 	}
 
 	// Adds a class for the archive page layout.
@@ -183,8 +231,36 @@ function newspack_body_classes( $classes ) {
 
 	// Add a class when using the 'featured latest' archive layout.
 	$feature_latest_post = get_theme_mod( 'archive_feature_latest_post', true );
-	if ( is_archive() && true === $feature_latest_post ) {
+	if ( is_archive() && true === $feature_latest_post && ! is_post_type_archive( 'tribe_events' ) ) {
 		$classes[] = 'feature-latest';
+	}
+
+	// Add a class when there's an ad background color, and another when there's an ad above the footer to remove the space.
+	$ads_background_color = get_theme_mod( 'ads_color', 'default' );
+	$above_footer_ad      = method_exists( 'Newspack_Ads\Placements', 'can_display_ad_unit' ) && \Newspack_Ads\Placements::can_display_ad_unit( 'global_above_footer' );
+	if ( 'custom' === $ads_background_color ) {
+		$classes[] = 'custom-ad-bg';
+
+		if ( true === $above_footer_ad ) {
+			$classes[] = 'ad-above-footer';
+		}
+	}
+
+	// Add a class for the footer logo size.
+	$footer_logo_size = get_theme_mod( 'footer_logo_size', 'medium' );
+	if ( 'medium' !== $footer_logo_size ) {
+		$classes[] = 'footer-logo-' . esc_attr( $footer_logo_size );
+	}
+
+	// Add a class for the footer widget layout.
+	$footer_widget_layout = get_theme_mod( 'footer_widget_layout', 'columns' );
+	if ( 'stacked' === $footer_widget_layout ) {
+		$classes[] = 'fw-stacked';
+	}
+
+	// If custom fonts are used, add a class indicating that fonts will be loaded. The class will be removed by JS.
+	if ( ! empty( newspack_get_used_custom_fonts() ) ) {
+		$classes[] = 'newspack--font-loading';
 	}
 
 	return $classes;
@@ -263,9 +339,11 @@ function newspack_get_the_archive_title() {
 	} elseif ( is_post_type_archive() ) {
 		$title = esc_html__( 'Post Type Archives: ', 'newspack' ) . '<span class="page-description">' . post_type_archive_title( '', false ) . '</span>';
 	} elseif ( is_tax() ) {
-		$tax = get_taxonomy( get_queried_object()->taxonomy );
+		$tax  = get_taxonomy( get_queried_object()->taxonomy );
+		$term = get_queried_object();
+
 		/* translators: %s: Taxonomy singular name */
-		$title = sprintf( esc_html__( '%s Archives:', 'newspack' ), $tax->labels->singular_name );
+		$title = sprintf( esc_html__( '%s Archives:', 'newspack' ), $tax->labels->singular_name ) . '<span class="page-description">' . $term->name . '</span>';
 	} else {
 		$title = esc_html__( 'Archives:', 'newspack' );
 	}
@@ -363,27 +441,6 @@ function newspack_get_discussion_data() {
 }
 
 /**
- * WCAG 2.0 Attributes for Dropdown Menus
- *
- * Adjustments to menu attributes tot support WCAG 2.0 recommendations
- * for flyout and dropdown menus.
- *
- * @ref https://www.w3.org/WAI/tutorials/menus/flyout/
- */
-function newspack_nav_menu_link_attributes( $atts, $item, $args, $depth ) {
-
-	// Add [aria-haspopup] and [aria-expanded] to menu items that have children
-	$item_has_children = in_array( 'menu-item-has-children', $item->classes );
-	if ( $item_has_children ) {
-		$atts['aria-haspopup'] = 'true';
-		$atts['aria-expanded'] = 'false';
-	}
-
-	return $atts;
-}
-add_filter( 'nav_menu_link_attributes', 'newspack_nav_menu_link_attributes', 10, 4 );
-
-/**
  * Add a dropdown icon to top-level menu items.
  *
  * @param string $output Nav menu item start element.
@@ -391,7 +448,6 @@ add_filter( 'nav_menu_link_attributes', 'newspack_nav_menu_link_attributes', 10,
  * @param int    $depth  Depth.
  * @param object $args   Nav menu args.
  * @return string Nav menu item start element.
- * Add a dropdown icon to top-level menu items
  */
 function newspack_add_dropdown_icons( $output, $item, $depth, $args ) {
 
@@ -404,12 +460,20 @@ function newspack_add_dropdown_icons( $output, $item, $depth, $args ) {
 
 		// Add SVG icon to parent items.
 		$icon = newspack_get_icon_svg( 'keyboard_arrow_down', 24 );
+		$menu_state = 'setState' . $item->ID;
 
 		$output .= sprintf(
-			'<button class="submenu-expand" tabindex="-1">%s</button>',
-			$icon
+			 '<button aria-expanded="false" class="submenu-expand" [class]="' . $menu_state . ' ? \'submenu-expand open-dropdown\' : \'submenu-expand\'" [aria-expanded]="' . $menu_state . ' ? \'true\' : \'false\'" on="tap:AMP.setState( { ' . $menu_state . ': !' . $menu_state . ' } )" aria-haspopup="true" data-toggle-parent-id="toggle-' . $item->ID . '">
+					%1$s
+					<span class="screen-reader-text" [text]="' . $menu_state . ' ? \'%3$s\' : \'%2$s\'">%2$s</span>
+				</button>',
+			$icon,
+			esc_html__( 'Open dropdown menu', 'newspack' ),
+			esc_html__( 'Close dropdown menu', 'newspack' )
 		);
 	}
+
+	//tap:AMP.setState( { searchVisible: !searchVisible
 
 	return $output;
 }
@@ -421,7 +485,7 @@ add_filter( 'walker_nav_menu_start_el', 'newspack_add_dropdown_icons', 10, 4 );
  * @return string the default hexidecimal color.
  */
 function newspack_get_primary_color() {
-	return '#3366ff';
+	return '#003da5';
 }
 
 /**
@@ -504,10 +568,10 @@ function newspack_get_color_contrast( $hex ) {
 	}
 	if ( $contrast_ratio > 5 ) {
 		// If contrast is more than 5, return black color
-		return '#000';
+		return 'black';
 	} else {
 		// if not, return white color.
-		return '#fff';
+		return 'white';
 	}
 }
 
@@ -516,8 +580,8 @@ function newspack_get_color_contrast( $hex ) {
  */
 function newspack_color_with_contrast( $color ) {
 	$contrast = newspack_get_color_contrast( $color );
-	if ( '#000' === $contrast ) {
-		return '#5a5a5a';
+	if ( 'black' === $contrast ) {
+		return 'dimgray';
 	}
 	return $color;
 }
@@ -608,9 +672,16 @@ function newspack_math_to_time_ago( $post_time, $format, $post, $updated ) {
  * Apply time ago format to publish dates if enabled.
  */
 function newspack_convert_to_time_ago( $post_time, $format, $post ) {
-	return newspack_math_to_time_ago( $post_time, $format, $post, false );
+	// Don't override specifically requested formats.
+	if ( empty( $format ) ) {
+		$post_time = newspack_math_to_time_ago( $post_time, $format, $post, false );
+	}
+	return $post_time;
 }
 add_filter( 'get_the_date', 'newspack_convert_to_time_ago', 10, 3 );
+add_filter( 'newspack_blocks_formatted_displayed_post_date', function($date_formatted, $post){
+	return newspack_math_to_time_ago( $date_formatted, '', $post, false );
+}, 10, 3 );
 
 /**
  * Apply time ago format to modified dates if enabled.
@@ -619,12 +690,16 @@ function newspack_convert_modified_to_time_ago( $post_time, $format, $post ) {
 	return newspack_math_to_time_ago( $post_time, $format, $post, true );
 }
 
-
 /**
  * Check whether updated date should be displayed.
  */
 function newspack_should_display_updated_date() {
-	if ( is_single() && true === get_theme_mod( 'post_updated_date', false ) && ! get_post_meta( get_the_ID(), 'newspack_hide_updated_date', true ) ) {
+	$show_updated_date_sitewide = get_theme_mod( 'post_updated_date', false );
+
+	$hide_updated_date_post     = get_post_meta( get_the_ID(), 'newspack_hide_updated_date', true );
+	$show_updated_date_post     = get_post_meta( get_the_ID(), 'newspack_show_updated_date', true ) && ! $show_updated_date_sitewide;
+
+	if ( is_single() && ( ( $show_updated_date_sitewide && ! $hide_updated_date_post ) || $show_updated_date_post ) ) {
 		$post          = get_post();
 		$publish_date  = $post->post_date;
 		$modified_date = $post->post_modified;
@@ -633,7 +708,8 @@ function newspack_should_display_updated_date() {
 		$modified_timestamp = strtotime( $modified_date );
 		$modified_cutoff    = strtotime( 'tomorrow midnight', $publish_timestamp );
 
-		if ( $modified_timestamp > $modified_cutoff ) {
+		// Show the updated date either if it's enabled site-wide and more than 24 hours past the publish date, or if it's enabled on this specific post:
+		if ( ( $modified_timestamp > $modified_cutoff && $show_updated_date_sitewide ) || $show_updated_date_post ) {
 			return true;
 		} else {
 			return false;
@@ -641,3 +717,65 @@ function newspack_should_display_updated_date() {
 	}
 	return false;
 }
+
+/**
+ * Create a predictable unique ID for the search forms.
+ *
+ * @param string $prefix Text to prepend the ID with.
+ */
+function newspack_search_id( $prefix = '' ) {
+	static $id_counter = 0;
+	return $prefix . ( string ) ++$id_counter;
+}
+
+/**
+ * Check whether there's a Post Summary, and return it.
+ */
+function newspack_has_post_summary() {
+	if ( ! is_singular( 'post' ) ) {
+		return;
+	}
+
+	$post    = get_post();
+	$summary = get_post_meta( $post->ID, 'newspack_article_summary', true );
+
+	return trim( $summary );
+}
+
+/**
+ * Give the post summary some markup, and run it through wpautop().
+ *
+ * @param string $summary The post summary.
+ */
+function newspack_post_summary_markup( $summary ) {
+	$post          = get_post();
+	$summary_title = get_post_meta( $post->ID, 'newspack_article_summary_title', true );
+	ob_start();
+	?>
+	<div class="article-summary">
+		<?php if ( '' !== $summary_title ) { ?>
+			<h2 class="article-summary-title"><?php echo esc_html( $summary_title ); ?></h2>
+		<?php } ?>
+		<?php echo wp_kses_post( wpautop( $summary ) ); ?>
+	</div>
+	<?php
+	return ob_get_clean();
+}
+
+/**
+ * Inject the post summary at the top of a post.
+ *
+ * @param string $content The post content.
+ */
+function newspack_inject_post_summary( $content ) {
+	if ( ! is_singular( 'post' ) ) {
+		return $content;
+	}
+	$summary = newspack_has_post_summary();
+	if ( ! $summary ) {
+		return $content;
+	}
+
+	return newspack_post_summary_markup( $summary ) . $content;
+}
+add_filter( 'the_content', 'newspack_inject_post_summary', 11 );

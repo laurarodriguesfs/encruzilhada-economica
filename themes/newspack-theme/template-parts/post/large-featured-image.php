@@ -5,16 +5,13 @@
  * @package Newspack
  */
 
-$caption = get_the_excerpt( get_post_thumbnail_id() );
-// Check the existance of the caption separately, so filters -- like ones that add ads -- don't interfere.
-$caption_exists = get_post( get_post_thumbnail_id() )->post_excerpt;
-
+$header_sticky = get_theme_mod( 'header_sticky', false );
 
 if ( 'behind' === newspack_featured_image_position() ) :
 ?>
 
 	<div class="featured-image-behind">
-		<?php newspack_post_thumbnail(); ?>
+		<?php newspack_post_thumbnail( 'newspack-featured-image-large' ); ?>
 		<div class="wrapper">
 			<header class="entry-header">
 				<?php get_template_part( 'template-parts/header/entry', 'header' ); ?>
@@ -22,9 +19,7 @@ if ( 'behind' === newspack_featured_image_position() ) :
 		</div><!-- .wrapper -->
 	</div><!-- .featured-image-behind -->
 
-	<?php if ( $caption_exists ) : ?>
-		<figcaption><?php echo wp_kses_post( $caption ); ?></figcaption>
-	<?php endif; ?>
+	<?php newspack_post_thumbnail_caption(); ?>
 
 <?php elseif ( 'beside' === newspack_featured_image_position() ) : ?>
 
@@ -35,17 +30,15 @@ if ( 'behind' === newspack_featured_image_position() ) :
 			</header>
 		</div><!-- .wrapper -->
 
-		<?php newspack_post_thumbnail(); ?>
+		<?php newspack_post_thumbnail( 'newspack-featured-image-large' ); ?>
 
-		<?php if ( $caption_exists ) : ?>
-			<figcaption><span><?php echo wp_kses_post( $caption ); ?></span></figcaption>
-		<?php endif; ?>
+		<?php newspack_post_thumbnail_caption(); ?>
 	</div><!-- .featured-image-behind -->
 
 <?php elseif ( 'above' === newspack_featured_image_position() ) : ?>
 
 	<div class="featured-image-above">
-		<?php newspack_post_thumbnail(); ?>
+		<?php newspack_post_thumbnail( 'newspack-featured-image-large' ); ?>
 
 		<header class="entry-header">
 			<?php get_template_part( 'template-parts/header/entry', 'header' ); ?>

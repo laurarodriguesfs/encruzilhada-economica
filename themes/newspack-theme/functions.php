@@ -15,6 +15,7 @@ if ( version_compare( $GLOBALS['wp_version'], '4.7', '<' ) ) {
 	return;
 }
 
+
 if ( ! function_exists( 'newspack_is_amp' ) ) {
 	/**
 	 * Determine whether it is an AMP response.
@@ -63,9 +64,20 @@ if ( ! function_exists( 'newspack_setup' ) ) :
 		set_post_thumbnail_size( 1568, 9999 );
 
 		add_image_size( 'newspack-featured-image', 1200, 9999 );
+		add_image_size( 'newspack-featured-image-large', 2000, 9999 );
 		add_image_size( 'newspack-archive-image', 800, 600, true );
 		add_image_size( 'newspack-archive-image-large', 1200, 900, true );
-		add_image_size( 'newspack-footer-logo', 400, 9999, true );
+		add_image_size( 'newspack-footer-logo', 400, 9999 );
+
+		if ( ! get_theme_mod( 'archive_enable_cropping', true ) ) {
+			add_image_size( 'newspack-archive-image', 800, 9999, false );
+			add_image_size( 'newspack-archive-image-large', 1200, 9999, false );
+		}
+
+		/**
+		 * Enable feature support for specific post types.
+		 */
+		add_post_type_support( 'page', 'excerpt' ); // Custom excerpts for pages, normally restricted to posts.
 
 		// This theme uses wp_nav_menu() in two locations.
 		register_nav_menus(
@@ -85,11 +97,13 @@ if ( ! function_exists( 'newspack_setup' ) ) :
 		add_theme_support(
 			'html5',
 			array(
-				'search-form',
+				'caption',
 				'comment-form',
 				'comment-list',
 				'gallery',
-				'caption',
+				'script',
+				'search-form',
+				'style',
 			)
 		);
 
@@ -120,7 +134,7 @@ if ( ! function_exists( 'newspack_setup' ) ) :
 		add_theme_support( 'editor-styles' );
 
 		// Enqueue editor styles.
-		add_editor_style( 'styles/style-editor.css' );
+		add_editor_style( 'style-editor.css' );
 
 		// Add custom editor font sizes.
 		add_theme_support(
@@ -247,22 +261,25 @@ if ( ! function_exists( 'newspack_setup' ) ) :
 			)
 		);
 
+		// Add block custom spacing support.
+		add_theme_support( 'custom-spacing' );
+
 		// Add support for responsive embedded content.
 		add_theme_support( 'responsive-embeds' );
 
 		// Make our theme AMP/PWA Native
-		add_theme_support( 'amp' , [
-			'service_worker' => [
-				'cdn_script_caching'   => true,
-				'google_fonts_caching' => true,
-			],
-		] );
+		add_theme_support(
+			'amp',
+			[
+				'service_worker' => [
+					'cdn_script_caching'   => true,
+					'google_fonts_caching' => true,
+				],
+			]
+		);
 
 		// Add custom theme support - post subtitle
 		add_theme_support( 'post-subtitle' );
-
-		// Add post format support.
-		add_theme_support( 'post-formats', array( 'aside' ) );
 	}
 endif;
 add_action( 'after_setup_theme', 'newspack_setup' );
@@ -290,12 +307,44 @@ function newspack_widgets_init() {
 		array(
 			'name'          => __( 'Slide-out Sidebar', 'newspack' ),
 			'id'            => 'header-1',
-			'description'   => sprintf(
-				/* translators: %s: link to Header Settings panel in Customizer. */
-				__( 'Add widgets here to appear in an off-screen sidebar when it is enabled under %s.', 'newspack' ),
-				'<a rel="goto-control" href="#header_show_slideout">' . __( 'Header Settings', 'newspack' ) . '</a>'
-			),
+			'description'   => esc_html__( 'Add widgets here to appear in an off-screen sidebar when it is enabled under the Customizer Header Settings.', 'newspack' ),
 			'before_widget' => '<section id="%1$s" class="below-content widget %2$s">',
+			'after_widget'  => '</section>',
+			'before_title'  => '<h2 class="widget-title">',
+			'after_title'   => '</h2>',
+		)
+	);
+
+	register_sidebar(
+		array(
+			'name'          => __( 'Above Header', 'newspack' ),
+			'id'            => 'header-2',
+			'description'   => esc_html__( 'Add widgets here to appear above the site header.', 'newspack' ),
+			'before_widget' => '<section id="%1$s" class="below-content widget %2$s">',
+			'after_widget'  => '</section>',
+			'before_title'  => '<h2 class="widget-title">',
+			'after_title'   => '</h2>',
+		)
+	);
+
+	register_sidebar(
+		array(
+			'name'          => __( 'Below Header', 'newspack' ),
+			'id'            => 'header-3',
+			'description'   => esc_html__( 'Add widgets here to appear below the site header.', 'newspack' ),
+			'before_widget' => '<section id="%1$s" class="below-content widget %2$s">',
+			'after_widget'  => '</section>',
+			'before_title'  => '<h2 class="widget-title">',
+			'after_title'   => '</h2>',
+		)
+	);
+
+	register_sidebar(
+		array(
+			'name'          => __( 'Above Footer', 'newspack' ),
+			'id'            => 'footer-3',
+			'description'   => esc_html__( 'Add widgets here to appear above the site footer.', 'newspack' ),
+			'before_widget' => '<section id="%1$s" class="above-footer widget %2$s">',
 			'after_widget'  => '</section>',
 			'before_title'  => '<h2 class="widget-title">',
 			'after_title'   => '</h2>',
@@ -375,6 +424,13 @@ function newspack_content_width() {
 add_action( 'template_redirect', 'newspack_content_width', 0 );
 
 /**
+ * Return the list of custom fonts in use.
+ */
+function newspack_get_used_custom_fonts(): array {
+	return array_filter( [ get_theme_mod( 'font_header', '' ), get_theme_mod( 'font_body', '' ) ] );
+}
+
+/**
  * Enqueue scripts and styles.
  */
 function newspack_scripts() {
@@ -382,25 +438,15 @@ function newspack_scripts() {
 
 	wp_style_add_data( 'newspack-style', 'rtl', 'replace' );
 
-	wp_enqueue_style( 'newspack-print-style', get_template_directory_uri() . '/styles/print.css', array(), wp_get_theme()->get( 'Version' ), 'print' );
-
-	if ( ! newspack_is_amp() ) {
-		if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
-			wp_enqueue_script( 'comment-reply' );
-		}
-
-		$newspack_l10n = array(
-			'open_search'        => esc_html__( 'Open Search', 'newspack' ),
-			'close_search'       => esc_html__( 'Close Search', 'newspack' ),
-			'expand_comments'    => esc_html__( 'Expand Comments', 'newspack' ),
-			'collapse_comments'  => esc_html__( 'Collapse Comments', 'newspack' ),
-			'show_order_details' => esc_html__( 'Show details', 'newspack' ),
-			'hide_order_details' => esc_html__( 'Hide details', 'newspack' ),
-		);
-
-		wp_enqueue_script( 'newspack-amp-fallback', get_theme_file_uri( '/js/dist/amp-fallback.js' ), array(), wp_get_theme()->get( 'Version' ), true );
-		wp_localize_script( 'newspack-amp-fallback', 'newspackScreenReaderText', $newspack_l10n );
+	/**
+	 * Filters whether to enqueue print styles.
+	 *
+	 * @param bool $should_enqueue_print_styles Whether to enqueue print styles.
+	 */
+	if ( apply_filters( 'newspack_theme_enqueue_print_styles', true ) ) {
+		wp_enqueue_style( 'newspack-print-style', get_template_directory_uri() . '/styles/print.css', array(), wp_get_theme()->get( 'Version' ), 'print' );
 	}
+
 	// Load custom fonts, if any.
 	if ( get_theme_mod( 'custom_font_import_code', '' ) ) {
 		wp_enqueue_style( 'newspack-font-import', newspack_custom_typography_link( 'custom_font_import_code' ), array(), null );
@@ -410,8 +456,117 @@ function newspack_scripts() {
 		wp_enqueue_style( 'newspack-font-alternative-import', newspack_custom_typography_link( 'custom_font_import_code_alternate' ), array(), null );
 	}
 
+	/**
+	 * Filters whether to enqueue JS.
+	 *
+	 * @param bool $should_enqueue_js Whether to enqueue JS.
+	 */
+	if ( ! apply_filters( 'newspack_theme_enqueue_js', true ) ) {
+		return;
+	}
+
+	$newspack_l10n = array(
+		'open_search'         => esc_html__( 'Open Search', 'newspack' ),
+		'close_search'        => esc_html__( 'Close Search', 'newspack' ),
+		'expand_comments'     => esc_html__( 'Expand Comments', 'newspack' ),
+		'collapse_comments'   => esc_html__( 'Collapse Comments', 'newspack' ),
+		'show_order_details'  => esc_html__( 'Show details', 'newspack' ),
+		'hide_order_details'  => esc_html__( 'Hide details', 'newspack' ),
+		'open_dropdown_menu'  => esc_html__( 'Open dropdown menu', 'newspack' ),
+		'close_dropdown_menu' => esc_html__( 'Close dropdown menu', 'newspack' ),
+		'is_amp'              => newspack_is_amp(),
+	);
+
+	if ( ! newspack_is_amp() ) {
+		if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
+			wp_enqueue_script( 'comment-reply' );
+		}
+
+		wp_enqueue_script( 'newspack-amp-fallback', get_theme_file_uri( '/js/dist/amp-fallback.js' ), array(), wp_get_theme()->get( 'Version' ), true );
+		wp_localize_script( 'newspack-amp-fallback', 'newspackScreenReaderText', $newspack_l10n );
+	}
+
+	wp_enqueue_script( 'newspack-menu-accessibility', get_theme_file_uri( '/js/dist/menu-accessibility.js' ), array(), wp_get_theme()->get( 'Version' ), true );
+	wp_localize_script( 'newspack-menu-accessibility', 'newspackScreenReaderText', $newspack_l10n );
+
+	if ( newspack_is_sticky_animated_header() ) {
+		wp_enqueue_script( 'amp-animation', 'https://cdn.ampproject.org/v0/amp-animation-0.1.js', array(), '0.1', true );
+		wp_enqueue_script( 'amp-position-observer', 'https://cdn.ampproject.org/v0/amp-position-observer-0.1.js', array(), '0.1', true );
+	}
+
+	wp_enqueue_script( 'newspack-font-loading', get_theme_file_uri( '/js/dist/font-loading.js' ), array(), wp_get_theme()->get( 'Version' ), true );
+	wp_localize_script(
+		'newspack-font-loading',
+		'newspackFontLoading',
+		[
+			'fonts' => newspack_get_used_custom_fonts(),
+		]
+	);
 }
 add_action( 'wp_enqueue_scripts', 'newspack_scripts' );
+
+/**
+ * Add AMP-related attributes to the script tags.
+ *
+ * @param string $tag Enqueued script tag.
+ * @param string $handle Handle of enqueued of script.
+ *
+ * @return string Modified $tag.
+ */
+function newspack_add_amp_attributes( $tag, $handle ) {
+
+	if ( newspack_is_sticky_animated_header() ) {
+		$scripts_to_defer = array( 'amp-animation', 'amp-position-observer' );
+		foreach ( $scripts_to_defer as $defer_script ) {
+			if ( $defer_script === $handle ) {
+				return str_replace( ' src', ' async custom-element="true" src', $tag );
+			}
+		}
+	}
+	return $tag;
+}
+add_filter( 'script_loader_tag', 'newspack_add_amp_attributes', 10, 3 );
+
+/**
+ * Add AMP animation for when:
+ * - A site has a sticky header, and a simplified subpage header
+ * - When viewing a page or post with a featured image behind or beside.
+ */
+function newspack_sticky_header_amp_animation() {
+	if ( newspack_is_sticky_animated_header() ) {
+		$sticky_header_fade_out = array(
+			'duration'   => '500ms',
+			'fill'       => 'both',
+			'iterations' => '1',
+			'animations' => array(
+				array(
+					'selector'  => '#masthead .sticky-bg',
+					'keyframes' => array(
+						'opacity' => 0,
+					),
+				),
+			),
+		);
+
+		$sticky_header_fade_in = array(
+			'duration'   => '500ms',
+			'fill'       => 'both',
+			'iterations' => '1',
+			'animations' => array(
+				array(
+					'selector'  => '#masthead .sticky-bg',
+					'keyframes' => array(
+						'opacity' => 0.7,
+					),
+				),
+			),
+		);
+
+		echo '<amp-animation id="headerFadeOut" layout="nodisplay"><script type="application/json">' . wp_json_encode( $sticky_header_fade_out ) . '</script></amp-animation>';
+		echo '<amp-animation id="headerFadeIn" layout="nodisplay"><script type="application/json">' . wp_json_encode( $sticky_header_fade_in ) . '</script></amp-animation>';
+	}
+}
+add_action( 'wp_body_open', 'newspack_sticky_header_amp_animation' );
 
 /**
  * Enqueue scripts for:
@@ -422,6 +577,13 @@ function newspack_enqueue_scripts() {
 	$languages_path = get_parent_theme_file_path( '/languages' );
 	$theme_version  = wp_get_theme()->get( 'Version' );
 	$post_type      = get_post_type();
+	$current_screen = get_current_screen();
+
+	// Add check to see if currently on the widgets screen; none of these files are needed there, but are loaded as of WP 5.8.
+	// See: https://github.com/WordPress/gutenberg/issues/28538.
+	if ( 'widgets' === $current_screen->id ) {
+		return;
+	}
 
 	// Featured Image options.
 	wp_register_script(
@@ -442,6 +604,10 @@ function newspack_enqueue_scripts() {
 	if ( 'post' === $post_type ) {
 		wp_enqueue_script( 'newspack-post-subtitle', get_theme_file_uri( '/js/dist/post-subtitle.js' ), array(), $theme_version, true );
 		wp_set_script_translations( 'newspack-post-subtitle', 'newspack', $languages_path );
+
+		wp_enqueue_script( 'newspack-post-summary', get_theme_file_uri( '/js/dist/post-summary.js' ), array(), $theme_version, true );
+		wp_set_script_translations( 'newspack-post-summary', 'newspack', $languages_path );
+
 	}
 
 	// Post meta options.
@@ -459,8 +625,81 @@ function newspack_enqueue_scripts() {
 		newspack_get_post_toggle_post_types()
 	);
 	wp_enqueue_script( 'newspack-post-meta-toggles' );
+
+	// Remove FSE-related Gutenberg blocks.
+	$allowed_fse_blocks = newspack_fse_blocks_to_remove();
+	wp_register_script( 'newspack-hide-fse-blocks', get_theme_file_uri( '/js/dist/editor-remove-blocks.js' ), array( 'wp-blocks', 'wp-dom-ready', 'wp-edit-post' ), $theme_version, true );
+	wp_localize_script( 'newspack-hide-fse-blocks', 'updateAllowedBlocks', $allowed_fse_blocks );
+	wp_enqueue_script( 'newspack-hide-fse-blocks' );
 }
 add_action( 'enqueue_block_editor_assets', 'newspack_enqueue_scripts' );
+
+
+/**
+ * Check for additional allowed blocks
+ *
+ * Add this flag to the wp-config.php to allow more blocks, formatted in a array --
+ * for example: `define( 'NEWSPACK_FSE_BLOCKS_ALLOWED', ['core/avatar', 'core/loginout'] );`
+ *
+ * @return array List of allowed FSE blocks.
+ */
+function newspack_is_fse_blocks_allowed() {
+	if ( defined( 'NEWSPACK_FSE_BLOCKS_ALLOWED' ) ) {
+		return NEWSPACK_FSE_BLOCKS_ALLOWED;
+	}
+}
+
+/**
+ * Put together list of FSE blocks to remove
+ *
+ * @return array FSE blocks to remove from editor.
+ */
+function newspack_fse_blocks_to_remove() {
+
+	// List of all FSE blocks to remove from the editor.
+	$fse_blocks = array(
+		'core/loginout',
+		'core/comments',
+		'core/post-comments-form',
+		'core/comments-query-loop',
+		'core/query',
+		// 'core/post-title', Temporarily allow this block. Ref. https://github.com/woocommerce/woocommerce/pull/52209
+		'core/post-featured-image',
+		'core/post-excerpt',
+		'core/post-content',
+		'core/post-terms',
+		'core/post-date',
+		'core/post-author',
+		'core/post-author-name',
+		'core/post-navigation-link',
+		'core/read-more',
+		'core/avatar',
+		'core/post-author-biography',
+		'core/query-title',
+		'core/term-description',
+	);
+
+	// Get site-specific allowed FSE blocks.
+	if ( is_array( newspack_is_fse_blocks_allowed() ) ) {
+		$get_allowed_blocks = array_map( 'esc_html', newspack_is_fse_blocks_allowed() );
+
+		// Remove the allowed FSE blocks from the list of blocks to remove.
+		if ( $get_allowed_blocks ) {
+			$fse_blocks = array_diff( $fse_blocks, $get_allowed_blocks );
+		}
+	}
+
+	// Turn FSE blocks array into a string.
+	$fse_blocks = implode( ',', $fse_blocks );
+
+	// Format FSE block list so it can be passed to the JavaScript file as a translation.
+	$blocks_to_remove = array(
+		'removeblocks' => $fse_blocks,
+	);
+
+	// Return the list of blocks to remove.
+	return $blocks_to_remove;
+}
 
 /**
  * Fix skip link focus in IE11.
@@ -484,6 +723,21 @@ function newspack_skip_link_focus_fix() {
 	<?php
 }
 add_action( 'wp_print_footer_scripts', 'newspack_skip_link_focus_fix' );
+
+/**
+ * Checks whether the amp animation files need to be loaded for the sticky header.
+ */
+function newspack_is_sticky_animated_header() {
+	$header_sticky          = get_theme_mod( 'header_sticky', false );
+	$header_sub_simplified  = get_theme_mod( 'header_sub_simplified', false );
+	$feat_img_behind_beside = in_array( newspack_featured_image_position(), array( 'behind', 'beside' ) );
+
+	if ( $header_sticky && $header_sub_simplified && $feat_img_behind_beside && newspack_is_amp() ) {
+		return true;
+	} else {
+		return false;
+	}
+}
 
 /**
  * Enqueue supplemental block editor styles.
@@ -553,7 +807,10 @@ function newspack_filter_admin_body_class( $classes ) {
 		$classes .= ' no-sidebar';
 	}
 
-	if ( 'single-feature.php' === newspack_check_current_template() ) {
+	if (
+		'single-feature.php' === newspack_check_current_template()
+		|| 'no-header-footer.php' === newspack_check_current_template()
+	) {
 		$classes .= ' newspack-single-column-template';
 	} elseif ( 'single-wide.php' === newspack_check_current_template() ) {
 		$classes .= ' newspack-single-wide-template';
@@ -638,7 +895,38 @@ function newspack_register_meta() {
 
 	register_post_meta(
 		'post',
+		'newspack_article_summary_title',
+		array(
+			'default'      => esc_html__( 'Overview:', 'newspack' ),
+			'show_in_rest' => true,
+			'single'       => true,
+			'type'         => 'string',
+		)
+	);
+
+	register_post_meta(
+		'post',
+		'newspack_article_summary',
+		array(
+			'show_in_rest' => true,
+			'single'       => true,
+			'type'         => 'string',
+		)
+	);
+
+	register_post_meta(
+		'post',
 		'newspack_hide_updated_date',
+		array(
+			'show_in_rest' => true,
+			'single'       => true,
+			'type'         => 'boolean',
+		)
+	);
+
+	register_post_meta(
+		'post',
+		'newspack_show_updated_date',
 		array(
 			'show_in_rest' => true,
 			'single'       => true,
@@ -653,6 +941,17 @@ function newspack_register_meta() {
 			'show_in_rest' => true,
 			'single'       => true,
 			'type'         => 'boolean',
+		)
+	);
+
+	register_post_meta(
+		'page',
+		'newspack_show_share_buttons',
+		array(
+			'show_in_rest' => true,
+			'single'       => true,
+			'type'         => 'boolean',
+			'default'      => false,
 		)
 	);
 }
@@ -685,7 +984,7 @@ add_action( 'after_switch_theme', 'newspack_migrate_settings', 10, 2 );
 function newspack_colors_css_wrap() {
 
 	// Only bother if we haven't customized the color.
-	if ( ( ! is_customize_preview() && ( 'default' === get_theme_mod( 'theme_colors', 'default' ) && newspack_get_mobile_cta_color() === get_theme_mod( 'header_cta_hex', newspack_get_mobile_cta_color() ) ) ) || is_admin() ) {
+	if ( ( ! is_customize_preview() && ( 'default' === get_theme_mod( 'theme_colors', 'default' ) && newspack_get_mobile_cta_color() === get_theme_mod( 'header_cta_hex', newspack_get_mobile_cta_color() ) && 'default' === get_theme_mod( 'ads_color', 'default' ) ) ) || is_admin() ) {
 		return;
 	}
 
@@ -698,6 +997,62 @@ function newspack_colors_css_wrap() {
 	<?php
 }
 add_action( 'wp_head', 'newspack_colors_css_wrap' );
+
+/**
+ * Get theme colors' values.
+ *
+ * @return string[] Array of colors.
+ */
+function newspack_get_colors() {
+	$colors              = [];
+	$colors['primary']   = newspack_get_primary_color();
+	$colors['secondary'] = newspack_get_secondary_color();
+	$colors['cta']       = get_theme_mod( 'header_cta_hex', newspack_get_mobile_cta_color() );
+
+	if ( true === get_theme_mod( 'header_solid_background', false ) ) {
+		$colors['header'] = $colors['primary'];
+	}
+
+	if ( 'default' !== get_theme_mod( 'theme_colors', 'default' ) ) {
+		$colors['primary']   = get_theme_mod( 'primary_color_hex', $colors['primary'] );
+		$colors['secondary'] = get_theme_mod( 'secondary_color_hex', $colors['secondary'] );
+
+		if ( 'default' !== get_theme_mod( 'header_color', 'default' ) ) {
+			$colors['header']       = get_theme_mod( 'header_color_hex', '#666666' );
+			$colors['primary_menu'] = get_theme_mod( 'header_primary_menu_color_hex', '' );
+		} else {
+			$colors['header'] = $colors['primary'];
+		}
+
+		if ( 'default' !== get_theme_mod( 'footer_color', 'default' ) ) {
+			$colors['footer'] = get_theme_mod( 'footer_color_hex', '' );
+		}
+	}
+
+	// Set color contrasts.
+	foreach ( $colors as $color_key => $color_value ) {
+		$colors[ $color_key . '_contrast' ] = newspack_get_color_contrast( $color_value );
+	}
+
+	return $colors;
+}
+
+/**
+ * Add CSS variables to theme's colors.
+ */
+function newspack_colors_css_variables() {
+	$colors = newspack_get_colors();
+	?>
+	<style type="text/css" id="newspack-theme-colors-variables">
+		:root {
+			<?php foreach ( $colors as $color_key => $color_value ) : ?>
+				--newspack-<?php echo esc_attr( str_replace( '_', '-', $color_key ) ); ?>-color: <?php echo esc_attr( $color_value ); ?>;
+			<?php endforeach; ?>
+		}
+	</style>
+	<?php
+}
+add_action( 'wp_head', 'newspack_colors_css_variables' );
 
 /**
  * Display custom font CSS in customizer and on frontend.
@@ -713,7 +1068,7 @@ function newspack_typography_css_wrap() {
 		<?php echo newspack_custom_typography_css(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 	</style>
 
-<?php
+	<?php
 }
 add_action( 'wp_head', 'newspack_typography_css_wrap' );
 
@@ -722,7 +1077,7 @@ add_action( 'wp_head', 'newspack_typography_css_wrap' );
  */
 function newspack_sanitize_svgs() {
 	$svg_args = array(
-		'svg'   => array(
+		'svg'      => array(
 			'class'           => true,
 			'aria-hidden'     => true,
 			'aria-labelledby' => true,
@@ -732,15 +1087,21 @@ function newspack_sanitize_svgs() {
 			'height'          => true,
 			'viewbox'         => true,
 		),
-		'g'     => array(
-			'fill' => true,
+		'g'        => array(
+			'fill'      => true,
+			'fill-rule' => true,
 		),
-		'title' => array(
+		'title'    => array(
 			'title' => true,
 		),
-		'path'  => array(
+		'path'     => array(
 			'd'    => true,
 			'fill' => true,
+		),
+		'defs'     => true,
+		'clipPath' => true,
+		'polygon'  => array(
+			'points' => true,
 		),
 	);
 
@@ -767,11 +1128,11 @@ function newspack_truncate_text( $content, $length, $after = '...' ) {
 }
 
  /**
- * Returns an array of 'acceptable' avatar tags, to use with wp_kses().
- */
+  * Returns an array of 'acceptable' avatar tags, to use with wp_kses().
+  */
 function newspack_sanitize_avatars() {
 	$avatar_args = array(
-		'img' => array(
+		'img'      => array(
 			'class'  => true,
 			'src'    => true,
 			'alt'    => true,
@@ -802,13 +1163,18 @@ function newspack_get_featured_image_post_types() {
  */
 function newspack_get_post_toggle_post_types() {
 	$hide_date_post_types = [];
+	$show_date_post_types = [];
 	if ( true === get_theme_mod( 'post_updated_date', false ) ) {
 		$hide_date_post_types[] = 'post';
+	} else {
+		$show_date_post_types[] = 'post';
 	}
 
 	return array(
-		'hide_date'  => $hide_date_post_types,
-		'hide_title' => [ 'page' ],
+		'hide_date'          => $hide_date_post_types,
+		'show_date'          => $show_date_post_types,
+		'hide_title'         => [ 'page' ],
+		'show_share_buttons' => function_exists( 'sharing_display' ) ? [ 'page' ] : [],
 	);
 }
 
@@ -824,63 +1190,6 @@ function newspack_coauthors_in_rss( $the_author ) {
 	}
 }
 add_filter( 'the_author', 'newspack_coauthors_in_rss' );
-
-/**
- * Determine minimum theme breakpoint, below which responsive Ads media queries should not have a min-width.
- *
- * @param array  $media_queries An array of objects, one for each size, with width|height|min_width|min_height.
- * @param string $placement ID of the ad placement.
- * @param string $context Optional second string describing the ad placement. For Widget placements, the ID of the Widget.
- * @return array The correct array of media query data.
- */
-function newspack_theme_newspack_ads_media_queries( $media_queries, $placement, $context ) {
-	if ( 'newspack_ads_widget' === $placement && strpos( $context, 'scaip' ) === 0 ) {
-		switch ( get_page_template_slug() ) {
-			case 'single-wide.php':
-				foreach ( $media_queries as $index => &$media_query ) {
-					$next_media_query = ( count( $media_queries ) > $index + 1 ) ? $media_queries[ $index + 1 ] : null;
-					if ( intval( $media_query['width'] ) > 1200 ) {
-						$media_query['min_width'] = null;
-						$media_query['max_width'] = null;
-					} else {
-						$media_query['min_width'] = ceil( intval( $media_query['width'] ) / 0.9 );
-						if ( $next_media_query['width'] && $next_media_query['width'] <= 1200 ) {
-							$media_query['max_width'] = ceil( $next_media_query['width'] / 0.9 - 1 );
-						} else {
-							$media_query['max_width'] = null;
-						}
-					}
-				}
-				break;
-			case 'single-feature.php':
-			default:
-				foreach ( $media_queries as $index => &$media_query ) {
-					$next_media_query = ( count( $media_queries ) > $index + 1 ) ? $media_queries[ $index + 1 ] : null;
-					if ( intval( $media_query['width'] ) > 780 ) {
-						$media_query['min_width'] = null;
-						$media_query['max_width'] = null;
-					} else if ( intval( $media_query['width'] ) > ceil( 782 * 0.585 ) ) {
-						$media_query['min_width'] = ceil( intval( $media_query['width'] ) / 0.585 );
-						if ( $next_media_query['width'] && $next_media_query['width'] <= 780 ) {
-							$media_query['max_width'] = ceil( $next_media_query['width'] / 0.585 - 1 );
-						} else {
-							$media_query['max_width'] = null;
-						}
-					} else {
-						$media_query['min_width'] = ceil( intval( $media_query['width'] ) / 0.9 );
-						if ( $next_media_query['width'] && $next_media_query['width'] <= 780 ) {
-							$media_query['max_width'] = ceil( $next_media_query['width'] / 0.585 - 1 );
-						} else {
-							$media_query['max_width'] = null;
-						}
-					}
-				}
-				break;
-		}
-	}
-	return $media_queries;
-}
-add_filter( 'newspack_ads_media_queries', 'newspack_theme_newspack_ads_media_queries', 10, 3 );
 
 /**
  * Should a particular Ad deployment use responsive placement.
@@ -900,24 +1209,13 @@ function newspack_theme_newspack_ads_maybe_use_responsive_placement( $responsive
 add_filter( 'newspack_ads_maybe_use_responsive_placement', 'newspack_theme_newspack_ads_maybe_use_responsive_placement', 10, 3 );
 
 /**
- * Display Featured Images in RSS feed.
- */
-function newspack_thumbnails_in_rss( $content ) {
-	global $post;
-	if ( has_post_thumbnail( $post->ID ) ) {
-		$content = '<figure>' . get_the_post_thumbnail( $post->ID, 'medium' ) . '</figure>' . $content;
-	}
-	return $content;
-}
-add_filter( 'the_excerpt_rss', 'newspack_thumbnails_in_rss' );
-add_filter( 'the_content_feed', 'newspack_thumbnails_in_rss' );
-
-/**
  * Add a extra span and class to the_archive_title, for easier styling.
  */
 function newspack_update_the_archive_title( $title ) {
 	// Split the title into parts so we can wrap them with spans:
-	$title_parts = explode( '<span class="page-description">', $title, 2 );
+	$title_parts  = explode( '<span class="page-description">', $title, 2 );
+	$title_format = get_theme_mod( 'archive_title_format', 'default' );
+
 	// Glue it back together again.
 	if ( ! empty( $title_parts[1] ) ) {
 		$title = wp_kses(
@@ -928,7 +1226,11 @@ function newspack_update_the_archive_title( $title ) {
 				),
 			)
 		);
-		$title = '<span class="page-subtitle">' . esc_html( $title_parts[0] ) . '</span><span class="page-description">' . $title;
+		if ( 'default' === $title_format ) {
+			$title = '<span class="page-subtitle">' . esc_html( $title_parts[0] ) . '</span><span class="page-description">' . $title;
+		} else {
+			$title = '<span class="page-description">' . $title;
+		}
 	}
 	return $title;
 }
@@ -942,14 +1244,32 @@ add_filter( 'get_the_archive_title', 'newspack_update_the_archive_title', 11, 1 
  * @param boolean $update Whether this is an existing post being updated or not.
  */
 function newspack_maybe_set_default_post_template( $post_ID, $post, $update ) {
-	if ( ! $update && 'post' === $post->post_type ) {
-		$post_template_default = get_theme_mod( 'post_template_default' );
-		if ( 'default' !== $post_template_default ) {
-			update_post_meta( $post_ID, '_wp_page_template', $post_template_default );
+	if ( ! $update ) {
+		if ( 'post' === $post->post_type ) {
+			$post_template_default = get_theme_mod( 'post_template_default' );
+			if ( 'default' !== $post_template_default ) {
+				update_post_meta( $post_ID, '_wp_page_template', $post_template_default );
+			}
+		} elseif ( 'page' === $post->post_type ) {
+			$page_template_default = get_theme_mod( 'page_template_default' );
+			if ( 'default' !== $page_template_default ) {
+				update_post_meta( $post_ID, '_wp_page_template', $page_template_default );
+			}
 		}
 	}
 }
 add_action( 'wp_insert_post', 'newspack_maybe_set_default_post_template', 10, 3 );
+
+/**
+ * Dequeue Media Element styles if AMP is enabled.
+ */
+function newspack_dequeue_mediaelement() {
+	if ( newspack_is_amp() ) {
+		wp_deregister_script( 'wp-mediaelement' );
+		wp_deregister_style( 'wp-mediaelement' );
+	}
+}
+add_action( 'wp_enqueue_scripts', 'newspack_dequeue_mediaelement', 20 );
 
 /**
  * SVG Icons class.
@@ -992,6 +1312,11 @@ require get_template_directory() . '/inc/customizer.php';
 require get_template_directory() . '/inc/logo-resizer.php';
 
 /**
+ * Custom Login Screen.
+ */
+require get_template_directory() . '/inc/login-screen.php';
+
+/**
  * Load Jetpack compatibility file.
  */
 if ( defined( 'JETPACK__VERSION' ) ) {
@@ -1017,4 +1342,42 @@ if ( class_exists( 'Trust_Indicators' ) ) {
  */
 if ( function_exists( '\Newspack_Sponsors\get_sponsors_for_post' ) ) {
 	require get_template_directory() . '/inc/newspack-sponsors.php';
+}
+
+/**
+ * Load Newsletters compatibility file.
+ */
+if ( class_exists( '\Newspack_Newsletters' ) ) {
+	require get_template_directory() . '/inc/newspack-newsletters.php';
+}
+
+/**
+ * Load Web Stories compatibility file.
+ */
+require get_template_directory() . '/inc/web-stories.php';
+
+/**
+ * Load The Events Calendar compatibility file.
+ */
+if ( class_exists( 'Tribe__Events__Main' ) ) {
+	require get_template_directory() . '/inc/the-events-calendar.php';
+}
+
+/**
+ * Multi-branded plugin support
+ */
+if ( class_exists( 'Newspack_Multibranded_Site\Customizations\Theme_Colors' ) ) {
+	require get_template_directory() . '/inc/newspack-multibranded-site-plugin.php';
+}
+
+/**
+ * Woo Templates cache handling
+ */
+require get_template_directory() . '/woocommerce/templates.php';
+
+/**
+ * Yoast customizations
+ */
+if ( class_exists( 'WPSEO_Options' ) ) {
+	require get_template_directory() . '/inc/yoast.php';
 }

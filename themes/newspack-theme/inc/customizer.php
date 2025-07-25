@@ -108,6 +108,24 @@ function newspack_customize_register( $wp_customize ) {
 		)
 	);
 
+	// Header - add option for simplified short header.
+	$wp_customize->add_setting(
+		'header_sticky',
+		array(
+			'default'           => false,
+			'sanitize_callback' => 'newspack_sanitize_checkbox',
+		)
+	);
+	$wp_customize->add_control(
+		'header_sticky',
+		array(
+			'type'        => 'checkbox',
+			'label'       => esc_html__( 'Sticky Header', 'newspack' ),
+			'description' => esc_html__( 'Makes header "stick" to the top of the page on scroll. Forces a fixed height.', 'newspack' ),
+			'section'     => 'header_section_appearance',
+		)
+	);
+
 	/**
 	 * Header Slideouts
 	 */
@@ -331,6 +349,23 @@ function newspack_customize_register( $wp_customize ) {
 		)
 	);
 
+	// Mobile CTA - toggle on and off.
+	$wp_customize->add_setting(
+		'cta_in_simplified_header',
+		array(
+			'default'           => false,
+			'sanitize_callback' => 'newspack_sanitize_checkbox',
+		)
+	);
+	$wp_customize->add_control(
+		'cta_in_simplified_header',
+		array(
+			'type'    => 'checkbox',
+			'label'   => esc_html__( 'Show Mobile CTA in Simplfied Subpage Header', 'newspack' ),
+			'section' => 'header_section_cta',
+		)
+	);
+
 	// Add option to upload logo specifically for the footer.
 	$wp_customize->add_setting(
 		'newspack_alternative_logo',
@@ -373,7 +408,7 @@ function newspack_customize_register( $wp_customize ) {
 		array(
 			'type'    => 'radio',
 			'label'   => __( 'Colors', 'newspack' ),
-			'choices'  => array(
+			'choices' => array(
 				'default' => _x( 'Default', 'primary color', 'newspack' ),
 				'custom'  => _x( 'Custom', 'primary color', 'newspack' ),
 			),
@@ -529,6 +564,50 @@ function newspack_customize_register( $wp_customize ) {
 		)
 	);
 
+	/**
+	 * Ads background_color
+	 */
+	$wp_customize->add_setting(
+		'ads_color',
+		array(
+			'default'           => 'default',
+			'sanitize_callback' => 'newspack_sanitize_color_option',
+		)
+	);
+
+	$wp_customize->add_control(
+		'ads_color',
+		array(
+			'type'    => 'radio',
+			'label'   => __( 'Ads Background Color', 'newspack' ),
+			'choices' => array(
+				'default' => _x( 'Default', 'primary color', 'newspack' ),
+				'custom'  => _x( 'Custom', 'primary color', 'newspack' ),
+			),
+			'section' => 'colors',
+		)
+	);
+
+	// Add ads color hexidecimal setting and control.
+	$wp_customize->add_setting(
+		'ads_color_hex',
+		array(
+			'default'           => '#ffffff',
+			'sanitize_callback' => 'sanitize_hex_color',
+		)
+	);
+
+	$wp_customize->add_control(
+		new WP_Customize_Color_Control(
+			$wp_customize,
+			'ads_color_hex',
+			array(
+				'description' => __( 'Apply a background color to the ads.', 'newspack' ),
+				'section'     => 'colors',
+			)
+		)
+	);
+
 	// Header - add option to hide tagline.
 	$wp_customize->add_setting(
 		'header_display_tagline',
@@ -584,16 +663,41 @@ function newspack_customize_register( $wp_customize ) {
 			$wp_customize,
 			'newspack_footer_logo',
 			array(
-				'label'       => esc_html__( 'Footer logo', 'newspack' ),
+				'label'       => esc_html__( 'Footer Logo', 'newspack' ),
 				'description' => esc_html__( 'Optional alternative logo to be displayed in the footer.', 'newspack' ),
 				'section'     => 'title_tagline',
 				'settings'    => 'newspack_footer_logo',
 				'priority'    => 9,
-				'flex_width'  => false,
+				'flex_width'  => true,
 				'flex_height' => true,
 				'width'       => 400,
 				'height'      => 300,
 			)
+		)
+	);
+
+	$wp_customize->add_setting(
+		'footer_logo_size',
+		array(
+			'default'           => 'medium',
+			'sanitize_callback' => 'newspack_sanitize_footer_logo_size',
+		)
+	);
+
+	$wp_customize->add_control(
+		'footer_logo_size',
+		array(
+			'label'    => esc_html__( 'Footer Logo Size', 'newspack' ),
+			'section'  => 'title_tagline',
+			'priority' => 9,
+			'type'     => 'select',
+			'settings' => 'footer_logo_size',
+			'choices'  => array(
+				'small'  => esc_html__( 'Small', 'newspack' ),
+				'medium' => esc_html__( 'Medium', 'newspack' ),
+				'large'  => esc_html__( 'Large', 'newspack' ),
+				'xlarge' => esc_html__( 'Extra Large', 'newspack' ),
+			),
 		)
 	);
 
@@ -729,9 +833,10 @@ function newspack_customize_register( $wp_customize ) {
 	$wp_customize->add_control(
 		'featured_image_default',
 		array(
-			'type'    => 'radio',
-			'label'   => __( 'Featured Image Default Position', 'newspack' ),
-			'choices' => array(
+			'type'        => 'radio',
+			'label'       => __( 'Featured Image Default Position', 'newspack' ),
+			'description' => esc_html__( 'Affects all posts where the Featured Image Position is set to \'Default\'.', 'newspack' ),
+			'choices'     => array(
 				'large'  => esc_html__( 'Large', 'newspack' ),
 				'small'  => esc_html__( 'Small', 'newspack' ),
 				'behind' => esc_html__( 'Behind article title', 'newspack' ),
@@ -739,11 +844,11 @@ function newspack_customize_register( $wp_customize ) {
 				'above'  => esc_html__( 'Above article title', 'newspack' ),
 				'hidden' => esc_html__( 'Hidden', 'newspack' ),
 			),
-			'section' => 'post_default_settings',
+			'section'     => 'post_default_settings',
 		)
 	);
 
-	// Add option to select the default post template
+	// Add option to select the default post template.
 	$wp_customize->add_setting(
 		'post_template_default',
 		array(
@@ -754,14 +859,15 @@ function newspack_customize_register( $wp_customize ) {
 	$wp_customize->add_control(
 		'post_template_default',
 		array(
-			'type'    => 'select',
-			'label'   => __( 'Default Post Template', 'newspack' ),
-			'choices' => array(
-				'default'            => esc_html__( 'Default Template', 'newspack' ),
+			'type'        => 'select',
+			'label'       => __( 'Default Post Template', 'newspack' ),
+			'description' => esc_html__( 'This option changes the selected template used for newly created posts going forward. The template can still be changed on a per-post basis.', 'newspack' ),
+			'choices'     => array(
+				'default'            => esc_html__( 'With Sidebar', 'newspack' ),
 				'single-feature.php' => esc_html__( 'One Column', 'newspack' ),
 				'single-wide.php'    => esc_html__( 'One Column Wide', 'newspack' ),
 			),
-			'section' => 'post_default_settings',
+			'section'     => 'post_default_settings',
 		)
 	);
 
@@ -853,6 +959,23 @@ function newspack_customize_register( $wp_customize ) {
 		)
 	);
 
+	// Add option to display previous and next links on single posts.
+	$wp_customize->add_setting(
+		'post_excerpt_instead_of_subtitle',
+		array(
+			'default'           => false,
+			'sanitize_callback' => 'newspack_sanitize_checkbox',
+		)
+	);
+	$wp_customize->add_control(
+		'post_excerpt_instead_of_subtitle',
+		array(
+			'type'    => 'checkbox',
+			'label'   => __( 'Display the custom excerpt at the top of single posts instead of the article subtitle.', 'newspack' ),
+			'section' => 'post_default_settings',
+		)
+	);
+
 	/**
 	 * Page Template Settings
 	 */
@@ -875,9 +998,10 @@ function newspack_customize_register( $wp_customize ) {
 	$wp_customize->add_control(
 		'page_featured_image_default',
 		array(
-			'type'    => 'radio',
-			'label'   => __( 'Featured Image Default Position', 'newspack' ),
-			'choices' => array(
+			'type'        => 'radio',
+			'label'       => __( 'Featured Image Default Position', 'newspack' ),
+			'description' => esc_html__( 'Affects all pages where the Featured Image Position is set to \'Default\'.', 'newspack' ),
+			'choices'     => array(
 				'large'  => esc_html__( 'Large', 'newspack' ),
 				'small'  => esc_html__( 'Small', 'newspack' ),
 				'behind' => esc_html__( 'Behind article title', 'newspack' ),
@@ -885,7 +1009,30 @@ function newspack_customize_register( $wp_customize ) {
 				'above'  => esc_html__( 'Above article title', 'newspack' ),
 				'hidden' => esc_html__( 'Hidden', 'newspack' ),
 			),
-			'section' => 'page_default_settings',
+			'section'     => 'page_default_settings',
+		)
+	);
+
+	// Add option to select the d page template.
+	$wp_customize->add_setting(
+		'page_template_default',
+		array(
+			'default'           => 'default',
+			'sanitize_callback' => 'newspack_sanitize_post_template',
+		)
+	);
+	$wp_customize->add_control(
+		'page_template_default',
+		array(
+			'type'        => 'select',
+			'label'       => __( 'Default Page Template', 'newspack' ),
+			'description' => esc_html__( 'This option changes the selected template used for newly created pages going forward. The template can still be changed on a per-page basis.', 'newspack' ),
+			'choices'     => array(
+				'default'            => esc_html__( 'With Sidebar', 'newspack' ),
+				'single-feature.php' => esc_html__( 'One Column', 'newspack' ),
+				'single-wide.php'    => esc_html__( 'One Column Wide', 'newspack' ),
+			),
+			'section'     => 'page_default_settings',
 		)
 	);
 
@@ -917,6 +1064,58 @@ function newspack_customize_register( $wp_customize ) {
 		)
 	);
 
+	// Add option to enable image cropping in the archive pages.
+	$wp_customize->add_setting(
+		'archive_enable_cropping',
+		array(
+			'default'           => true,
+			'sanitize_callback' => 'newspack_sanitize_checkbox',
+		)
+	);
+	$wp_customize->add_control(
+		'archive_enable_cropping',
+		array(
+			'type'    => 'checkbox',
+			'label'   => esc_html__( 'Crop archive images to a 4:3 aspect ratio (changes require regenerating thumbnails for existing featured images)', 'newspack' ),
+			'section' => 'archive_options',
+		)
+	);
+
+	// Add option to show image captions in archives.
+	$wp_customize->add_setting(
+		'archive_show_captions',
+		array(
+			'default'           => false,
+			'sanitize_callback' => 'newspack_sanitize_checkbox',
+		)
+	);
+	$wp_customize->add_control(
+		'archive_show_captions',
+		array(
+			'type'    => 'checkbox',
+			'label'   => esc_html__( 'Show image captions in archives and WordPress’s default search results', 'newspack' ),
+			'section' => 'archive_options',
+		)
+	);
+
+	// Add option to show image credits in archives.
+	$wp_customize->add_setting(
+		'archive_show_credits',
+		array(
+			'default'           => false,
+			'sanitize_callback' => 'newspack_sanitize_checkbox',
+		)
+	);
+	$wp_customize->add_control(
+		'archive_show_credits',
+		array(
+			'type'    => 'checkbox',
+			'label'   => esc_html__( 'Show image credits in archives and WordPress’s default search results', 'newspack' ),
+			'section' => 'archive_options',
+		)
+	);
+
+
 	// Add option to change archive layouts.
 	$wp_customize->add_setting(
 		'archive_layout',
@@ -931,7 +1130,7 @@ function newspack_customize_register( $wp_customize ) {
 			'type'    => 'radio',
 			'label'   => esc_html__( 'Archive Layout', 'newspack' ),
 			'choices' => array(
-				'default'         => esc_html__( 'Default', 'newspack' ),
+				'default'         => esc_html__( 'With sidebar', 'newspack' ),
 				'one-column'      => esc_html__( 'One column', 'newspack' ),
 				'one-column-wide' => esc_html__( 'One column wide', 'newspack' ),
 			),
@@ -955,6 +1154,29 @@ function newspack_customize_register( $wp_customize ) {
 			'type'    => 'checkbox',
 			'label'   => esc_html__( 'Use a large, featured display for the latest post in the archives', 'newspack' ),
 			'section' => 'archive_options',
+		)
+	);
+
+	// Add option to customize archive titles.
+	$wp_customize->add_setting(
+		'archive_title_format',
+		array(
+			'default'           => 'default',
+			'sanitize_callback' => 'newspack_sanitize_radio',
+		)
+	);
+
+	$wp_customize->add_control(
+		'archive_title_format',
+		array(
+			'type'        => 'radio',
+			'label'       => esc_html__( 'Archive Title Format', 'newspack' ),
+			'description' => esc_html__( 'Change the format of the title used on archive pages.', 'newspack' ),
+			'choices'     => array(
+				'default' => esc_html__( 'Default (eg. "Category: Featured", "Author: Jane Doe")', 'newspack' ),
+				'short'   => esc_html__( 'Only archive name (eg. "Featured", "Jane Doe")', 'newspack' ),
+			),
+			'section'     => 'archive_options',
 		)
 	);
 
@@ -1031,6 +1253,46 @@ function newspack_customize_register( $wp_customize ) {
 		)
 	);
 
+	// Add option to toggle off the footer branding.
+	$wp_customize->add_setting(
+		'footer_show_branding',
+		array(
+			'default'           => true,
+			'sanitize_callback' => 'newspack_sanitize_checkbox',
+		)
+	);
+	$wp_customize->add_control(
+		'footer_show_branding',
+		array(
+			'type'        => 'checkbox',
+			'label'       => esc_html__( 'Show footer branding', 'newspack' ),
+			'description' => esc_html__( 'Display the site logo in the footer when the footer widget area is populated.', 'newspack' ),
+			'section'     => 'footer_options',
+		)
+	);
+
+	// Add option to toggle off the default footer layout.
+	$wp_customize->add_setting(
+		'footer_widget_layout',
+		array(
+			'default'           => 'columns',
+			'sanitize_callback' => 'newspack_sanitize_radio',
+		)
+	);
+	$wp_customize->add_control(
+		'footer_widget_layout',
+		array(
+			'type'        => 'radio',
+			'label'       => esc_html__( 'Footer Widget Layout', 'newspack' ),
+			'description' => esc_html__( 'Stack the footer widgets, or have them automatically divide into even columns.', 'newspack' ),
+			'choices'     => array(
+				'columns' => esc_html__( 'Columns', 'newspack' ),
+				'stacked' => esc_html__( 'Stacked', 'newspack' ),
+			),
+			'section'     => 'footer_options',
+		)
+	);
+
 	// Add option to collapse the comments.
 	$wp_customize->add_setting(
 		'footer_copyright',
@@ -1046,104 +1308,6 @@ function newspack_customize_register( $wp_customize ) {
 			'label'       => esc_html__( 'Copyright Information', 'newspack' ),
 			'description' => esc_html__( 'Add custom text to be displayed next to a copyright symbol and current year in the footer. By default, it will display your site title.', 'newspack' ),
 			'section'     => 'footer_options',
-		)
-	);
-
-	/**
-	 * WooCommerce Order Details settings
-	 */
-	$wp_customize->add_section(
-		'woocommerce_cart_options',
-		array(
-			'title' => esc_html__( 'Order Details', 'newspack' ),
-			'panel' => 'woocommerce',
-		)
-	);
-
-	// Add order details visibility options.
-	$wp_customize->add_setting(
-		'collapse_order_details',
-		array(
-			'default'           => 'hide',
-			'sanitize_callback' => 'newspack_sanitize_radio',
-		)
-	);
-	$wp_customize->add_control(
-		'collapse_order_details',
-		array(
-			'type'    => 'radio',
-			'label'   => esc_html__( 'Order Details Visibility', 'newspack' ),
-			'choices' => array(
-				'hide'    => esc_html__( 'Hide', 'newspack' ),
-				'toggle'  => esc_html__( 'Hide, with ability to toggle open', 'newspack' ),
-				'display' => esc_html__( 'Show', 'newspack' ),
-			),
-			'section' => 'woocommerce_cart_options',
-		)
-	);
-
-	/**
-	 * WooCommerce Thank You page details
-	 */
-	$wp_customize->add_section(
-		'woocommerce_thank_you',
-		array(
-			'title' => esc_html__( 'Thank You Page', 'newspack' ),
-			'panel' => 'woocommerce',
-		)
-	);
-
-	// Thank you page title.
-	$wp_customize->add_setting(
-		'woocommerce_thank_you_title',
-		array(
-			'default'           => esc_html__( 'Order received', 'newspack' ),
-			'sanitize_callback' => 'sanitize_text_field',
-		)
-	);
-	$wp_customize->add_control(
-		'woocommerce_thank_you_title',
-		array(
-			'type'    => 'text',
-			'label'   => esc_html__( 'Thank You page title', 'newspack' ),
-			'section' => 'woocommerce_thank_you',
-		)
-	);
-
-	// Thank you message text.
-	$wp_customize->add_setting(
-		'woocommerce_thank_you_message',
-		array(
-			'default'           => esc_html__( 'Thank you. Your order has been received.', 'newspack' ),
-			'sanitize_callback' => 'sanitize_text_field',
-		)
-	);
-	$wp_customize->add_control(
-		'woocommerce_thank_you_message',
-		array(
-			'type'        => 'textarea',
-			'label'       => esc_html__( 'Thank You message', 'newspack' ),
-			'description' => esc_html__( 'Text message that displays at the top of the "Thank You" page.' ),
-			'section'     => 'woocommerce_thank_you',
-		)
-	);
-
-	// Thank you - display customer details
-	$wp_customize->add_setting(
-		'thank_you_customer_details_display',
-		array(
-			'default'           => false,
-			'sanitize_callback' => 'newspack_sanitize_checkbox',
-		)
-	);
-
-	$wp_customize->add_control(
-		'thank_you_customer_details_display',
-		array(
-			'type'        => 'checkbox',
-			'label'       => esc_html__( 'Display Customer Details', 'newspack' ),
-			'description' => esc_html__( 'Display the customer\'s billing address below their transaction details.', 'newspack' ),
-			'section'     => 'woocommerce_thank_you',
 		)
 	);
 }
@@ -1331,6 +1495,28 @@ function newspack_panels_js() {
 add_action( 'customize_controls_enqueue_scripts', 'newspack_panels_js' );
 
 /**
+ * Sanitize footer logo size.
+ *
+ * @param string $choice Whether the footer logo is small or large.
+ *
+ * @return string
+ */
+function newspack_sanitize_footer_logo_size( $choice ) {
+	$valid = array(
+		'small',
+		'medium',
+		'large',
+		'xlarge',
+	);
+
+	if ( in_array( $choice, $valid, true ) ) {
+		return $choice;
+	}
+
+	return 'medium';
+}
+
+/**
  * Sanitize custom color choice.
  *
  * @param string $choice Whether image filter is active.
@@ -1393,6 +1579,7 @@ function newspack_sanitize_post_template( $choice ) {
 
 	return 'default';
 }
+
 
 /**
  * Sanitize slide-out sidebar side
@@ -1469,10 +1656,10 @@ function newspack_sanitize_font_provider_url( $code ) {
 		return '';
 	}
 	$font_service_urls = array(
-		'google'     => 'fonts.googleapis.com',
-		'fonts'      => 'fast.fonts.net',
-		'typekit'    => 'use.typekit.net',
-		'typography' => 'cloud.typography.com',
+		'google'      => 'fonts.googleapis.com',
+		'fonts'       => 'fast.fonts.net',
+		'typekit'     => 'use.typekit.net',
+		'typenetwork' => 'cloud.typenetwork.com',
 	);
 
 	$regex = '/\/\/[^\("\') \n]+/i';

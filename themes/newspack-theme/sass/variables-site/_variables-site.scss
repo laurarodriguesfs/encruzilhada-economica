@@ -1,5 +1,3 @@
-@import 'colors';
-@import 'fonts';
-@import 'structure';
-@import 'columns';
-@import 'transitions';
+@use "newspack-ui";
+@use "structure";
+@use "transitions";

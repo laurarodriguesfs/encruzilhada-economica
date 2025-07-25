@@ -100,8 +100,12 @@ function newspack_customize_logo_resize( $html ) {
 		$subhead_max_width  = 200;
 		$subhead_max_height = 60;
 
+		$sticky_max_width  = 400;
+		$sticky_max_height = 90;
+
 		$mobile  = newspack_logo_small_sizes( $img['width'], $img['height'], $mobile_max_width, $mobile_max_height );
 		$subhead = newspack_logo_small_sizes( $img['width'], $img['height'], $subhead_max_width, $subhead_max_height );
+		$sticky  = newspack_logo_small_sizes( $img['width'], $img['height'], $sticky_max_width, $sticky_max_height );
 
 		// add the CSS
 		$css = '
@@ -121,11 +125,24 @@ function newspack_customize_logo_resize( $html ) {
 		}
 
 		@media (min-width: 782px) {
+			.h-stk:not(.h-sub) .site-header .custom-logo {
+				max-height: ' . $sticky['height'] . 'px;
+				max-width: ' . $sticky['width'] . 'px;
+			}
+
 			.h-sub .site-header .custom-logo {
 				max-width: ' . $subhead['width'] . 'px;
 				max-height: ' . $subhead['height'] . 'px;
 			}
 		}
+
+		@media (max-width: 1199px) and (min-width: 782px) {
+			.h-stk.h-cl:not(.h-sub) .site-header .custom-logo {
+				max-width: 100%;
+				width: auto;
+			}
+		}
+
 		</style>';
 
 		$html = $css . $html;

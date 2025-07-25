@@ -1,46 +1,75 @@
+@use "../mixins/utilities";
+@use "../variables-site/structure";
+
 /** === Layout === */
+
+#page {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+	> *:not(#content) {
+		flex-grow: 0;
+	}
+}
+#content {
+	flex: 1;
+}
+
+.admin-bar #page {
+	min-height: calc(100vh - 46px);
+
+	@include utilities.media( tablet ) {
+		min-height: calc(100vh - 32px);
+	}
+}
 
 .wrapper {
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-between;
 	margin: auto;
-	max-width: 90%;
-	width: $size__site-main;
+	max-width: 90vw;
+	width: structure.$size__site-main;
 
-	@include media( tablet ) {
+	@include utilities.media( tablet ) {
 		flex-wrap: nowrap;
 	}
 }
 
-#page {
-	overflow: hidden;
-	width: 100%;
-}
-
 .site-content {
 	min-height: 30vh;
-	margin-top: #{1.5 * $size__spacing-unit};
+	margin-top: #{1.5 * structure.$size__spacing-unit};
 
-	@include media( tablet ) {
-		margin-top: #{4 * $size__spacing-unit};
+	@include utilities.media( tablet ) {
+		margin-top: #{4 * structure.$size__spacing-unit};
+	}
+}
+
+.post-template-single-feature,
+.page-template-single-feature,
+.page-template-no-header-footer,
+.post-template-single-wide,
+.page-template-single-wide,
+.newspack-front-page {
+	.site-content {
+		overflow: hidden;
 	}
 }
 
 #primary {
 	margin: auto;
-	max-width: 90%;
-	width: $size__site-main;
+	max-width: 90vw;
+	width: structure.$size__site-main;
 }
 
 #secondary {
-	margin-top: $size__spacing-unit;
+	margin-top: structure.$size__spacing-unit;
 }
 
 .single,
-.page:not( .newspack-front-page ) {
+.page:not(.newspack-front-page) {
 	&.has-sidebar #main {
-		@include media( tablet ) {
+		@include utilities.media( tablet ) {
 			display: flex;
 			flex-wrap: wrap;
 			justify-content: space-between;
@@ -52,7 +81,7 @@
 .blog,
 .search {
 	&.has-sidebar #primary {
-		@include media( tablet ) {
+		@include utilities.media( tablet ) {
 			display: flex;
 			flex-wrap: wrap;
 			justify-content: space-between;
@@ -65,7 +94,7 @@
 .search #main,
 .page .main-content,
 .single .main-content {
-	@include media( tablet ) {
+	@include utilities.media( tablet ) {
 		width: 65%;
 	}
 }
@@ -75,11 +104,11 @@
 .search #secondary,
 .page #secondary,
 .single #secondary {
-	@include media( tablet ) {
-		width: calc( 35% - #{2 * $size__spacing-unit} );
+	@include utilities.media( tablet ) {
+		width: calc(35% - #{2 * structure.$size__spacing-unit});
 	}
-	@include media( desktop ) {
-		width: calc( 35% - #{3 * $size__spacing-unit} );
+	@include utilities.media( desktop ) {
+		width: calc(35% - #{3 * structure.$size__spacing-unit});
 	}
 }
 
@@ -90,6 +119,7 @@
 // Single-column layouts
 .post-template-single-feature .main-content,
 .page-template-single-feature .main-content,
+.page-template-no-header-footer .main-content,
 .archive-one-column #main,
 .newspack-front-page.page-template-single-feature .site-main {
 	margin-left: auto;
@@ -98,8 +128,9 @@
 	width: 100%;
 }
 
-@include media( tablet ) {
+@include utilities.media( tablet ) {
 	.page-template-single-feature .entry-header,
+	.page-template-no-header-footer .entry-header,
 	.archive.archive-one-column .page-header {
 		margin-left: auto;
 		margin-right: auto;
@@ -119,12 +150,28 @@
 		width: 100%;
 	}
 
-	@include media( tablet ) {
+	@include utilities.media( tablet ) {
 		.author-bio,
 		.comments-area {
 			margin-left: auto;
 			margin-right: auto;
 			width: 65%;
+		}
+	}
+}
+
+/* 'No Header or Fotoer' page template */
+.page-template-no-header-footer {
+	&,
+	&.hide-page-title {
+		.site-content {
+			margin-top: 0;
+		}
+	}
+
+	&:not(.hide-page-title):not([class*="single-featured-image-"]) {
+		.entry-header {
+			margin-top: structure.$size__spacing-unit;
 		}
 	}
 }

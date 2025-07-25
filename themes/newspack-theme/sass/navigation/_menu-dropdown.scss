@@ -1,3 +1,6 @@
+@use "../variables-site/structure";
+@use "../mixins/utilities";
+
 /** === Dropdown menus === */
 
 .dd-menu {
@@ -7,15 +10,14 @@
 		border: none;
 		padding: 0;
 		margin: 0;
-		font-family: $font__heading;
+		font-family: var(--newspack-theme-font-heading);
 		line-height: 1.2;
 		text-decoration: none;
 		background: transparent;
 		color: inherit;
 		cursor: pointer;
 		transition: background 250ms ease-in-out, transform 150ms ease;
-		-webkit-appearance: none;
-		-moz-appearance: none;
+		appearance: none;
 
 		&:hover,
 		&:focus {
@@ -23,12 +25,12 @@
 		}
 
 		&:focus {
-			outline: 1px solid transparent;
+			outline: 1px dotted currentcolor;
 			outline-offset: -4px;
 		}
 
 		&:active {
-			transform: scale( 0.99 );
+			transform: scale(0.99);
 		}
 	}
 
@@ -45,6 +47,7 @@
 
 	.submenu-expand {
 		display: inline-block;
+		pointer-events: none;
 	}
 
 	.sub-menu {
@@ -53,11 +56,11 @@
 			&.menu-item-has-children {
 				.submenu-expand {
 					position: absolute;
-					width: calc( 24px + #{$size__spacing-unit} );
+					width: calc(24px + #{structure.$size__spacing-unit});
 					bottom: 0;
 					color: white;
 					line-height: 1;
-					padding: calc( 0.5 * #{$size__spacing-unit} );
+					padding: calc(0.5 * #{structure.$size__spacing-unit});
 					margin-right: 0;
 
 					svg {
@@ -85,7 +88,7 @@
 		&.menu-item-has-children {
 			position: inherit;
 
-			@include media( tablet ) {
+			@include utilities.media( tablet ) {
 				position: relative;
 			}
 
@@ -102,6 +105,10 @@
 					position: relative;
 					top: -0.2em;
 				}
+
+				&.open-dropdown svg {
+					transform: rotate(180deg);
+				}
 			}
 		}
 	}
@@ -109,7 +116,7 @@
 
 .site-header .dd-menu {
 	> ul > li {
-		@include media( tablet ) {
+		@include utilities.media( tablet ) {
 			&.menu-item-has-children > a {
 				padding-right: 0;
 			}
@@ -120,9 +127,9 @@
 
 			&::before {
 				border-style: solid;
-				border-width: 0 8px 8px 8px;
-				border-color: transparent transparent $color__background-dark transparent;
-				content: '';
+				border-width: 0 8px 8px;
+				border-color: transparent transparent var(--newspack-theme-color-bg-dark) transparent;
+				content: "";
 				display: inline-block;
 				height: 0;
 				left: 10px;
@@ -134,7 +141,8 @@
 	}
 
 	.sub-menu {
-		color: $color__background-body;
+		color: var(--newspack-theme-color-bg-body);
+		display: none;
 		position: absolute;
 		opacity: 0;
 		transition: opacity 0.2s;
@@ -142,12 +150,14 @@
 		z-index: 99999;
 
 		a {
-			background-color: $color__background-dark;
-			color: $color__background-body;
+			background-color: var(--newspack-theme-color-bg-dark);
+			color: var(--newspack-theme-color-bg-body);
 			display: block;
-			line-height: $font__line-height-heading;
-			padding: calc( 0.75 * #{$size__spacing-unit} ) calc( 24px + #{$size__spacing-unit} )
-				calc( 0.75 * #{$size__spacing-unit} ) $size__spacing-unit;
+			line-height: var(--newspack-theme-font-line-height-heading);
+			padding:
+				calc(0.75 * #{structure.$size__spacing-unit})
+				calc(24px + #{structure.$size__spacing-unit})
+				calc(0.75 * #{structure.$size__spacing-unit}) structure.$size__spacing-unit;
 
 			&:hover,
 			&:focus {
@@ -156,57 +166,35 @@
 		}
 
 		.submenu-expand {
-			right: #{0.25 * $size__spacing-unit};
-			top: #{0.65 * $size__spacing-unit};
-			transform: rotate( -90deg );
+			right: -5px;
+			top: #{0.65 * structure.$size__spacing-unit};
+			transform: rotate(-90deg);
+
+			svg {
+				margin-top: -10px;
+			}
 		}
 	}
 
 	/*
 	 * Sub-menu styles
-	 *
-	 * :focus-within needs its own selector so other similar
-	 * selectors don’t get ignored if a browser doesn’t recognize it
 	 */
-	.menu-item-has-children:not( .off-canvas ):focus-within > .sub-menu {
-		display: block;
-		margin-top: 0;
-		opacity: 1;
-		position: absolute;
-		left: 0;
-		right: auto;
-		top: 100%;
-		bottom: auto;
-		height: auto;
-		transform: none;
-		width: #{12.5 * $size__spacing-unit};
-	}
-
-	.sub-menu .menu-item-has-children:not( .off-canvas ):focus-within > .sub-menu {
-		left: 100%;
-		top: 0;
-	}
-
-	.menu-item-has-children:not( .off-canvas ):hover > .sub-menu,
-	.menu-item-has-children:not( .off-canvas ):focus > .sub-menu,
-	.menu-item-has-children.is-focused:not( .off-canvas ) > .sub-menu {
+	.menu-item-has-children:hover > .sub-menu,
+	.menu-item-has-children > .submenu-expand.open-dropdown + .sub-menu {
 		display: block;
 		float: none;
 		margin-top: 0;
 		opacity: 1;
 		position: absolute;
-		left: 0;
-		right: auto;
-		top: 100%;
-		bottom: auto;
+		inset: 100% auto auto 0;
 		height: auto;
 		transform: none;
-		width: #{12.5 * $size__spacing-unit};
+		width: #{12.5 * structure.$size__spacing-unit};
 	}
 
-	.sub-menu .menu-item-has-children:not( .off-canvas ):hover > .sub-menu,
-	.sub-menu .menu-item-has-children:not( .off-canvas ):focus > .sub-menu,
-	.sub-menu .menu-item-has-children.is-focused:not( .off-canvas ) > .sub-menu {
+	.sub-menu .menu-item-has-children:hover > .sub-menu,
+	.sub-menu .menu-item-has-children > .submenu-expand.open-dropdown + .sub-menu {
+		display: block;
 		left: 100%;
 		top: 0;
 	}

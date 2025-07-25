@@ -26,33 +26,42 @@
 			<?php get_template_part( 'template-parts/footer/below-footer', 'widgets' ); ?>
 
 			<div class="wrapper site-info-contain">
-				<a href="<?php echo esc_url( __( 'https://laurarodrigues.com.br', 'laura rodrigues' ) ); ?>" class="desenvolvido-por">
-					<?php echo esc_html__( 'Desenvolvido por', 'laura rodrigues' ); ?>
-					<br>
-					<img class= "custom-logo-lr" src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/logo-claro.png" alt="Logo Laura Rodrigues">
-				</a>
+				<div class="left-column">
+					<a href="<?php echo esc_url( __( 'https://laurarodrigues.com.br', 'laura rodrigues' ) ); ?>" class="desenvolvido-por">
+						<?php echo esc_html__( 'Desenvolvido por', 'laura rodrigues' ); ?>
+						<br>
+						<img class="custom-logo-lr" src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/logo-claro.png" alt="Logo Laura Rodrigues">
+					</a>
 
-				<?php
+					<a href="<?php echo esc_url( __( 'https://newspack.pub/', 'newspack' ) ); ?>" class="imprint">
+						<?php echo esc_html__( 'com base no tema Newspack by Automattic', 'newspack' ); ?>
+					</a>
+
+					<?php
 					$copyright_info   = get_bloginfo( 'name' );
 					$custom_copyright = get_theme_mod( 'footer_copyright', '' );
 					if ( ! empty( $custom_copyright ) ) {
 						$copyright_info = $custom_copyright;
 					}
-				?>
-				<?php if ( ! empty( $copyright_info ) ) : ?>
-					<span class="copyright">&copy; <?php echo esc_html( date( 'Y' ) ); ?> <?php echo esc_html( $copyright_info ); ?>.</span>
-				<?php endif; ?>
+					?>
+					<?php if ( ! empty( $copyright_info ) ) : ?>
+						<span class="copyright">&copy; <?php echo esc_html( date( 'Y' ) ); ?> <?php echo esc_html( $copyright_info ); ?>.</span>
+					<?php endif; ?>
 
+					<?php
+					if ( function_exists( 'the_privacy_policy_link' ) ) {
+						the_privacy_policy_link( '', '' );
+					}
+					?>
+				</div><!-- .left-column -->
 
-				<?php
-				if ( function_exists( 'the_privacy_policy_link' ) ) {
-					the_privacy_policy_link( '', '' );
-				}
-
-				if ( ! is_active_sidebar( 'footer-1' ) || ( ! has_custom_logo() ) ) {
-					newspack_social_menu_footer();
-				}
-				?>
+				<div class="right-column">
+					<?php
+					if ( ! is_active_sidebar( 'footer-1' ) || ( ! has_custom_logo() ) ) {
+						newspack_social_menu_footer();
+					}
+					?>
+				</div><!-- .right-column -->
 			</div><!-- .wrapper -->
 		</div><!-- .site-info -->
 	</footer><!-- #colophon -->
@@ -60,6 +69,5 @@
 </div><!-- #page -->
 
 <?php wp_footer(); ?>
-
 </body>
 </html>

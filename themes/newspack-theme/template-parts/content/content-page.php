@@ -9,10 +9,19 @@
 
 ?>
 
+<?php if ( newspack_is_sticky_animated_header() ) : ?>
+	<?php // If the header is sticky, add a position observer. ?>
+	<amp-position-observer target="" on="enter:headerFadeIn.start; exit:headerFadeOut.start;" layout="nodisplay"></amp-position-observer>
+<?php endif; ?>
+
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 	<div class="entry-content">
 		<?php
+		do_action( 'newspack_theme_before_page_content' );
+
 		the_content();
+
+		do_action( 'newspack_theme_after_page_content' );
 
 		wp_link_pages(
 			array(

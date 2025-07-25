@@ -18,213 +18,28 @@ function newspack_custom_typography_css() {
 
 	if ( get_theme_mod( 'font_header', '' ) ) {
 		$css_blocks .= '
-		/* _headings.scss */
-		.author-bio .author-link,
-		.author-meta,
-		.comment-metadata,
-		.comment-reply-link,
-		.comment-reply-login,
-		.comments-title,
-		.comment-author .fn,
-		.discussion-meta-info,
-		.cat-links,
-		amp-script .cat-links,
-		.entry-meta,
-		.entry-footer,
-		.nav1,
-		.no-comments,
-		.not-found .page-title,
-		.error-404 .page-title,
-		.page-links,
-		.page-description,
-		.pagination .nav-links,
-		.sticky-post,
-		.site-title,
-		.site-description,
-		.site-info,
-		#cancel-comment-reply-link,
-		.jp-relatedposts-i2 a,
-		.page-title,
-		h1,
-		h2,
-		h3,
-		h4,
-		h5,
-		h6,
-
-		/* _tables.scss */
-		table,
-
-		/* _buttons.scss */
-		.button,
-		button,
-		input[type="button"],
-		input[type="reset"],
-		input[type="submit"],
-
-		/* _blocks.scss */
-		.wp-block-button__link,
-
-		/* _captions.scss */
-		figcaption,
-		.wp-caption-text,
-		.gallery-caption,
-		.amp-image-lightbox-caption,
-
-		/* _infinite_scroll.scss */
-		.site-main #infinite-handle span button,
-		.site-main #infinite-handle span button:hover,
-		.site-main #infinite-handle span button:focus,
-
-		/* _menu-main-navigation.scss */
-		.nav1 button,
-		.mobile-menu-toggle,
-
-		/* _menu-tertiary-navigation.scss */
-		.nav3,
-
-		/* _menu-top-navigation.scss */
-		.secondary-menu,
-
-		/* _menu-highlight-navigation.scss */
-		.highlight-menu-contain .wrapper,
-
-		/* _next_previous.scss */
-		.comment-navigation .nav-previous,
-		.comment-navigation .nav-next,
-		.post-navigation,
-
-		/* _comments.scss */
-		.comment-list .pingback .comment-body,
-		.comment-list .trackback .comment-body,
-		.comment-list .pingback .comment-body .comment-edit-link,
-		.comment-list .trackback .comment-body .comment-edit-link,
-		.comment-form label,
-		.comment-form .comment-notes,
-
-		/* _blocks.scss */
-		.wp-block-latest-comments .wp-block-latest-comments__comment-meta,
-		.wp-block-pullquote cite,
-		.wp-block-categories li,
-		.wp-block-archives li,
-		.wp-block-latest-posts li > a,
-		.wp-block-latest-posts time,
-		.wp-block-file,
-		.wp-block-file .wp-block-file__button,
-
-		/* _widgets.scss */
-		.widget,
-		.widget_archive ul li,
-		.widget_categories ul li,
-		.widget_meta ul li,
-		.widget_nav_menu ul li,
-		.widget_pages ul li,
-		.widget_recent_comments ul li,
-		.widget_recent_entries ul li,
-		.widget_rss ul li,
-
-		.widget_tag_cloud .tagcloud,
-
-		/* _copy.scss */
-		blockquote cite,
-
-		/* Jetpack */
-		.jp-relatedposts-i2,
-		#jp-relatedposts.jp-relatedposts,
-		.jp-relatedposts-i2 .jp-relatedposts-headline,
-		#jp-relatedposts.jp-relatedposts .jp-relatedposts-headline,
-
-		/* Yoast Breadcrumbs */
-		.site-breadcrumb .wrapper > span
-		{
-			font-family: ' . wp_kses( $font_header, null ) . ';
-		}';
+			:root {
+				--newspack-theme-font-heading: ' . wp_kses( $font_header, null ) . ';
+			}
+		';
 
 		$editor_css_blocks .= '
-		.edit-post-visual-editor.editor-styles-wrapper h1,
-		.edit-post-visual-editor.editor-styles-wrapper h2,
-		.edit-post-visual-editor.editor-styles-wrapper h3,
-		.edit-post-visual-editor.editor-styles-wrapper h4,
-		.edit-post-visual-editor.editor-styles-wrapper h5,
-		.edit-post-visual-editor.editor-styles-wrapper h6,
-		.block-editor-block-list__layout .block-editor-block-list__block figcaption,
-		.block-editor-block-list__layout .block-editor-block-list__block .gallery-caption,
-		.block-editor-block-list__layout .block-editor-block-list__block .cat-links,
-
-		/* Post Title */
-		.edit-post-visual-editor.editor-styles-wrapper .editor-post-title__block .editor-post-title__input,
-
-		/* Homepage Posts Block */
-		.block-editor-block-list__layout .wpnbha .entry-title,
-		.block-editor-block-list__layout .wpnbha .entry-meta,
-
-		/* Table Block */
-		.block-editor-block-list__layout .block-editor-block-list__block .wp-block-table th,
-		.block-editor-block-list__layout .block-editor-block-list__block .wp-block-table td,
-
-		/* Button Block */
-		.block-editor-block-list__layout .block-editor-block-list__block .wp-block-button__link,
-
-		/* Blockquote Block */
-		.block-editor-block-list__layout .block-editor-block-list__block .wp-block-quote cite,
-		.block-editor-block-list__layout .block-editor-block-list__block .wp-block-quote footer,
-		.block-editor-block-list__layout .block-editor-block-list__block .wp-block-quote .wp-block-quote__citation,
-
-		/* Pullquote Block */
-		.block-editor-block-list__layout .block-editor-block-list__block .wp-block[data-type="core/pullquote"] .wp-block-pullquote__citation,
-		.block-editor-block-list__layout .block-editor-block-list__block .wp-block[data-type="core/pullquote"][data-align="left"] .wp-block-pullquote__citation,
-		.block-editor-block-list__layout .block-editor-block-list__block .wp-block[data-type="core/pullquote"][data-align="right"] .wp-block-pullquote__citation,
-
-		/* File Block */
-		.block-editor-block-list__layout .block-editor-block-list__block .wp-block-file,
-
-		/* Widget blocks */
-		.block-editor-block-list__layout .block-editor-block-list__block ul.wp-block-archives li,
-		.block-editor-block-list__layout .block-editor-block-list__block .wp-block-categories li,
-		.block-editor-block-list__layout .block-editor-block-list__block .wp-block-latest-posts li > a,
-		.block-editor-block-list__layout .block-editor-block-list__block .wp-block-latest-posts time,
-
-		/* Latest Comments blocks */
-		.block-editor-block-list__layout .block-editor-block-list__block .wp-block-latest-comments .wp-block-latest-comments__comment-meta,
-
-		/* Jetpack blocks */
-		.block-editor-block-list__layout .block-editor-block-list__block .jp-relatedposts-i2 a,
-		.block-editor-block-list__layout .block-editor-block-list__block .jp-relatedposts-i2 strong,
-		.block-editor-block-list__layout .block-editor-block-list__block .jp-relatedposts-i2 .jp-related-posts-i2__post-date,
-		.block-editor-block-list__layout .block-editor-block-list__block .jp-relatedposts-i2 .jp-related-posts-i2__post-context,
-
-		/* Classic Editor */
-		.block-editor-block-list__layout .block-editor-block-list__block .wp-caption dd,
-		.block-editor-block-list__layout .block-editor-block-list__block .wp-block-freeform blockquote cite
-
-		{
-			font-family: ' . wp_kses( $font_header, null ) . ';
-		}
+			:root .editor-styles-wrapper {
+				--newspack-theme-font-heading: ' . wp_kses( $font_header, null ) . ';
+			}
 		';
 	}
 
 	if ( get_theme_mod( 'font_body', '' ) ) {
 		$css_blocks .= '
-		/* _typography.scss */
-		body,
-		input,
-		select,
-		optgroup,
-		textarea,
-
-		/* _blocks.scss */
-		.wp-block-verse
-		{
-			font-family: ' . wp_kses( $font_body, null ) . ';
-		}
+			:root {
+				--newspack-theme-font-body: ' . wp_kses( $font_body, null ) . ';
+			}
 		';
 
 		$editor_css_blocks .= '
-			#newspack-post-subtitle-element,
-			.block-editor-block-list__layout,
-			.editor-default-block-appender .editor-default-block-appender__content
-			{
-				font-family: ' . wp_kses( $font_body, null ) . ';
+			:root .editor-styles-wrapper {
+				--newspack-theme-font-body: ' . wp_kses( $font_body, null ) . ';
 			}
 		';
 	}
@@ -249,6 +64,7 @@ function newspack_custom_typography_css() {
 		if ( ! is_child_theme() ) {
 			$css_blocks        .= '
 				.accent-header,
+				#secondary .widgettitle,
 				.article-section-title {
 					text-transform: uppercase;
 				}
@@ -298,28 +114,34 @@ function newspack_custom_typography_link( $theme_mod ) {
 function newspack_get_font_stacks() {
 	return array(
 		'serif'      => array(
-			'name'  => __( 'Serif' ),
+			'name'  => __( 'Serif', 'newspack' ),
 			'fonts' => array(
 				'Georgia',
-				'Garamond',
-				'Times New Roman',
 				'serif',
 			),
 		),
 		'sans_serif' => array(
-			'name'  => __( 'Sans Serif' ),
+			'name'  => __( 'Sans Serif', 'newspack' ),
 			'fonts' => array(
-				'-apple-system',
-				'BlinkMacSystemFont',
-				'Segoe UI',
-				'Roboto',
-				'Oxygen',
-				'Ubuntu',
-				'Cantarell',
-				'Fira Sans',
-				'Droid Sans',
-				'Helvetica Neue',
+				'Helvetica',
 				'sans-serif',
+			),
+		),
+		'display'    => array(
+			'name'  => __( 'Display', 'newspack' ),
+			'fonts' => array(
+				'Impact',
+				'Arial Black',
+				'sans-serif',
+			),
+		),
+		'monospace'  => array(
+			'name'  => __( 'Monospace', 'newspack' ),
+			'fonts' => array(
+				'Consolas',
+				'Courier New',
+				'Courier',
+				'monospace'
 			),
 		),
 	);

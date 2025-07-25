@@ -1,3 +1,8 @@
+@use "sass:math";
+@use "../../mixins/mixins-main";
+@use "../../mixins/utilities";
+@use "../../variables-site/structure";
+
 .comment-content a {
 	word-wrap: break-word;
 }
@@ -7,26 +12,26 @@
 }
 
 .comments-area {
-	margin: calc( 2 * #{$size__spacing-unit} ) 0;
+	margin: calc(2 * #{structure.$size__spacing-unit}) 0;
 
-	@include media( tablet ) {
-		margin: calc( 3 * #{$size__spacing-unit} ) 0;
+	@include utilities.media( tablet ) {
+		margin: calc(3 * #{structure.$size__spacing-unit}) 0;
 	}
 
 	> * {
-		margin-top: calc( 2 * #{$size__spacing-unit} );
-		margin-bottom: calc( 2 * #{$size__spacing-unit} );
+		margin-top: calc(2 * #{structure.$size__spacing-unit});
+		margin-bottom: calc(2 * #{structure.$size__spacing-unit});
 	}
 
 	/* Add extra margin when the comments section is located immediately after the
 	 * post itself (this happens on pages).
 	 */
 	.entry + & {
-		margin-top: calc( 3 * #{$size__spacing-unit} );
+		margin-top: calc(3 * #{structure.$size__spacing-unit});
 	}
 
 	.comments-title-wrap {
-		@include media( tablet ) {
+		@include utilities.media( tablet ) {
 			align-items: baseline;
 			display: flex;
 			justify-content: space-between;
@@ -35,14 +40,14 @@
 		.comments-title {
 			margin: 0;
 
-			@include media( tablet ) {
-				flex: 1 0 calc( 3 * ( 100vw / 12 ) );
+			@include utilities.media( tablet ) {
+				flex: 1 0 calc(3 * ( 100vw / 12 ));
 			}
 		}
 
 		.discussion-meta {
-			@include media( tablet ) {
-				margin-left: #{$size__spacing-unit};
+			@include utilities.media( tablet ) {
+				margin-left: #{structure.$size__spacing-unit};
 				text-align: right;
 			}
 		}
@@ -63,7 +68,7 @@
 	position: relative;
 
 	.comment-user-avatar {
-		margin: $size__spacing-unit 0 -#{$size__spacing-unit};
+		margin: structure.$size__spacing-unit 0 -#{structure.$size__spacing-unit};
 	}
 
 	.comment .comment-form {
@@ -71,12 +76,17 @@
 	}
 
 	> small {
+		bottom: 1em;
 		display: block;
-		font-size: $font__size_base;
+		font-size: var(--newspack-theme-font-size-base);
 		position: absolute;
-		left: calc( #{$size__spacing-unit} + 100% );
-		top: calc( -3.5 * #{$size__spacing-unit} );
-		width: calc( 100vw / 12 );
+		right: 0;
+		white-space: nowrap;
+
+		// hide link if AMP is enabled; it adds an 'on' attribute.
+		[on] {
+			display: none;
+		}
 	}
 }
 
@@ -106,8 +116,8 @@
 }
 
 .comment-policy {
-	font-size: $font__size-sm;
-	margin: #{0.5 * $size__spacing-unit} 0 $size__spacing-unit;
+	font-size: var(--newspack-theme-font-size-sm);
+	margin: #{0.5 * structure.$size__spacing-unit} 0 structure.$size__spacing-unit;
 
 	a {
 		text-decoration: underline;
@@ -120,7 +130,7 @@
 
 	.children {
 		margin: 0;
-		padding: 0 0 0 $size__spacing-unit;
+		padding: 0 0 0 structure.$size__spacing-unit;
 	}
 
 	> .comment:first-child {
@@ -130,26 +140,30 @@
 	.pingback,
 	.trackback {
 		.comment-body {
-			color: $color__text-light;
-			font-family: $font__heading;
-			font-size: $font__size-xs;
+			color: var(--newspack-theme-color-text-light);
+			font-family: var(--newspack-theme-font-heading);
+			font-size: var(--newspack-theme-font-size-xs);
 			font-weight: 500;
-			margin-top: $size__spacing-unit;
-			margin-bottom: $size__spacing-unit;
+			margin-top: structure.$size__spacing-unit;
+			margin-bottom: structure.$size__spacing-unit;
 
-			a:not( .comment-edit-link ) {
+			a:not(.comment-edit-link) {
 				font-weight: bold;
 				line-height: 1.5;
-				padding-right: #{0.5 * $size__spacing-unit};
+				padding-right: #{0.5 * structure.$size__spacing-unit};
 				display: block;
 			}
 
 			.comment-edit-link {
-				color: $color__text-light;
-				font-family: $font__heading;
+				color: var(--newspack-theme-color-text-light);
+				font-family: var(--newspack-theme-font-heading);
 				font-weight: 500;
 			}
 		}
+	}
+
+	#respond .comment-reply-title {
+		font-size: var(--newspack-theme-font-size-base);
 	}
 }
 
@@ -168,8 +182,8 @@
 	list-style: none;
 	position: relative;
 
-	@include media( tablet ) {
-		padding-left: calc( 0.5 * ( #{$size__spacing-unit} + calc( 100vw / 12 ) ) );
+	@include utilities.media( tablet ) {
+		padding-left: calc(0.5 * ( #{structure.$size__spacing-unit} + calc(100vw / 12) ));
 
 		&.depth-1,
 		.children {
@@ -178,7 +192,7 @@
 	}
 
 	.comment-body {
-		margin: calc( 2 * #{$size__spacing-unit} ) 0 0;
+		margin: calc(2 * #{structure.$size__spacing-unit}) 0 0;
 	}
 
 	.comment-meta {
@@ -188,7 +202,7 @@
 	.comment-author {
 		.avatar {
 			float: left;
-			margin-right: $size__spacing-unit;
+			margin-right: structure.$size__spacing-unit;
 			position: relative;
 		}
 
@@ -200,23 +214,23 @@
 				color: inherit;
 
 				&:hover {
-					color: $color__primary-variation;
+					color: var(--newspack-theme-color-primary-against-white);
 				}
 			}
 		}
 
 		.post-author-badge {
-			background: $color__primary;
+			background: var(--newspack-theme-color-primary);
 			border-radius: 100%;
-			color: #fff;
+			color: var(--newspack-theme-color-against-primary);
 			display: inline-block;
 			height: 16px;
 			line-height: 16px;
-			margin-left: #{0.25 * $size__spacing-unit};
+			margin-left: #{0.25 * structure.$size__spacing-unit};
 			text-align: center;
 			width: 16px;
 
-			@include media( tablet ) {
+			@include utilities.media( tablet ) {
 				height: 18px;
 				line-height: 18px;
 				width: 18px;
@@ -224,9 +238,9 @@
 
 			svg {
 				display: inline-block;
-				fill: currentColor;
+				fill: currentcolor;
 				height: inherit;
-				transform: scale( 0.875 );
+				transform: scale(0.875);
 				width: inherit;
 			}
 		}
@@ -237,7 +251,7 @@
 		.comment-edit-link {
 			display: inline;
 			font-weight: 500;
-			color: $color__text-light;
+			color: var(--newspack-theme-color-text-light);
 			vertical-align: baseline;
 
 			time {
@@ -245,7 +259,7 @@
 			}
 
 			&:hover {
-				color: $color__primary-variation;
+				color: var(--newspack-theme-color-primary-against-white);
 				text-decoration: none;
 			}
 		}
@@ -255,16 +269,16 @@
 		}
 
 		.edit-link-sep {
-			color: $color__text-light;
+			color: var(--newspack-theme-color-text-light);
 			margin: 0 0.2em;
 			vertical-align: baseline;
 		}
 
 		.edit-link {
-			color: $color__text-light;
+			color: var(--newspack-theme-color-text-light);
 
 			svg {
-				transform: scale( 0.8 );
+				transform: scale(0.8);
 				vertical-align: baseline;
 				margin-right: 0.1em;
 			}
@@ -272,21 +286,21 @@
 
 		.comment-edit-link {
 			position: relative;
-			padding-left: $size__spacing-unit;
-			margin-left: -#{$size__spacing-unit};
+			padding-left: structure.$size__spacing-unit;
+			margin-left: -#{structure.$size__spacing-unit};
 			z-index: 1;
 
 			&:hover {
-				color: $color__primary;
+				color: var(--newspack-theme-color-primary-against-white);
 			}
 		}
 	}
 
 	.comment-content {
-		margin: $size__spacing-unit 0;
+		margin: structure.$size__spacing-unit 0;
 
-		@include media( desktop ) {
-			padding-right: $size__spacing-unit;
+		@include utilities.media( desktop ) {
+			padding-right: structure.$size__spacing-unit;
 		}
 
 		> *:first-child {
@@ -312,7 +326,7 @@
 }
 
 .must-log-in {
-	font-size: $font__size-sm;
+	font-size: var(--newspack-theme-font-size-sm);
 	font-style: italic;
 }
 
@@ -322,12 +336,12 @@
 	font-weight: 500;
 
 	&:hover {
-		color: $color__primary-variation;
+		color: var(--newspack-theme-color-primary-variation);
 	}
 }
 
 .discussion-avatar-list {
-	@include clearfix;
+	@include mixins-main.clearfix;
 
 	margin: 0;
 	padding: 0;
@@ -342,8 +356,8 @@
 
 	.comment-user-avatar {
 		img {
-			height: calc( 1.5 * #{$size__spacing-unit} );
-			width: calc( 1.5 * #{$size__spacing-unit} );
+			height: calc(1.5 * #{structure.$size__spacing-unit});
+			width: calc(1.5 * #{structure.$size__spacing-unit});
 		}
 	}
 }
@@ -354,9 +368,9 @@
 
 		.svg-icon {
 			vertical-align: middle;
-			fill: currentColor;
-			transform: scale( 0.6 ) scaleX( -1 ) translateY( -0.1em );
-			margin-left: -#{0.25 * $size__spacing-unit}; // Align icon with avatars above.
+			fill: currentcolor;
+			transform: scale(0.6) scaleX(-1) translateY(-0.1em);
+			margin-left: -#{0.25 * structure.$size__spacing-unit}; // Align icon with avatars above.
 		}
 	}
 }
@@ -364,28 +378,28 @@
 .comment-form {
 	.comment-notes,
 	label {
-		font-family: $font__heading;
-		font-size: $font__size-xs;
-		color: $color__text-light;
+		font-family: var(--newspack-theme-font-heading);
+		font-size: var(--newspack-theme-font-size-xs);
+		color: var(--newspack-theme-color-text-light);
 	}
 
 	.comment-form-author,
 	.comment-form-email {
-		@include media( tablet ) {
-			width: calc( 50% - #{$size__spacing-unit / 2} );
+		@include utilities.media( tablet ) {
+			width: calc(50% - #{math.div( structure.$size--spacing-unit, 2 )});
 			float: left;
 		}
 	}
 
 	.comment-form-email {
-		@include media( tablet ) {
-			margin-left: $size__spacing-unit;
+		@include utilities.media( tablet ) {
+			margin-left: structure.$size__spacing-unit;
 		}
 	}
 
-	input[name='author'],
-	input[name='email'],
-	input[name='url'] {
+	input[name="author"],
+	input[name="email"],
+	input[name="url"] {
 		display: block;
 		width: 100%;
 	}
@@ -410,34 +424,34 @@
 	align-items: center;
 	background: transparent;
 	border-radius: 0;
-	border-top: 1px solid $color__border;
-	color: $color__text-main;
+	border-top: 1px solid var(--newspack-theme-color-border);
+	color: var(--newspack-theme-color-text-main);
 	display: flex;
-	font-size: $font__size-sm;
+	font-size: var(--newspack-theme-font-size-sm);
 	justify-content: center;
 	margin-top: 0;
 	position: relative;
 	width: 100%;
 
 	svg {
-		transform: rotate( 90deg );
+		transform: rotate(90deg);
 	}
 
 	&:hover,
 	&:focus {
 		background: transparent;
-		color: $color__primary;
+		color: var(--newspack-theme-color-primary-against-white);
 	}
 }
 
 .comments-hide + .comments-toggle {
 	svg {
-		transform: rotate( 270deg );
+		transform: rotate(270deg);
 	}
 
 	&::after {
-		background-image: linear-gradient( rgba( 255, 255, 255, 0 ), rgba( 255, 255, 255, 1 ) );
-		content: '';
+		background-image: linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+		content: "";
 		height: 150px;
 		left: 0;
 		position: absolute;

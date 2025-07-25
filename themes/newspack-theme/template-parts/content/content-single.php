@@ -23,12 +23,21 @@ if ( function_exists( 'newspack_get_all_sponsors' ) ) {
 }
 ?>
 
+<?php if ( newspack_is_sticky_animated_header() ) : ?>
+	<?php // If the header is sticky, add a position observer. ?>
+	<amp-position-observer target="" on="enter:headerFadeIn.start; exit:headerFadeOut.start;" layout="nodisplay"></amp-position-observer>
+<?php endif; ?>
+
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 	<div class="entry-content">
 
 		<?php
 		if ( ! empty( $underwriter_sponsors ) ) :
 			newspack_sponsored_underwriters_info( $underwriter_sponsors );
+		endif;
+
+		if ( ! empty( $native_sponsors ) ) :
+			newspack_sponsor_footer_bio( $native_sponsors );
 		endif;
 		?>
 
@@ -66,9 +75,8 @@ if ( function_exists( 'newspack_get_all_sponsors' ) ) {
 	</footer><!-- .entry-footer -->
 
 	<?php
-	if ( ! empty( $native_sponsors ) ) :
-		newspack_sponsor_footer_bio( $native_sponsors );
-	elseif ( ! is_singular( 'attachment' ) ) :
+	$show_author = ! empty( $native_sponsors ) ? newspack_display_sponsors_and_authors( $native_sponsors ) : true;
+	if ( $show_author && ! is_singular( 'attachment' ) ) :
 		get_template_part( 'template-parts/post/author', 'bio' );
 	endif;
 	?>
