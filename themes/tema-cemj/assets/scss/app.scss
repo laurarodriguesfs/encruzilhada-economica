@@ -28,6 +28,28 @@ body, p, a, .link {
   font-family: $text;
 }
 
+#primary, .wrapper{
+    width: 80% !important;
+    max-width: 80% !important;
+}
+
+.newspack-front-page .entry .entry-content .wp-block-cover.alignfull > div > :not(.alignfull):not(.alignwide),
+.newspack-front-page .entry .entry-content .wp-block-cover.alignwide > div > :not(.alignfull):not(.alignwide),
+.newspack-front-page .entry .entry-content .wp-block-group.alignfull > div > :not(.alignfull):not(.alignwide),
+.newspack-front-page .entry .entry-content .wp-block-group.alignwide > div > :not(.alignfull):not(.alignwide),
+.post-template-single-wide .entry .entry-content .wp-block-cover.alignfull > div > :not(.alignfull):not(.alignwide),
+.post-template-single-wide .entry .entry-content .wp-block-cover.alignwide > div > :not(.alignfull):not(.alignwide),
+.post-template-single-wide .entry .entry-content .wp-block-group.alignfull > div > :not(.alignfull):not(.alignwide),
+.post-template-single-wide .entry .entry-content .wp-block-group.alignwide > div > :not(.alignfull):not(.alignwide),
+.page-template-single-wide .entry .entry-content .wp-block-cover.alignfull > div > :not(.alignfull):not(.alignwide),
+.page-template-single-wide .entry .entry-content .wp-block-cover.alignwide > div > :not(.alignfull):not(.alignwide),
+.page-template-single-wide .entry .entry-content .wp-block-group.alignfull > div > :not(.alignfull):not(.alignwide),
+.page-template-single-wide .entry .entry-content .wp-block-group.alignwide > div > :not(.alignfull):not(.alignwide) {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    max-width: 80% !important; 
+}
+
 // Títulos com a fonte de destaque
 h1, h2, h3, h4, h5, h6, nav a{
     font-family: $titles;
@@ -345,6 +367,22 @@ ul.sub-menu li a:hover {
     background-color: #d35400; /* Tom mais escuro de laranja ao passar o mouse */
 }
 
+#masthead {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; 
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
+}
+
+body {
+    padding-top: 150px; 
+
+    @media (max-width: 768px) {
+        padding-top: 50px; 
+    }
+}
 .site-header .dd-menu .sub-menu a{
     background-color: transparent;
 
