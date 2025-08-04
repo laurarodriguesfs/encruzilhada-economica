@@ -33,8 +33,5 @@ if ( function_exists( 'newspack_get_all_sponsors' ) ) {
 		<header class="entry-header">
 			<?php the_title( sprintf( '<h2 class="entry-title"><a href="%s" rel="bookmark">', esc_url( get_permalink() ) ), '</a></h2>' ); ?>
 		</header><!-- .entry-header -->
-		<div class="entry-content the-excerpt">
-			<?php the_excerpt(); ?>
-		</div><!-- .entry-content -->
 	</div><!-- .entry-container -->
 </article><!-- #post-${ID} -->

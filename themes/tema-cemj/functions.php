@@ -419,3 +419,92 @@ function cemj_customizer_register( $wp_customize ) {
     ) ) );
 }
 add_action( 'customize_register', 'cemj_customizer_register' );
+
+/**
+ * Enfileira o script para a funcionalidade "Carregar Mais".
+ */
+function newspack_child_enqueue_load_more_scripts() {
+    // Só carrega o script em páginas de arquivo (categorias, tags, arquivos de autor, etc.)
+    if ( is_archive() || is_home() ) {
+        global $wp_query;
+
+        // Define qual template part deve ser usado por padrão
+        $template_to_use = 'excerpt';
+
+        // Se estivermos no arquivo de 'revista', mudamos para 'revista'
+        if ( is_post_type_archive('revista') ) {
+            $template_to_use = 'revista';
+        }
+
+
+
+        // Registra e enfileira o script
+        wp_enqueue_script(
+            'newspack-load-more',
+            get_stylesheet_directory_uri() . '/assets/javascript/load-more.js',
+            array( 'jquery' ),
+            '1.0',
+            true
+        );
+
+        // Passa variáveis do PHP para o JavaScript
+        wp_localize_script(
+            'newspack-load-more',
+            'load_more_params',
+            array(
+                'ajaxurl'       => admin_url( 'admin-ajax.php' ),
+                'query'         => json_encode( $wp_query->query_vars ), // Mude 'posts' para 'query'
+                'current_page'  => get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1,
+                'max_pages'     => $wp_query->max_num_pages, // Mude 'max_page' para 'max_pages'
+                'nonce'         => wp_create_nonce('load_more_posts_nonce'),
+                'template_part' => $template_to_use // ADICIONE ESTA LINHA
+            )
+
+        );
+    }
+}
+add_action( 'wp_enqueue_scripts', 'newspack_child_enqueue_load_more_scripts' );
+
+/**
+ * Manipulador AJAX para carregar mais posts.
+ */
+function newspack_child_load_more_handler() {
+    // Verifica o nonce de segurança
+    check_ajax_referer('load_more_posts_nonce', 'nonce');
+
+    // Prepara os argumentos da query
+    $args = json_decode( stripslashes( $_POST['query'] ), true );
+    $args['paged'] = $_POST['page'] + 1; // Carrega a próxima página
+    $args['post_status'] = 'publish';
+
+    $query = new WP_Query( $args );
+
+    if ( $query->have_posts() ) {
+        // Inicia o loop para buscar os posts
+        while ( $query->have_posts() ) : $query->the_post();
+            // Pega o nome do template que o JS enviou e o valida por segurança
+            $template_part_name = 'excerpt'; // Valor padrão de segurança
+            if ( isset($_POST['template_part']) ) {
+                $template_part_name = sanitize_file_name($_POST['template_part']);
+            }
+
+            // Usa a variável para carregar o template correto
+            get_template_part( 'template-parts/content/content', $template_part_name );
+        endwhile;
+    }
+
+    wp_die(); // Termina a execução do AJAX
+}
+add_action( 'wp_ajax_load_more_posts', 'newspack_child_load_more_handler' );
+add_action( 'wp_ajax_nopriv_load_more_posts', 'newspack_child_load_more_handler' ); // Para usuários não logados
+
+/**
+ * Altera o número de posts por página no arquivo de "Revistas".
+ */
+function tema_cemj_limite_posts_revista( $query ) {
+    if ( ! is_admin() && $query->is_main_query() && is_post_type_archive( 'revista' ) ) {
+        
+        $query->set( 'posts_per_page', 8 );
+    }
+}
+add_action( 'pre_get_posts', 'tema_cemj_limite_posts_revista' );

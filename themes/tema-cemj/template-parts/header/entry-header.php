@@ -40,43 +40,16 @@ $subtitle = get_post_meta( $post->ID, 'newspack_post_subtitle', true );
 		<div class="newspack-post-subtitle">
 			<?php echo esc_html( $subtitle ); ?>
 		</div>
-	<?php endif; ?>
+	<?php endif; 
+	if ( has_excerpt() ) : ?>
+        <div class="entry-summary">
+            <?php the_excerpt(); ?>
+        </div>
+    <?php endif; ?>
 <?php else : ?>
 	<h2 class="entry-title">
 		<a href="<?php the_permalink(); ?>" rel="bookmark">
 			<?php echo wp_kses_post( get_the_title() ); ?>
 		</a>
 	</h2>
-<?php endif; ?>
-
-
-<?php if ( ! is_page() ) : ?>
-	<div class="entry-subhead">
-		<?php if ( ! empty( $native_sponsors ) ) : ?>
-			<div class="entry-meta entry-sponsor">
-				<?php newspack_sponsor_logo_list( $native_sponsors ); ?>
-				<span>
-					<?php
-						newspack_sponsor_byline( $native_sponsors );
-						newspack_posted_on();
-						do_action( 'newspack_theme_entry_meta' );
-					?>
-				</span>
-			</div>
-		<?php else : ?>
-			<div class="entry-meta">
-				<?php
-					// newspack_posted_by();
-					newspack_posted_on();
-					do_action( 'newspack_theme_entry_meta' );
-				?>
-			</div><!-- .meta-info -->
-		<?php endif; ?>
-		<?php
-			// Display Jetpack Share icons, if enabled
-			if ( function_exists( 'sharing_display' ) ) {
-				sharing_display( '', true );
-			}
-		?>
-	</div>
 <?php endif; ?>

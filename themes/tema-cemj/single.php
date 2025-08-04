@@ -18,6 +18,8 @@ get_header();
 			if ( has_post_format( 'gallery' )) {
 				echo 'Esta é uma galeria de imagens!';
  			}
+			// CÓDIGO CORRIGIDO (COM A ORDEM CERTA)
+
 			/* Start the Loop */
 			while ( have_posts() ) :
 				the_post();
@@ -26,6 +28,10 @@ get_header();
 				if ( in_array( newspack_featured_image_position(), array( 'large', 'behind', 'beside', 'above' ) ) ) :
 					get_template_part( 'template-parts/post/large-featured-image' );
 				else :
+					// SE A IMAGEM FOR 'small', CARREGUE-A AQUI, ANTES DE TUDO.
+					if ( 'small' === newspack_featured_image_position() ) {
+						newspack_post_thumbnail();
+					}
 				?>
 					<header class="entry-header">
 						<?php get_template_part( 'template-parts/header/entry', 'header' ); ?>
@@ -40,12 +46,10 @@ get_header();
 						dynamic_sidebar( 'article-1' );
 					}
 
-					// Place smaller featured images inside of 'content' area.
-					if ( 'small' === newspack_featured_image_position() ) :
-						newspack_post_thumbnail();
-					endif;
+					// A CHAMADA DA IMAGEM FOI REMOVIDA DESTA ÁREA.
 
 					get_template_part( 'template-parts/content/content-single', 'single' );
+					// ... (resto do código)
 
 					newspack_previous_next();
 

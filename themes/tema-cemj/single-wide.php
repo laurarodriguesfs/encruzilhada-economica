@@ -1,7 +1,7 @@
 <?php
 /**
  * Template Name: One column wide
- * Template Post Type: post, page
+ * Template Post Type: post, page, projeto, blog, publicacoescatedra,  transparencia, revista
  *
  * The template for displaying all single posts
  *

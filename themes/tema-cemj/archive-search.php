@@ -49,7 +49,6 @@ get_header(); ?>
 				<?php do_action( 'newspack_theme_below_archive_title' ); ?>
 
 
-				<input type="hidden" name="post_type" value="livro">
 				<?php get_search_form(); ?>
 
 
@@ -98,7 +97,7 @@ get_header(); ?>
 		</div>
 		<main id="main" class="site-main">
 				<?php if ( have_posts() ) : while ( have_posts() ) : the_post();
-					get_template_part( 'template-parts/content/content', 'livro' ); ?>
+					get_template_part( 'template-parts/content/content', 'excerpt' ); ?>
 				<?php endwhile; ?>
 				<?php endif; ?>
 		</main><!-- contentarea -->
