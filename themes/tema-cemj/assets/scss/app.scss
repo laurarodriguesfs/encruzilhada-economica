@@ -28,9 +28,22 @@ body, p, a, .link {
   font-family: $text;
 }
 
+img{
+    width: 100%;
+}
+
 #primary, .wrapper{
     width: 80% !important;
     max-width: 80% !important;
+}
+
+/* Aplica a margem em todas as páginas, exceto na home (blog) e na front-page (estática) */
+body:not(.home, .front-page) #primary.content-area{
+    margin-top: 120px;
+}
+
+.single #primary.content-area, .search #primary.content-area{
+    margin-top: 170px !important;
 }
 
 .newspack-front-page .entry .entry-content .wp-block-cover.alignfull > div > :not(.alignfull):not(.alignwide),
@@ -58,6 +71,11 @@ h1, h2, h3, h4, h5, h6, nav a, h1 a, h2 a, h3 a, h4 a, h5 a, h6 a{
 
 .wp-block-button__link{
     font-family: $titles;
+    min-width: fit-content;
+    padding: 10px 50px;
+    font-size: 22px;
+    margin-top: 20px;
+
 }
 
 .wp-block-button .wp-block-button__link:hover{
@@ -594,10 +612,6 @@ body {
 
 //archive
 
-.archive .content-area{
-    margin-top: 160px !important;
-}
-
 .archive .archive-posts-grid{
     grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
 }
@@ -620,7 +634,7 @@ body {
 }
 
 .archive .page-header{
-    margin: 0;
+    margin: 30px 0 0 0;
 }
 
 .archive article.entry:first-of-type, .archive article, .archive .entry{
@@ -666,6 +680,221 @@ body {
 //Archive de revistas com grid de 4 posts por linha{
 .post-type-archive-revista .archive-posts-grid{
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+//single da revista
+/* Estilos aplicados SOMENTE em single pages com a classe .revista-template-single-wide */
+.single.revista-template-single-wide {
+
+    @media (min-width: 768px) {
+
+        /* Garante que o container do post contenha os elementos flutuantes */
+        /* Ajustado para o novo seletor específico */
+        .hentry,
+        > article {
+            display: flow-root;
+        }
+
+        /* Faz a imagem flutuar à esquerda */
+        #primary .post-thumbnail {
+            float: left !important;
+            width: 45% !important;
+            margin-right: 40px !important;
+            margin-bottom: 20px !important;
+            margin-top: 5px;
+        }
+
+        /* Remove a margem inferior do bloco do cabeçalho para juntar com o conteúdo */
+        #primary .entry-header {
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        #primary .entry-title {
+            margin: 0 !important;
+            padding: 0 !important;
+            font-size: 48px;
+        }
+
+        /* Ajustado para o novo seletor específico */
+        #primary .entry-content {
+            clear: none !important;      
+            float: none !important;      
+            width: auto !important;      /* Permite que a largura do container se ajuste ao redor da imagem */
+            margin-top: 0 !important;    /* Remove o espaço de cima */
+            padding-top: 0 !important; /* Adiciona um pequeno respiro para não colar no autor/data */
+        }
+
+        /* Estiliza o novo resumo para ter a fonte correta */
+        .entry-summary p {
+            font-size: 16px !important;
+            font-weight: inherit !important;
+            margin-top: 1em;
+        }
+
+        /* Reseta qualquer regra de grid que possa interferir nos outros elementos */
+        #primary main.site-main,
+        #primary .main-content {
+            display: block !important;
+            grid-column: auto !important;
+            width: auto !important;
+        }
+
+        .cat-links {
+            display: none !important;
+        }
+    }
+}
+
+.single.revista-template-single-wide #primary .post-thumbnail {
+    width: 35% !important;
+}
+
+//single da catedra
+/* Estilos aplicados SOMENTE em single pages com a classe .revista-template-single-wide */
+.single.publicacoescatedra-template-single-wide {
+
+    @media (min-width: 768px) {
+
+        /* Garante que o container do post contenha os elementos flutuantes */
+        /* Ajustado para o novo seletor específico */
+        .hentry,
+        > article {
+            display: flow-root;
+        }
+
+        /* Faz a imagem flutuar à esquerda */
+        #primary .post-thumbnail {
+            float: left !important;
+            width: 45% !important;
+            margin-right: 40px !important;
+            margin-bottom: 20px !important;
+            margin-top: 5px;
+        }
+
+        /* Remove a margem inferior do bloco do cabeçalho para juntar com o conteúdo */
+        #primary .entry-header {
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        #primary .entry-title {
+            margin: 0 !important;
+            padding: 0 !important;
+            font-size: 48px;
+        }
+
+        /* Ajustado para o novo seletor específico */
+        #primary .entry-content {
+            clear: none !important;      
+            float: none !important;      
+            width: auto !important;      /* Permite que a largura do container se ajuste ao redor da imagem */
+            margin-top: 0 !important;    /* Remove o espaço de cima */
+            padding-top: 0 !important; /* Adiciona um pequeno respiro para não colar no autor/data */
+        }
+
+        /* Estiliza o novo resumo para ter a fonte correta */
+        .entry-summary p {
+            font-size: 16px !important;
+            font-weight: inherit !important;
+            margin-top: 1em;
+        }
+
+        /* Reseta qualquer regra de grid que possa interferir nos outros elementos */
+        #primary main.site-main,
+        #primary .main-content {
+            display: block !important;
+            grid-column: auto !important;
+            width: auto !important;
+        }
+
+        .cat-links {
+            display: none !important;
+        }
+    }
+}
+
+//Formulário da página da catedra
+.form-catedra{
+    /* Container do formulário */
+    .wpcf7-form {
+    color: white;
+    font-family: sans-serif;
+    }
+
+    /* Labels */
+    .wpcf7-form label {
+    display: block;
+    margin-bottom: 1rem;
+    color: white;
+    font-weight: 500;
+        font-size: 14px;
+    }
+
+    /* Campos de input e textarea */
+    .wpcf7-form input[type="text"],
+    .wpcf7-form input[type="email"],
+    .wpcf7-form input[type="tel"],
+    .wpcf7-form input[type="url"],
+    .wpcf7-form textarea {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: transparent;
+    border: 2px solid white;
+    border-radius: 8px;
+    color: white;
+    font-size: 14px;
+    box-sizing: border-box;
+    }
+
+    /* Placeholder */
+    .wpcf7-form ::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+    }
+
+    /* Botão de envio */
+    .wpcf7-form input[type="submit"] {
+    background-color: white;
+    color: #6a0dad; /* Um roxo escuro para contraste */
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    }
+
+    /* Hover no botão */
+    .wpcf7-form input[type="submit"]:hover {
+    background-color: var(--azul-escuro);
+    color: #fff;
+    }
+
+    /* Mensagens de erro e sucesso */
+    .wpcf7-response-output {
+    margin-top: 1rem;
+    color: white;
+    }
+
+    .wpcf7-form input[type="submit"] {
+        background-color: var(--azul-escuro);
+        color: #fff;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        font-family:$titles;
+        text-align: center;
+    }
+
+    /* Centraliza o parágrafo que contém o botão de envio do Contact Form 7 */
+    .wpcf7-form p:last-of-type {
+        text-align: center;
+    }
+
 }
 
 //tainacan
@@ -823,13 +1052,10 @@ body {
 
 .tainacan-title{
     border-color: transparent !important;
-
 }
 
 .single {
-    #primary.content-area {
-        margin-top: 160px;
-    }
+
     @media (min-width: 768px) {
 
         /* Garante que o container do post contenha os elementos flutuantes */
@@ -849,8 +1075,7 @@ body {
 
         /* Remove a margem inferior do bloco do cabeçalho para juntar com o conteúdo */
         #primary .entry-header {
-            margin-bottom: 0 !important;
-            padding-bottom: 0 !important;
+            margin: 30px 0 0 0 !important;
         }
 
         .single #primary .entry-content {
@@ -901,4 +1126,84 @@ body {
     font-size: 22px;
     font-family: $titles;
   }
+}
+
+.post-type-archive-transparencia .archive-posts-grid{
+    display: block;
+
+}
+
+.search{
+    .page-header{
+        width: 100%;
+    }
+
+    .has-post-thumbnail .entry-container {
+        flex-basis: 100%;
+    }
+
+    .page-header h1{
+        margin-top: 20px;
+        font-size: 36px;
+        color: var(--azul-escuro);
+    }
+
+    input{
+        font-family: $titles;
+    }
+
+    .header-search{
+        width: 100%;
+    }
+
+    #main{
+        width:100%;
+    }
+
+    .archive-posts-grid{
+        display: block;
+    }
+}
+
+.search-results .entry-container {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding-bottom: 30px;
+    margin-bottom: 30px;
+    border-bottom: 1px solid #eee;
+}
+
+.search-results .entry-container .post-thumbnail {
+    flex-shrink: 0;
+}
+
+ .search .has-post-thumbnail .post-thumbnail{
+    width: 400px;
+}
+
+.search-results .entry-container .entry-text-wrapper {
+    flex-grow: 1;
+}
+
+.search-results .entry-title {
+    margin-top: 0;
+    font-size: 1.2rem;
+}
+
+.search-results .entry-content {
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+@media (max-width: 767px) {
+    .search-results .entry-container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .search-results .entry-container .post-thumbnail {
+        width: 100%;
+        margin-bottom: 20px;
+    }
 }
