@@ -26,29 +26,28 @@ get_header();
 				if ( in_array( newspack_featured_image_position(), array( 'large', 'behind', 'beside', 'above' ) ) ) :
 					get_template_part( 'template-parts/post/large-featured-image' );
 				else :
+					// SE A IMAGEM FOR 'small', CARREGUE-A AQUI, ANTES DE TUDO.
+					if ( 'small' === newspack_featured_image_position() ) {
+						newspack_post_thumbnail();
+					}
 				?>
 					<header class="entry-header">
 						<?php get_template_part( 'template-parts/header/entry', 'header' ); ?>
 					</header>
+
 				<?php endif; ?>
 
 				<div class="main-content">
 
 					<?php
-					if ( is_active_sidebar( 'article-1' ) && is_single() ) {
+					if ( is_active_sidebar( 'article-1' ) ) {
 						dynamic_sidebar( 'article-1' );
 					}
 
-					// Place smaller featured images inside of 'content' area.
-					if ( 'small' === newspack_featured_image_position() ) {
-						newspack_post_thumbnail();
-					}
+					// A CHAMADA DA IMAGEM FOI REMOVIDA DESTA ÁREA.
 
-					if ( is_page() ) {
-						get_template_part( 'template-parts/content/content', 'page' );
-					} else {
-						get_template_part( 'template-parts/content/content', 'single' );
-					}
+					get_template_part( 'template-parts/content/content-single', 'single' );
+					// ... (resto do código)
 
 					newspack_previous_next();
 
@@ -56,10 +55,14 @@ get_header();
 					if ( comments_open() || get_comments_number() ) {
 						newspack_comments_template();
 					}
-					?>
-				</div>
 
-			<?php endwhile; ?>
+					?>
+				</div><!-- .main-content -->
+
+			<?php
+				endwhile;
+				get_sidebar();
+			?>
 
 		</main><!-- #main -->
 	</section><!-- #primary -->
