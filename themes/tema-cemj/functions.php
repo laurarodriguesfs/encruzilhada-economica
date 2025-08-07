@@ -425,7 +425,7 @@ add_action( 'customize_register', 'cemj_customizer_register' );
  */
 function newspack_child_enqueue_load_more_scripts() {
     // Só carrega o script em páginas de arquivo (categorias, tags, arquivos de autor, etc.)
-    if ( is_archive() || is_home() ) {
+    if ( is_archive() || is_home() || is_search()) {
         global $wp_query;
 
         // Define qual template part deve ser usado por padrão
@@ -436,6 +436,13 @@ function newspack_child_enqueue_load_more_scripts() {
             $template_to_use = 'revista';
         }
 
+        elseif ( is_search() || $is_custom_search_page ) {
+            $template_to_use = 'search';
+        }
+
+        elseif ( is_post_type_archive('blog' ) ) {
+            $template_to_use = 'blog';
+        }
 
 
         // Registra e enfileira o script
