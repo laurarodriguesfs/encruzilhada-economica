@@ -44,7 +44,7 @@ get_header(); ?>
 				}
 				?>
 
-				<?php the_archive_title( '<h1 class="page-title">', '</h1>' ); ?>
+				<h1 class="page-title">Encontre os projetos, artigos e relatórios que te interessam.</h1>
 
 				<?php do_action( 'newspack_theme_below_archive_title' ); ?>
 
@@ -92,31 +92,23 @@ get_header(); ?>
 
 		</header><!-- .page-header -->
 		<?php do_action( 'before_archive_posts' ); ?>
-		<div>
+		<div class="header-search">
 			<h3>Resultado da busca por: <?php echo htmlentities($s, ENT_QUOTES, 'UTF-8'); ?> </h3>
 		</div>
 		<main id="main" class="site-main">
+			<div class="archive-posts-grid">
 				<?php if ( have_posts() ) : while ( have_posts() ) : the_post();
-					get_template_part( 'template-parts/content/content', 'excerpt' ); ?>
+					get_template_part( 'template-parts/content/content', 'search' ); ?>
 				<?php endwhile; ?>
-				<?php endif; ?>
-		</main><!-- contentarea -->
-<div class="pagination-posts">
-	<?php
-		$args = array(
-			'show_all' => false, // all pages involved in pagination are shown
-			'end_size' => 1,     // number of pages at the ends
-			'mid_size' => 1,     // number of pages around the current page
-			'prev_next' => true, // whether to display 'previous/next page' side links.
-			'prev_text' => 'PREV',
-			'next_text' => 'NEXT',
-			'add_args' => false,  // Array of arguments (query variables) to add to links.
-			'add_fragment' => '', // Text to be added to all links.
-			'screen_reader_text' => __('Posts navigation' ),
-		);
+				<?php endif;?>
+				</div>
+        </main><?php
+// Exibe o botão "Carregar Mais" apenas se houver mais páginas a serem carregadas
+global $wp_query;
+if ( $wp_query->max_num_pages > 1 ) :
+?>
+    <button id="load-more-button" class="button">Carregar Mais</button>
+<?php endif; ?>
 
-		the_posts_pagination($args);
-	?>
-</div>
 <?php get_sidebar(); ?>
 <?php get_footer(); ?>
