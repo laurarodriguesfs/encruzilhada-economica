@@ -28,6 +28,11 @@ body, p, a, .link {
   font-family: $text;
 }
 
+html body a:hover{
+    opacity: 1;
+}
+
+
 img{
     width: 100%;
 }
@@ -37,13 +42,28 @@ img{
     max-width: 80% !important;
 }
 
-/* Aplica a margem em todas as páginas, exceto na home (blog) e na front-page (estática) */
+/* Aplica a margem em todas as páginas, exceto na front-page */
 body:not(.home, .front-page) #primary.content-area{
     margin-top: 120px;
+
+    @media only screen and (max-width: 782px) {
+        margin-top: 70px !important;
+    }
+}
+
+.wp-block-spacer{
+
+    @media only screen and (max-width: 782px) {
+        height: 10px !important;
+    }
 }
 
 .single #primary.content-area, .search #primary.content-area{
     margin-top: 170px !important;
+
+    @media only screen and (max-width: 782px) {
+        margin-top: 70px !important;
+    }
 }
 
 .newspack-front-page .entry .entry-content .wp-block-cover.alignfull > div > :not(.alignfull):not(.alignwide),
@@ -69,14 +89,97 @@ h1, h2, h3, h4, h5, h6, nav a, h1 a, h2 a, h3 a, h4 a, h5 a, h6 a{
     color: var(--azul-escuro);
 }
 
-.wp-block-button__link{
+.mobile-sidebar{
+    background-color: #fff;
+
+    ul.sub-menu {
+        background-color: #fff;
+        box-shadow: none;
+    }
+}
+
+button.mobile-menu-toggle{
+    font-family: $text !important;
+    color: var(--azul-escuro) !important;
+}
+
+.mobile-sidebar{
+    .nav1 a{
+        font-family: $text !important;
+        font-optical-sizing: auto;
+        font-style: normal;
+        font-size: 16px;
+        color: var(--azul-escuro) !important;
+    }
+
+    ul.sub-menu{
+        border-left: 2px solid var(--azul-escuro);
+        border-radius: 0;
+    }
+}
+
+
+@mixin efeitoBotaoCircular($cor-fundo: var(--azul-escuro), $cor-texto-hover: #000) {
+    // Estilos essenciais que todo botão com este efeito terá
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    transition: color 0.4s ease-out;
+
+    // Estado do botão ao passar o mouse
+    &:hover {
+        color: $cor-texto-hover;
+
+        // Anima o pseudo-elemento
+        &::before {
+            transform: translate(-50%, -50%) scale(2.5);
+        }
+    }
+
+    // O pseudo-elemento que cria o círculo
+    &::before {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        background-color: $cor-fundo;
+
+        // Lógica do círculo
+        border-radius: 50%;
+        top: 50%;
+        left: 50%;
+        width: 100%;
+        padding-top: 100%;
+        transform: translate(-50%, -50%) scale(0);
+        transition: transform 0.4s ease-out;
+    }
+}
+
+.wp-block-button__link {
+    font-family: $titles;
+    min-width: fit-content;
+    padding: 10px 80px;
+    font-size: 22px;
+    margin-top: 20px;
+    opacity: 1;
+
+    // Inclui todo o pacote de estilos do efeito
+    @include efeitoBotaoCircular(); 
+}
+
+// Estilos para o segundo botão
+#load-more-button {
+    // Estilos específicos deste botão (pode copiar os de cima se forem iguais)
     font-family: $titles;
     min-width: fit-content;
     padding: 10px 50px;
     font-size: 22px;
     margin-top: 20px;
+    opacity: 1;
 
+    // Inclui o mesmo pacote de estilos do efeito
+    @include efeitoBotaoCircular();
 }
+
 
 .wp-block-button .wp-block-button__link:hover{
     background: transparent;
@@ -87,11 +190,9 @@ h1, h2, h3, h4, h5, h6, nav a, h1 a, h2 a, h3 a, h4 a, h5 a, h6 a{
     padding: 15px 50px; 
 }
 
-@media only screen and (min-width: 782px) {
-  .site-content{
-    margin-top: 0;
-  } 
-}
+.site-content{
+  margin-top: 0;
+} 
 
 //Prepara custom post-types para o uso de largura máxima
 .projeto-template-single-wide .entry .entry-content .alignfull.wp-block-cover {
@@ -384,8 +485,8 @@ body.admin-bar .bottom-header-contain{
 
     //Bloco de revistas
     .swiper-wrapper .swiper-slide.type-revista {
-    border-radius: 40px;
-    overflow: hidden; 
+        border-radius: 40px;
+        overflow: hidden; 
     }
 
     .swiper-wrapper .swiper-slide.type-revista {
@@ -500,6 +601,11 @@ ul.sub-menu li a {
     background-color: transparent;
     border-bottom: var(--azul-escuro) solid 2px;
     width: 90%;
+
+
+    @media (max-width: 768px) {
+        border-bottom: none;
+    }
 }
 
 /* Hover nos links */
@@ -620,6 +726,10 @@ body {
     font-family: $titles;
     font-size: 80px;
     color: var(--azul-escuro);
+
+    @media only screen and (max-width: 782px) {
+        font-size: 42px;
+    }
 }
 
 .archive .page-subtitle, .page-title::before{
@@ -644,6 +754,11 @@ body {
     .entry-title, h2{
         font-size: 1.4em !important;
     }
+
+    @media only screen and (max-width: 782px) {
+        margin-top:20px;
+        margin-bottom:60px;
+    }
 }
 
 .archive #main{
@@ -654,6 +769,10 @@ body {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 20px;
+
+    @media (max-width: 768px) {
+        display: block !important;
+    }
 }
 
 .archive-posts-grid .post-item {
@@ -1002,6 +1121,10 @@ body {
 
 //search
 
+.search .entry-header{
+    margin-left: 0;
+}
+
 .search-form input {
     padding-right: 2.5rem;
     width: 100%;
@@ -1015,6 +1138,10 @@ body {
 
 #header-search{
     top:0px !important;
+}
+
+.header-search h3{
+    color: var(--verde-vibrante) !important;
 }
 
 .video-gallery-wrapper .scroll-ratio .sidebar-itens button{
@@ -1146,6 +1273,10 @@ body {
         margin-top: 20px;
         font-size: 36px;
         color: var(--azul-escuro);
+
+        @media (max-width: 768px) {
+            font-size: 24px;
+        }
     }
 
     input{
