@@ -107,7 +107,9 @@ get_header(); ?>
 global $wp_query;
 if ( $wp_query->max_num_pages > 1 ) :
 ?>
-    <button id="load-more-button" class="button">Carregar Mais</button>
+ <div class="load-more-container">
+    <button id="load-more-button" class="button"><?php _e( 'Carregar mais', 'newspack' ); ?></button>
+    </div>
 <?php endif; ?>
 
 <?php get_sidebar(); ?>
