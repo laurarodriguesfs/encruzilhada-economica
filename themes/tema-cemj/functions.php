@@ -440,7 +440,7 @@ function newspack_child_enqueue_load_more_scripts() {
             $template_to_use = 'search';
         }
 
-        elseif ( is_post_type_archive('blog' ) ) {
+        elseif ( is_post_type_archive('blog' ) || is_post_type_archive('transparencia' ) ) {
             $template_to_use = 'blog';
         }
 
