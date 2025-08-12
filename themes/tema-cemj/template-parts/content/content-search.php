@@ -19,7 +19,7 @@
 		?>
 			<div class="post-thumbnail">
 				<a href="<?php the_permalink(); ?>" rel="bookmark">
-					<?php the_post_thumbnail( 'thumbnail' ); ?>
+					<?php the_post_thumbnail( 'large' ); ?>
 				</a>
 			</div>
 		<?php
