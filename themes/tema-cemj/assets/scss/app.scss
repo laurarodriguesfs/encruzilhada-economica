@@ -32,6 +32,28 @@ html body a:hover{
     opacity: 1;
 }
 
+//Tamanhos padrão de fonte conforme o editor
+
+
+.has-huge-font-size{
+    font-size: 80px !important;
+    @media only screen and (max-width: 782px) {
+        font-size: 50px !important;
+    }
+}
+
+.has-large-font-size{
+    font-size: 60px !important;
+
+    @media only screen and (max-width: 782px) {
+        font-size: 46px !important;
+    }
+}
+
+l body a:hover{
+    opacity: 1;
+}
+
 
 img{
     width: 100%;
@@ -48,13 +70,6 @@ body:not(.home, .front-page) #primary.content-area{
 
     @media only screen and (max-width: 782px) {
         margin-top: 70px !important;
-    }
-}
-
-.wp-block-spacer{
-
-    @media only screen and (max-width: 782px) {
-        height: 10px !important;
     }
 }
 
@@ -547,7 +562,12 @@ body.admin-bar .bottom-header-contain{
 .menos-espaco{
     h2,h3{
         margin-bottom: -20px;
+
+        @media only screen and (max-width: 782px) {
+            margin-bottom: -10px;
+        }
     }
+
 }
 
 .radius{
@@ -558,10 +578,20 @@ body.admin-bar .bottom-header-contain{
     }
 }
 
-.radius-top{
+.radius-top {
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
     margin-bottom: -130px;
+}
+
+h5.radius-top.has-background {
+    padding: 20px !important;
+}
+
+@media only screen and (max-width: 782px) {
+    .radius-top {
+        margin-bottom: -100px;
+    }
 }
 
 .bottom-header-contain .wrapper {
@@ -698,6 +728,10 @@ body {
     flex-direction: column;
     align-items: flex-start;
     margin-top: 10px;
+
+    @media only screen and (max-width: 782px) {
+        align-items: flex-end;
+    }
 }
 
 .left-column .desenvolvido-por,
@@ -1120,6 +1154,13 @@ body {
 }
 
 //search
+
+
+input[type="search"] {
+    font-family: $text; 
+    font-size: 16px;
+    color: var(--azul-escuro); 
+}
 
 .search .entry-header{
     margin-left: 0;
