@@ -28,6 +28,18 @@ body, p, a, .link {
   font-family: $text;
 }
 
+/* Garante que o contêiner principal ocupe no mínimo a altura total da tela */
+#page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Faz com que a área de conteúdo cresça e ocupe o espaço disponível */
+#content {
+    flex-grow: 1;
+}
+
 html body a:hover{
     opacity: 1;
 }
@@ -594,11 +606,13 @@ body.admin-bar .bottom-header-contain{
 
 h5.radius-top.has-background {
     padding: 20px !important;
+    padding-bottom: 50px !important;
+
 }
 
 @media only screen and (max-width: 782px) {
     .radius-top {
-        margin-bottom: -30px;
+        margin-bottom: -60px;
     }
 }
 
