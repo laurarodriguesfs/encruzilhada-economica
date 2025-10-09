@@ -9,7 +9,7 @@ stages:
 
 variables:
   KUBECONFIG: /etc/k8s-config
-  THEME_NAME: tema-cemj
+  THEME_NAME: tema-lopes-e-vasconcelos
   NAMESPACE_DEV: base-theme-site-dev
   NAMESPACE_PROD: base-theme-site-prod
   AUTH: JOB-TOKEN:$CI_JOB_TOKEN

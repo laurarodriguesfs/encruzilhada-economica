@@ -1,8 +1,8 @@
 .git/
 mariadb_data/
 mariadb_data/*
-themes/tema-cemj/node_modules/
+themes/tema-lopes-e-vasconcelos/node_modules/
 *.sql*
-themes/tema-cemj/dist/app.js
-themes/tema-cemj/dist/app.css
+themes/tema-lopes-e-vasconcelos/dist/app.js
+themes/tema-lopes-e-vasconcelos/dist/app.css
 

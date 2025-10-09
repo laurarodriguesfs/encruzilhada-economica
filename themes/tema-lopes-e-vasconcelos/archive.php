@@ -18,28 +18,6 @@ if ( function_exists( 'newspack_get_all_sponsors' ) ) {
 $feature_latest_post = false;
 $show_excerpt        = get_theme_mod( 'archive_show_excerpt', false );
 
-if (is_post_type_archive('tainacan-collection')) {
-    // Página que lista todas as coleções
-    locate_template('archive-tainacan-collection.php', true);
-} elseif (is_post_type_archive('tainacan-item') || is_singular('tainacan-collection')) {
-    // Página que lista os itens de uma coleção específica
-    locate_template('archive-tainacan-item.php', true);
-} elseif (is_singular('tainacan-item')) {
-    // Página de um item específico
-    locate_template('single-tainacan-item.php', true);
-} elseif (is_tax('tainacan-category')) {
-    // Página de categorias das coleções
-    locate_template('taxonomy-tainacan-category.php', true);
-} elseif (is_tax('tainacan-tag')) {
-    // Página de tags das coleções
-    locate_template('taxonomy-tainacan-tag.php', true);
-} elseif (is_tax('tainacan-collection')) {
-    // Página de coleções (taxonomia)
-    locate_template('taxonomy-tainacan-collection.php', true);
-} else {
-    // Se não for um tipo do Tainacan, usa o padrão do tema pai.
-    locate_template('archive.php', true);
-}
 
 ?>
 	<section id="primary" class="content-area">

@@ -16,25 +16,11 @@ if ( function_exists( 'newspack_get_all_sponsors' ) ) {
 ?>
 
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-	<?php if ( has_post_thumbnail() ) : ?>
-		<?php newspack_post_thumbnail( 'newspack-featured-image' ); ?>
-	<?php else : 
-		global $post;
-   		$post_slug = $post->post_name;
-		?>
-		<figure class="post-thumbnail">
-			<a class="post-thumbnail-inner" href="<?php echo get_permalink().$post_slug ?>">
-				<img class= "attachment-newspack-featured-image size-newspack-featured-image wp-post-image" src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/default.png" alt="<?php the_title(); ?>">
-			</a>
-		</figure>
-	<?php endif; ?>
 
 	<div class="entry-container">
 		<header class="entry-header">
 			<?php the_title( sprintf( '<h2 class="entry-title"><a href="%s" rel="bookmark">', esc_url( get_permalink() ) ), '</a></h2>' ); ?>
+			<a href="<?php echo esc_url( get_permalink() ); ?>" class="btn-transparencia">Acessar Transparência</a>
 		</header><!-- .entry-header -->
-		<div class="entry-content the-excerpt">
-			<?php the_excerpt(); ?>
-		</div><!-- .entry-content -->
 	</div><!-- .entry-container -->
 </article><!-- #post-${ID} -->

@@ -1,0 +1,1677 @@
+@import '2-atoms/a-mixins';
+@import 'variables';
+
+/* ----- 5: PAGES ------- */
+@import '5-pages/p-home';
+@import '5-pages/p-footer';
+
+//Identidade visual
+
+/// Fontes
+
+/* Fonte 1: Humanist (Peso Leve/Normal) */
+@font-face {
+  font-family: "Humanist";
+  src: url("/wp-content/themes/tema-lopes-e-vasconcelos/assets/fonts/Humanist521LightBT.ttf") format("truetype");
+  font-weight: 300; /* Leve/Light */
+  font-style: normal;
+}
+
+/* Fonte 2: Century Gothic Paneuropean - Versão Regular */
+@font-face {
+  font-family: "Century Gothic Paneuropean";
+  src: url("/wp-content/themes/tema-lopes-e-vasconcelos/assets/fonts/CenturyGothicPaneuropeanRegular.ttf") format("truetype");
+  font-weight: 400; /* Regular */
+  font-style: normal;
+}
+
+/* Fonte 2: Century Gothic Paneuropean - Versão Bold/Negrito */
+@font-face {
+  font-family: "Century Gothic Paneuropean";
+  src: url("/wp-content/themes/tema-lopes-e-vasconcelos/assets/fonts/CenturyGothicPaneuropeanBold.ttf") format("truetype");
+  font-weight: 700; /* Negrito/Bold */
+  font-style: normal;
+}
+
+// Variáveis de fontes
+$titles-pages: "Humanist", sans-serif;
+$text: "Century Gothic Paneuropean", "Century Gothic", CenturyGothic, sans-serif;  
+
+//Cores
+/* Dourado Principal */
+.has-dourado-principal-color {
+    color: var(--dourado-principal) !important;
+    text-decoration-color: currentColor !important;
+}
+.has-dourado-principal-background-color {
+    background-color: var(--dourado-principal) !important;
+}
+
+/* Azul Escuro */
+.has-azul-escuro-color {
+    color: var(--azul-escuro) !important;
+}
+.has-azul-escuro-background-color {
+    background-color: var(--azul-escuro) !important;
+}
+
+/* Azul Médio */
+.has-azul-medio-color {
+    color: var(--azul-medio) !important;
+}
+.has-azul-medio-background-color {
+    background-color: var(--azul-medio) !important;
+}
+
+/* Cinza Claro */
+.has-cinza-claro-color {
+    color: var(--cinza-claro) !important;
+}
+.has-cinza-claro-background-color {
+    background-color: var(--cinza-claro) !important;
+}
+
+/* Cinza Base */
+.has-cinza-base-color {
+    color: var(--cinza-base) !important;
+}
+.has-cinza-base-background-color {
+    background-color: var(--cinza-base) !important;
+}
+
+/* Preto */
+.has-preto-color {
+    color: var(--preto) !important;
+}
+.has-preto-background-color {
+    background-color: var(--preto) !important;
+}
+
+/* Branco */
+.has-branco-color {
+    color: var(--branco) !important;
+}
+.has-branco-background-color {
+    background-color: var(--branco) !important;
+}
+
+//Cor de fundo
+html body{
+    background-color: var(--cinza-base) !important;
+}
+
+// Aplicação global
+body, a, p, .link {
+    font-family: $text;
+    font-weight: 400;
+}
+
+strong a{
+   font-weight: 700 !important; 
+}
+
+
+body a:hover{
+    opacity: 1;
+}
+
+img{
+    width: 100%;
+}
+
+[id] {
+  scroll-margin-top: 260px;
+}
+
+/* Garante que o contêiner principal ocupe no mínimo a altura total da tela */
+#page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Faz com que a área de conteúdo cresça e ocupe o espaço disponível */
+#content {
+    flex-grow: 1;
+}
+
+html body a:hover{
+    opacity: 1;
+}
+
+//Reutilizáveis
+.border-radius{
+    border-radius: 30px;
+}
+
+.margin-left{
+    margin-left: -25px !important;
+
+    @media (max-width: 768px) {
+        margin-left: auto;
+    }
+}
+
+.margin-left-maior{
+    margin-left: -50px !important;
+}
+
+.margin-left-maiorainda{
+    margin-left: -100px !important;
+}
+.margin-right{
+    margin-right: -30px !important;
+}
+
+.dourado{
+    color: var(--dourado-principal) !important;
+
+    article .cat-links a, .wp-block-cover article .cat-links a:visited {
+        color: var(--dourado-principal) !important;
+    }
+
+    .cat-links a::after {
+    content: ""; 
+    
+    display: block;
+    width: 60%;          
+    height: 1px;        
+    background-color: var(--dourado-principal); 
+    
+    position: absolute;
+    bottom: 0;           
+    left: 0;             
+}
+
+
+}
+
+//Categorias
+
+.cat-links::before{
+    display: none;
+}
+
+.wpnbha .cat-links a:hover {
+  text-decoration: none !important;
+}
+
+.cat-links a, .entry-meta a{
+    position: relative; 
+    text-transform: initial;
+    text-decoration: none; 
+    font-size: 16px;
+}
+
+.cat-links a::after, .entry-meta a::after{
+    content: ""; 
+    
+    display: block;
+    width: 30px;          
+    height: 1px;        
+    background-color: var(--azul-escuro); 
+    
+    position: absolute;
+    bottom: 0;           
+    left: 0;             
+}
+
+.home .cat-links a::after {      
+    background-color: var(--dourado-principal) !important;            
+}
+
+.wp-block-cover.alignwide.border-radius.margin-left{
+    margin-right: -15% !important;
+
+    @media (max-width: 768px) {
+        margin-left: 0 !important;
+    }
+}
+
+.wp-block-cover.alignwide.border-radius.margin-left-servicos{
+    margin-right: -15% !important;
+
+    @media (max-width: 768px) {
+        margin-left: -7% !important;
+    }
+}
+
+//Header
+
+/* 1. Estilo do cabeçalho no topo da página (transparente) */
+.home #masthead.site-header,
+.page-id-27543 #masthead.site-header { 
+    background-color: transparent;
+    position: absolute;
+    width: 100%;
+    z-index: 100;
+    transition: background-color 0.4s ease-in-out;
+
+    @media (max-width: 768px) {
+        background-color: var(--azul-escuro);
+    }
+}
+
+/* 2. Estilo do cabeçalho após a rolagem (com cor de fundo) */
+.home #masthead.site-header.header-scrolled,
+.page-id-27543 #masthead.site-header.header-scrolled { 
+    background-color: #00305c;
+    position: fixed;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.page-id-27543 #primary.content-area{
+    margin-top:0px !important;
+}
+
+/* 3. Ajuste para o conteúdo não pular */
+.admin-bar.home #masthead.site-header.header-scrolled,
+.admin-bar.page-id-27543 #masthead.site-header.header-scrolled { 
+    top: 32px;
+}
+
+
+.middle-header-contain {
+    top: 0;
+}
+
+
+//Menu
+nav .main-navigation .nav1 .dd-menu svg{
+    fill:#fff !important;
+}
+
+.nav-wrapper.desktop-only {
+    display: flex;
+    flex-direction: column; /* Organiza os itens em uma coluna */
+}
+
+#social-nav-contain {
+    order: -1; 
+    width: 100%; 
+    text-align: right; 
+    margin-bottom: 10px; 
+}
+
+/* Coloca o menu de navegação principal em seguida (order: 0 é o padrão) */
+#site-navigation {
+    order: 0; 
+    width: 100%; 
+}
+
+#social-nav-contain .social-navigation {
+    display: flex;
+    justify-content: flex-end; /* Alinha o menu (ul) à direita */
+    margin-top: 0px;
+
+    @media (max-width: 768px) {
+        display: none; /* Esta regra é crucial para que o menu desktop SUMA no mobile */
+    }
+}
+
+#site-navigation .main-navigation {
+    margin-top: 20px;
+
+    @media (max-width: 768px) {
+        display: none; /* Esta regra é crucial para que o menu desktop SUMA no mobile */
+    }
+}
+
+.h-sh.h-db .middle-header-contain {
+  border-bottom: none;
+}
+.middle-header-contain .wrapper{
+    padding: 10px 0px;
+}
+
+nav a{
+    color: var(--branco) !important;
+    font-weight: 400 !important;
+}
+
+.header-search-contain{
+    display: none;
+}
+
+//Dropdown
+/* Cor padrão do ícone da seta (menu fechado) */
+.dd-menu > ul > li.menu-item-has-children .submenu-expand svg {
+  fill: #FFF !important;
+  top:-0.5em !important;
+}
+
+/* Cor do ícone quando você passa o mouse sobre o botão */
+.main-navigation .submenu-expand:hover .svg-icon {
+  fill: #FFF; /* << TROQUE ESTA COR */
+}
+
+/* Cor do ícone quando o menu dropdown está ABERTO */
+.main-navigation .submenu-expand.open-dropdown .svg-icon {
+  fill: #FFFF; /* << TROQUE ESTA COR */
+}
+
+.site-header .dd-menu .sub-menu{
+    background-color: var(--cinza-base);
+    border-radius: 20px;
+}
+
+/* Estilização do submenu */
+ul.sub-menu {
+    background-color: var(--amarelo-principal); /* Fundo laranja */
+    border-bottom-right-radius: 15px; /* Canto inferior direito */
+    border-bottom-left-radius: 15px;  /* Canto inferior esquerdo */
+    padding: 10px; /* Espaçamento interno */
+    list-style: none; /* Remove marcadores de lista */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+    margin: 0;
+    padding: 5px 0;
+}
+
+/* Remove qualquer pseudo-elemento estranho */
+ul.sub-menu::after, ul.sub-menu::before {
+    content: none !important;
+}
+
+/* Estilo dos itens do submenu */
+ul.sub-menu li {
+    margin: 5px 0; /* Espaçamento entre itens */
+}
+
+/* Links do submenu */
+ul.sub-menu li a {
+    display: block;
+    padding: 8px 15px;
+    color: var(--azul-escuro)!important;/* Cor do texto */
+    text-decoration: none; /* Remove sublinhado */
+    transition: background 0.3s ease;
+    background-color: transparent;
+    border-bottom: var(--azul-escuro) solid 2px;
+    width: 90%;
+
+
+    @media (max-width: 768px) {
+        border-bottom: none;
+        color: var(--branco)!important;/* Cor do texto */
+    }
+}
+
+/* Hover nos links */
+ul.sub-menu li a:hover {
+    background-color: var(--dourado-principal); /* Tom mais escuro de laranja ao passar o mouse */
+}
+
+/* Empurra o cabeçalho fixo para baixo APENAS quando a barra do admin estiver ativa */
+body.admin-bar .middle-header-contain {
+  top: 32px;
+}
+
+#masthead {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; 
+    background-color: #00305c; /* Usei o azul-escuro da sua paleta */
+}
+
+@media only screen and (min-width: 782px) {
+  .newspack-front-page .site-content{
+    margin-top: 0px !important;
+  }
+}
+
+//Menu mobile
+.mobile-sidebar{
+    background-color: var(--azul-escuro);
+
+    ul.sub-menu {
+        background-color: transparent;
+        box-shadow: none;
+    }
+}
+
+button.mobile-menu-toggle{
+    font-family: $text !important;
+    color: var(--branco) !important;
+}
+
+.mobile-sidebar{
+    .nav1 a{
+        font-family: $text !important;
+        font-optical-sizing: auto;
+        font-style: normal;
+        font-size: 16px;
+    }
+
+    ul.sub-menu{
+        border-left: 2px solid var(--branco);
+        border-radius: 0;
+    }
+}
+
+//Grid
+#primary, .wrapper{
+    width: 80% !important;
+    max-width: 80% !important;
+
+    @media only screen and (max-width: 1200px) {
+        width: 90% !important;
+        max-width: 90% !important;
+    }
+}
+
+.wpnbha.is-grid > div{
+    @media only screen and (max-width: 1200px) {
+        display: block !important;
+    }
+}
+
+/* Aplica a margem em todas as páginas, exceto na front-page */
+body:not(.home, .front-page, .page-template-single-wide) #primary.content-area{
+    margin-top: 220px;
+
+    @media only screen and (max-width: 782px) {
+        margin-top: 70px !important;
+    }
+}
+
+.single #primary.content-area, .search #primary.content-area, .archive #primary.content-area {
+    margin-top: 170px !important;
+
+    @media only screen and (max-width: 782px) {
+        margin-top: 70px !important;
+    }
+}
+
+.page-template-single-wide  #primary.content-area{
+    margin-top: 220px;
+
+    @media only screen and (max-width: 782px) {
+        margin-top: 30px !important;
+    }
+}
+
+.newspack-front-page .entry .entry-content .wp-block-cover.alignfull > div > :not(.alignfull):not(.alignwide),
+.newspack-front-page .entry .entry-content .wp-block-cover.alignwide > div > :not(.alignfull):not(.alignwide),
+.newspack-front-page .entry .entry-content .wp-block-group.alignfull > div > :not(.alignfull):not(.alignwide),
+.newspack-front-page .entry .entry-content .wp-block-group.alignwide > div > :not(.alignfull):not(.alignwide),
+.post-template-single-wide .entry .entry-content .wp-block-cover.alignfull > div > :not(.alignfull):not(.alignwide),
+.post-template-single-wide .entry .entry-content .wp-block-cover.alignwide > div > :not(.alignfull):not(.alignwide),
+.post-template-single-wide .entry .entry-content .wp-block-group.alignfull > div > :not(.alignfull):not(.alignwide),
+.post-template-single-wide .entry .entry-content .wp-block-group.alignwide > div > :not(.alignfull):not(.alignwide),
+.page-template-single-wide .entry .entry-content .wp-block-cover.alignfull > div > :not(.alignfull):not(.alignwide),
+.page-template-single-wide .entry .entry-content .wp-block-cover.alignwide > div > :not(.alignfull):not(.alignwide),
+.page-template-single-wide .entry .entry-content .wp-block-group.alignfull > div > :not(.alignfull):not(.alignwide),
+.page-template-single-wide .entry .entry-content .wp-block-group.alignwide > div > :not(.alignfull):not(.alignwide) {
+
+margin-left: auto !important;
+margin-right: auto !important;
+max-width: 80% !important;
+
+} 
+
+// Título principal das páginas
+.page .entry-header .entry-title{
+    font-family: $titles-pages !important;
+    color: var(--azul-escuro);
+    text-transform: initial;
+    font-size: 70px !important;
+}
+
+// Títulos de conteúdo (dentro do bloco de título)
+.wp-block-heading {
+    font-family: $text;
+
+    h1, h2, h3, h4, h5, h6{
+        font-weight: 400;
+    }
+}
+
+.page-description, .not-found .page-title, .error-404 .page-title, .pagination .nav-links, .comments-title, .cat-links, .comment-author .fn, .no-comments, .site-title, h1, h2, h3, h4, h5, h6{
+    font-weight: 400 !important;
+}
+
+.entry-title a:hover, .entry-title a:visited {
+  color: currentColor;
+}
+
+.wp-block-button__link {
+    font-family: $text;
+    min-width: fit-content;
+    padding: 10px 80px;
+    font-size: 22px;
+    margin-top: 20px;
+    opacity: 1;
+}
+
+// Estilos para o segundo botão
+#load-more-button {
+    // Estilos específicos deste botão (pode copiar os de cima se forem iguais)
+    font-family: $text;
+    min-width: fit-content;
+    padding: 10px 50px;
+    font-size: 22px;
+    margin-top: 20px;
+    opacity: 1;
+}
+
+
+.wp-block-button .wp-block-button__link:hover{
+    background: transparent;
+}
+
+.button, .wp-element-button{
+    border-radius: 0px !important;
+    padding: 15px 25px; 
+}
+
+.site-content{
+  margin-top: 0;
+} 
+
+/* Centraliza APENAS o botão de "carregar mais" */
+button.wp-block-button__link[data-next] {
+    display: block; /* Faz o botão ocupar a própria linha */
+    margin-left: auto; /* Cria margem automática à esquerda */
+    margin-right: auto; /* Cria margem automática à direita */
+    background-color: var(--azul-escuro);
+    color: #fff;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 0px;
+    margin-top: 50px;
+}
+
+//Padronização dos títulos
+h1 {
+    font-size: 40px /* título principal */
+  }
+  
+  h2 {
+    font-size: 32px /* subtítulo principal */
+  }
+  
+  h3 {
+    font-size: 28px /* seção */
+  }
+  
+  h4 {
+    font-size: 24px /* subseção */
+  }
+  
+  h5 {
+    font-size: 20px /* título pequeno */
+  }
+  
+  h6 {
+    font-size: 16px /* o menor título */
+  }
+  
+  p{
+    font-size: 18px;
+  }         
+.texto-margem{
+	margin-top: -10% !important;
+	position: sticky;
+	z-index: 9999999;
+}
+
+@media (max-width: 768px) {
+		
+	.entry .entry-content>*.aligncenter,
+    .newspack-inline-popup>*.aligncenter,
+    .banner-cidades .wp-block-cover__inner-container,
+    .footer-branding, .footer-widgets,
+    .wp-block-cover__inner-container{
+        margin-left: 0px !important;
+        margin-right: 0px !important;
+	}
+}
+
+@media (min-width: 768px) {
+    .clearfix {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2%; /* Espaço entre as colunas */
+    }
+
+    #left, #center, #right {
+        width: 40%; /* 3 colunas com gap */
+        box-sizing: border-box;
+    }
+
+    #right {
+        width: 10%; /* 3 colunas com gap */
+        box-sizing: border-box;
+
+        p{
+            margin-top: 50px;
+        }
+    }
+
+    label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .wpcf7-form-control-wrap, input[type="text"], input[type="email"] {
+        max-width: 100%;
+        width: 100%; /* Preencher a coluna */
+        display: inline-block;
+        box-sizing: border-box;
+    }
+}
+
+.site-info .site-info-contain .desenvolvido-por{
+    color:#f3e7de !important;
+}
+
+body.admin-bar .bottom-header-contain{
+    top: 132px; //Ajuste conforme altura real do header superior */
+}
+
+.bottom-header-contain {
+    top: 100px; //Ajuste conforme altura real do header superior */
+}
+
+/* Ajustes para menus dropdown */
+.main-navigation ul ul {
+    z-index: 1001 !important;
+    top: 100%;
+}
+
+/* Garantir que elementos fixos tenham largura completa */
+.wrapper {
+    max-width: 96%;
+    margin: auto;
+}
+
+//home
+.home{
+
+    //Slider
+    @media (max-width: 768px) {
+        .wp-block-newspack-blocks-carousel .article.post-has-image{
+            height: 600px !important;
+        }
+
+        .swiper-wrapper {
+            height: 600px !important;
+        }
+
+        .home .wp-block-newspack-blocks-carousel article .entry-wrapper {
+            height: 600px !important;
+        }
+    }
+
+    .wp-block-newspack-blocks-carousel .post-thumbnail {
+        height: 700px;
+    }
+    .wp-block-newspack-blocks-carousel .swiper-slide {
+        max-height: 700px;
+    }
+
+    .wp-block-newspack-blocks-carousel article .entry-wrapper {
+        height: 100%;
+    }
+
+    .wp-block-newspack-blocks-carousel .entry-title{
+        color: var(--branco);
+    }
+
+    article.post-has-image h3 {
+        top: 40%;
+        position: inherit;
+        padding: 100px;
+        font-size: 56px;
+
+        a{
+            font-weight: 700 !important;
+        }
+
+        @media (max-width: 768px) {
+            padding: 10px;
+            font-size: 32px;
+        }
+    }
+
+    .wp-block-newspack-blocks-carousel .swiper-button-next, .wp-block-newspack-blocks-carousel .swiper-button-prev{
+        margin-top: 20px;
+    }
+
+    .slide-excerpt {
+        top: 65%;
+        position: absolute;
+        padding-left: 100px;
+        max-width: 800px;
+        font-weight: 400 !important;
+
+        @media (max-width: 768px) {
+            top: 55%;
+            padding-left: 10px;
+            max-width: 100%;
+        }
+    }
+    .wp-block-newspack-blocks-carousel article .entry-wrapper {
+        background-color: rgba(0, 48, 92, .5);
+    }
+
+    .wp-block-newspack-blocks-carousel .swiper-button {
+        background-color: transparent;
+
+        &:hover{
+            background-color: transparent;
+        }
+    }
+
+    .wp-block-newspack-blocks-carousel .swiper-pagination-bullet {
+        border-radius: 0 !important;
+        width: 15px !important;
+        height: 6px;
+        background: var(--branco);
+
+        &:active{
+            width: 24px !important;
+        }
+    }
+
+    .wp-block-newspack-blocks-carousel .swiper-pagination-bullets {
+        margin-top: -100px !important;
+        z-index: 999;
+    }
+
+    //Bloco de serviços
+
+    #cobertura-servicos{
+        max-height: 900px;
+    }
+
+    .servicos{
+        margin: 10px;
+        border-bottom: solid 2px var(--azul-escuro);
+    }
+
+    .wp-block-column.is-vertically-aligned-center .wp-block-cover {
+        scroll-margin-top: 100px; 
+    }
+
+    .entry-header{
+        margin: 0;
+        display: none;
+    }
+
+    .entry .entry-content > *{
+        margin: 0;
+    }
+
+    #secondary{
+        display: none;
+    }
+
+    .ver-todos{
+        text-decoration: underline;
+        
+    }
+
+    .tab-pane h2{
+        font-size: 60px;
+
+         @media (max-width: 768px) {
+            font-size: 32px !important;
+        }
+    }
+
+    //Bloco de posts com fundo
+    .wp-block-newspack-blocks-homepage-articles article{ 
+
+        @media (max-width: 768px) {
+            margin-bottom: 50px !important;
+        }
+    }
+
+    .tab-link{
+        font-weight: bolder;
+        color: var(--azul-escuro);
+
+        @media (max-width: 768px) {
+            font-size: 14px !important;
+        }
+    }
+
+    .wp-block-group .servicos p{
+        font-size: 24px;
+
+        @media (max-width: 768px) {
+            font-size: 16px !important;
+        }
+    }
+}
+
+.menos-espaco{
+    h2,h3{
+        margin-bottom: -20px;
+
+        @media only screen and (max-width: 782px) {
+            margin-bottom: -10px;
+        }
+    }
+
+}
+
+//Blog
+/*
+ * ESTILO GRID DE 3 COLUNAS PARA LISTAGEM DE POSTS FILTRADOS
+ */
+
+.page-template-template-blog-com-filtros{
+    .posts-grid-layout {
+        display: grid;
+        // Padrão para telas grandes (3 colunas iguais)
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px; // Espaço entre os posts
+        margin-top: 40px; 
+        margin-bottom: 40px; 
+        
+        // Estilo dos itens individuais
+        .filtered-post-item {
+            margin: 0; // Remove margens padrão que podem atrapalhar o grid
+            // Certifique-se de que a imagem e o conteúdo se ajustam bem.
+            .post-thumbnail {
+                width: 100%;
+                height: auto;
+            }
+
+            // Estilos adicionais de borda, sombra, etc., para cada card (se necessário)
+            border: none;
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        p{
+            font-weight: 400;
+            color: var(--azul-escuro)
+        }
+
+        h2 a{
+            font-weight: bold !important; 
+            color: var(--azul-escuro);
+        }
+    }
+
+
+    /* Tablet (ajusta para 2 colunas) */
+    @media (max-width: 992px) {
+        .posts-grid-layout {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+    }
+
+    /* Celular (ajusta para 1 coluna) */
+    @media (max-width: 576px) {
+        .posts-grid-layout {
+            grid-template-columns: 1fr; /* Uma única coluna */
+            gap: 15px;
+            padding: 0 10px;
+        }
+    }
+
+    /*
+    * LAYOUT DE DUAS COLUNAS PARA OS GRUPOS DE FILTRO
+    */
+    .custom-filters-container {
+        display: flex; // Habilita o Flexbox
+        flex-wrap: wrap; // Permite quebrar linha em dispositivos móveis
+        justify-content: space-between; // Distribui o espaço entre as colunas
+        margin-bottom: 40px; 
+        font-family: $text !important;
+
+        h2 {
+            width: 100%; // Garante que o título 'Encontre o que você precisa...' ocupe toda a largura
+            margin-bottom: 20px;
+            font-family: $text !important;
+        }
+
+        // Estilo para CADA GRUPO de filtro ("por assunto" e "por formato")
+        & > div {
+            flex: 1 1 48%;
+            min-width: 300px;
+            margin-bottom: 20px;
+
+            h3 {
+                position: relative;
+                display: inline-block;
+                
+                margin-top: 0;
+                margin-bottom: 15px;
+                font-size: 1.2rem;
+                font-family: $text !important;
+                padding-bottom: 8px; 
+
+                &::after {
+                    content: "";
+                    display: block; 
+                    
+                    width: 30px; 
+                    height: 2px; 
+                    
+                    background-color: var(--azul-escuro, #00305c);
+                    
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                }
+            }
+        }
+    }
+    /*
+    * RESPONSIVIDADE: Pilha as colunas em telas menores (celulares)
+    */
+    @media (max-width: 768px) {
+        .custom-filters-container {
+            flex-direction: column; // Força os grupos a ficarem um sobre o outro (coluna)
+
+            & > div {
+                flex: 1 1 100%; // Ocupa 100% da largura
+                min-width: unset; // Remove a restrição de largura mínima
+            }
+        }
+    }
+
+    // --- Estilos para os botões internos ---
+
+    .filter-group {
+        display: flex;
+        flex-wrap: wrap; // Garante que os botões quebrem a linha dentro da sua coluna
+        gap: 8px; // Pequeno espaço entre os botões
+    }
+
+    .filter-button {
+        font-family: $text !important;
+        background-color: var(--cinza-claro, #ccc);
+        color: var(--azul-escuro);
+        padding: 8px 12px;
+        border: none;
+        cursor: pointer;
+        border-radius: 0px;
+        transition: background-color 0.2s;
+
+        &.active {
+            background-color: var(--azul-escuro, #00305c);
+            color: white;
+        }
+    }
+
+}
+
+
+body {
+
+    @media (max-width: 768px) {
+        padding-top: 32px; 
+    }
+}
+.site-header .dd-menu .sub-menu a{
+    background-color: transparent;
+    padding: 10px;
+    font-size: 16px;
+
+    &:hover{
+        background-color: transparent;
+        text-decoration: underline;
+    }
+}
+
+.social-links-menu li a svg{
+    width: 38px;
+    height: 38px;
+}
+
+#search-toggle .svg-icon {
+  width: 38px;  
+  height: 38px; 
+}
+
+
+.site-header .nav1{
+    font-size: 20px;
+}
+
+.page{
+    .entry-header{
+        margin: 0;
+    }
+
+    .entry .entry-content > *{
+        margin: 0;
+    }
+
+    .entry .entry-content > p{
+        margin: 20px 0;
+    }
+
+    #secondary{
+        display: none;
+    }
+
+}
+
+.wrapper.site-info-contain {
+    display: flex;
+    justify-content: space-between; /* Divide a área em duas colunas */
+    flex-wrap: wrap; /* Garante que a layout seja responsivo */
+    align-items: flex-start; /* Alinha os itens no topo */
+}
+
+.left-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column; /* Organiza os itens verticalmente */
+    align-items: flex-start;
+    margin-right: 20px;
+}
+
+.right-column {
+    flex: 0 0 200px; /* Ajusta o tamanho fixo da coluna à direita (pode mudar conforme necessário) */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 10px;
+
+    @media only screen and (max-width: 782px) {
+        align-items: flex-end;
+    }
+}
+
+.left-column .desenvolvido-por,
+.left-column .imprint,
+.left-column .copyright,
+.left-column .privacy-policy {
+    margin-bottom: 10px; /* Espaçamento entre os elementos */
+}
+
+.right-column a {
+    margin-bottom: 10px; /* Espaçamento entre os itens de redes sociais */
+}
+
+.custom-logo-lr {
+    max-width: 100%; /* Garante que a logo se ajuste corretamente */
+    height: auto;
+}
+
+//archive
+
+.archive .archive-posts-grid{
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+}
+
+.archive .page-description{
+    font-family: $titles-pages;
+    font-size: 80px;
+    color: var(--azul-escuro);
+
+    @media only screen and (max-width: 782px) {
+        font-size: 42px;
+    }
+}
+
+.single .page-subtitle, .page-title::before{
+    display: none;
+}
+.archive article .entry-header{
+    margin: 20px 0;
+}
+.archive .has-post-thumbnail .post-thumbnail{
+    max-width: 100%;
+}
+
+.archive .page-header{
+    margin: 30px 0 0 0;
+}
+
+.archive article.entry:first-of-type, .archive article, .archive .entry{
+    display: block !important;
+    margin-top:20px;
+    
+    .entry-title, h2{
+        font-size: 1.4em !important;
+    }
+
+    @media only screen and (max-width: 782px) {
+        margin-top:20px;
+        margin-bottom:60px;
+    }
+}
+
+.archive #main{
+    width: 100%;
+    margin: auto;
+}
+.archive-posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+
+    @media (max-width: 768px) {
+        display: block !important;
+    }
+}
+
+.archive-posts-grid .post-item {
+    border: 1px solid #ccc;
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.archive .archive-posts-grid .post-item:hover {
+    transform: translateY(-5px);
+}
+
+.archive .the-excerpt {
+    color: var(--azul-escuro);
+    
+    p{
+        font-size: 16px;
+    }
+
+}
+
+//Archive de revistas com grid de 4 posts por linha{
+.post-type-archive-revista .archive-posts-grid{
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+
+//search
+
+
+input[type="search"] {
+    font-family: $text; 
+    font-size: 16px;
+    color: var(--azul-escuro); 
+}
+
+.search .entry-header{
+    margin-left: 0;
+}
+
+.search-form input {
+    padding-right: 2.5rem;
+    width: 100%;
+    border: 1px solid var(--azul-escuro);
+    border-radius: 20px;
+
+    input[type="search"]:focus{
+        border-color: var(--azul-escuro);
+    }
+}
+
+#header-search{
+    top:0px !important;
+}
+
+.header-search h3{
+    color: var(--verde-vibrante) !important;
+}
+
+.video-gallery-wrapper .scroll-ratio .sidebar-itens button{
+    width: 100% !important;
+    height: 100% !important;
+    
+}
+
+.embed-template-block figure .wp-block-embed__wrapper{
+    height: 190px !important;
+}
+
+.iframe-container {
+    font-size: 8px !important; /* Altera o tamanho da fonte ao redor do iframe */
+}
+
+//Single de post
+
+body.single-post{
+    .entry-title {
+        font-family: $text;
+        font-weight: bold !important;
+        font-size: 44px;
+        color: var(--azul-escuro);
+    }
+
+    .entry-content{
+        color: var(--azul-escuro);
+    }
+
+    .entry-header{
+        padding: 20px;
+        border: solid 5px var(--dourado-principal) !important;
+        border-radius: 20px;
+    }
+
+    .main-content{
+        width: 100%;
+    }
+
+    //Estilos para o Container Externo (.entry-header)
+    .entry-header {
+        width: 100vw;
+        position: relative;
+        left: 40%;
+        transform: translateX(-50%);
+        background-color: #f7f7f7;
+        border-top: 1px solid #e0e0e0;
+        border-bottom: 1px solid #e0e0e0;
+        padding-top: 6px;
+        padding-bottom: 6px;
+        box-sizing: border-box; 
+    }
+
+    .entry-header-inner {
+        max-width: 80%; 
+        margin-left: auto;
+        margin-right: 5%;
+        padding: 2em 0;
+    }
+
+    .entry-header .entry-title {
+        margin-top: 0.5em; 
+        margin-bottom: 0;
+    }
+
+    .entry-header .cat-links {
+        margin-bottom: 0;
+    }
+}
+
+.categoria-e-formato-wrapper {
+    display: flex; /* Melhor para alinhamento */
+    align-items: center; /* Alinha verticalmente */
+    flex-wrap: wrap; /* Permite quebrar linha em telas pequenas */
+    margin-bottom: 0.5em; /* Adiciona um espaço abaixo do Formato/Categoria e o título */
+    font-size: 16px; /* Ajuste o tamanho da fonte se necessário */
+}
+
+.categoria-e-formato-wrapper .formato-separator {
+    margin-right: 5px; 
+}
+
+
+.categoria-e-formato-wrapper .screen-reader-text {
+    border-bottom: none !important;
+}
+
+
+.single:not(.has-large-featured-image) .entry-header{
+    border-bottom: none;
+}
+
+.load-more-container {
+  display: flex;
+  justify-content: center; /* Centraliza horizontalmente */
+  align-items: center;     /* Centraliza verticalmente (se o container tiver altura) */
+  margin-top: 30px;
+  margin-bottom: 30px;
+  width: 100%;
+
+  #load-more-button{
+    background-color: var(--verde-vibrante);
+    color: #fff;
+    font-size: 22px;
+    font-family: $text;
+  }
+}
+
+.search{
+    .page-header{
+        width: 100%;
+    }
+
+    .has-post-thumbnail .entry-container {
+        flex-basis: 100%;
+    }
+
+    .page-header h1{
+        margin-top: 20px;
+        font-size: 36px;
+        color: var(--azul-escuro);
+
+        @media (max-width: 768px) {
+            font-size: 24px;
+        }
+    }
+
+    input{
+        font-family: $text;
+    }
+
+    .header-search{
+        width: 100%;
+    }
+
+    #main{
+        width:100%;
+    }
+
+    .archive-posts-grid{
+        display: block;
+    }
+}
+
+.search-results .entry-container {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding-bottom: 30px;
+    margin-bottom: 30px;
+    border-bottom: 1px solid #eee;
+}
+
+.search-results .entry-container .post-thumbnail {
+    flex-shrink: 0;
+}
+
+ .search .has-post-thumbnail .post-thumbnail{
+    width: 400px;
+}
+
+.search-results .entry-container .entry-text-wrapper {
+    flex-grow: 1;
+}
+
+.search-results .entry-title {
+    margin-top: 0;
+    font-size: 1.2rem;
+}
+
+.search-results .entry-content {
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+@media (max-width: 767px) {
+    .search-results .entry-container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .search-results .entry-container .post-thumbnail {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+}
+
+//Sobre
+
+@media (max-width: 767px) {
+    .titulo-sobre{
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        
+        h2{
+            font-size: 32px !important;
+        }
+    }
+}
+
+
+
+/* Footer */
+.footer-area {
+    width: 80%;
+    margin: auto;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+
+    @media (max-width: 767px) {
+        display: block;
+
+        .wp-block-spacer{
+            display: none;
+        }
+    }
+
+}
+
+.widget .widget_nav_menu a,
+.widget p {
+    font-size: 20px !important;
+    font-weight: 400;
+
+    @media (max-width: 767px) {
+        font-size: 16px !important;
+    }
+    
+}
+
+.site-footer .widget-area {
+    width: 80% !important;
+    margin: 0 !important;
+}
+
+.site-footer .widget-area .wrapper {
+    margin: 0 !important;
+    min-width: 100% !important;
+}
+
+.site-footer .social-links-menu {
+    margin-top: 0;
+}
+
+.footer-area aside.footer-widgets {
+    flex-grow: 1;
+    height: 100%;
+}
+
+/* Coluna de Redes/Branding (O Wrapper Vertical) */
+.footer-social-branding-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    align-items: center;
+    margin-left: 20px;
+}
+
+.footer-branding {
+    margin-bottom: 200px;  
+    
+    @media (max-width: 767px) {
+        margin-bottom: 30px;
+    }
+}
+
+.site-footer .footer-branding .wrapper {
+    justify-content: center;
+}
+
+.site-footer .wp-block-column{
+    @media (max-width: 767px) {
+        margin-top: 0px;
+        padding: 0px;
+    }
+}
+
+.desenvolvido-por-container {
+    margin-top: auto;
+    text-align: center;
+    padding: 0;
+    margin-bottom: 60px;
+}
+
+.desenvolvido-por {
+    display: flex;
+    align-items: baseline; 
+    gap: 8px; 
+    font-size: 16px; 
+    text-decoration: none; 
+    min-width: 400px;
+}
+
+.custom-logo-lr{
+    height: 50px !important;
+    width: auto;
+}
+
+//Archive de categorias
+.archive #primary.content-area{
+    .entry-container{
+        color: var(--azul-escuro);
+    }
+
+    .page-subtitle{
+        display: none;
+    }
+}
+
+//Contato
+
+.page-id-27543 .entry-title {
+    display: none;
+}
+
+/* ========================================================= */
+/* 1. ESTILOS DO CONTAINER GERAL (Fundo Bege) */
+/* ========================================================= */
+
+/* Container principal do formulário */
+.cf7-container-bege {
+    /* Cor de fundo bege/dourado da imagem (Ajuste se necessário) */
+    box-sizing: border-box;
+    margin: 0 auto;
+}
+
+/* Título */
+.cf7-container-bege .form-title {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #333; 
+    margin-bottom: 20px;
+}
+
+/* ========================================================= */
+/* 2. LAYOUT DE DUAS COLUNAS (Flexbox) */
+/* ========================================================= */
+
+/* Container Flexbox para as duas grandes colunas */
+.duas-colunas-cf7 {
+    display: flex;
+    gap: 30px; /* Espaço entre as colunas esquerda e direita */
+    align-items: stretch; /* Garante que a coluna Mensagem (direita) estique */
+    margin-bottom: 20px;
+}
+
+/* Colunas (Nome/Email e Mensagem) com 50% de largura */
+.coluna-esquerda-cf7,
+.coluna-direita-cf7 {
+    width: 50%;
+    /* Usa flex para garantir que Nome e Email ocupem o espaço corretamente na esquerda */
+    display: flex;
+    flex-direction: column; 
+    justify-content: start; /* Distribui Nome e Email uniformemente */
+}
+
+/* Container do campo Mensagem para preencher o espaço */
+.coluna-direita-cf7 .mensagem-wrap {
+    flex-grow: 1; /* Faz com que o campo Mensagem preencha o espaço da coluna */
+}
+
+/* O campo textarea precisa ser 100% da altura do seu container */
+.coluna-direita-cf7 textarea {
+    height: 100% !important; /* Força o preenchimento da altura */
+    max-height: 140px; /* Altura mínima para fallback */
+}
+
+
+/* ========================================================= */
+/* 3. ESTILOS DOS CAMPOS E BOTÃO */
+/* ========================================================= */
+
+form p{
+    margin: 0;
+    margin-top: 10px;
+}
+/* Estiliza TODOS os campos de texto e a textarea do CF7 */
+.cf7-container-bege input:not([type="submit"]),
+.cf7-container-bege textarea {
+    width: 100%; 
+    padding: 10px;
+    border: 2px solid var(--azul-escuro); 
+    background-color: #fff; 
+    color: #333;
+    border-radius: 4px; 
+    box-sizing: border-box; 
+    font-size: 1em;
+}
+
+/* Ajuste de margem dos campos individuais na coluna da esquerda */
+.coluna-esquerda-cf7 .campo-100-vertical {
+    margin-bottom: 0px;
+}
+.coluna-esquerda-cf7 .campo-100-vertical:last-child {
+    margin-bottom: 0; /* Remove a margem extra do último campo */
+}
+
+/* Estilo das labels */
+.cf7-container-bege label {
+    font-size: 0.9em;
+    font-weight: bold;
+    display: block; 
+    margin-bottom: 0px;
+    color: #333; 
+}
+
+/* Estilo do botão ENVIAR */
+.cf7-container-bege input[type="submit"] {
+    background-color: var(--azul-escuro); 
+    font-family: $text !important;
+    color: var(--branco);
+    padding: 10px 25px;
+    border: none;
+    border-radius: 0px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.1em;
+    width: auto;
+    text-align: center !important;
+}
+
+.cf7-container-bege p:has(input[type="submit"]) {
+    text-align: center;
+    margin-top: 20px; /* Adiciona um espaço acima do botão */
+}
+
+/* ========================================================= */
+/* 4. RESPONSIVIDADE (Para telas de celular) */
+/* ========================================================= */
+
+@media (max-width: 768px) {
+    /* Em telas menores, as colunas ficam empilhadas */
+    .duas-colunas-cf7 {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    /* As duas colunas voltam a ocupar 100% da largura */
+    .coluna-esquerda-cf7,
+    .coluna-direita-cf7 {
+        width: 100%;
+    }
+    
+    /* Adiciona margem entre as colunas quando empilhadas */
+    .coluna-esquerda-cf7 {
+        margin-bottom: 20px;
+    }
+    
+    /* A textarea volta à altura padrão, já que não precisa mais esticar */
+    .coluna-direita-cf7 textarea {
+        height: auto !important;
+        min-height: 150px;
+    }
+}
+
+.wp-block-newspack-blocks-homepage-articles article h2.entry-title a{
+    font-weight: bolder;
+}
