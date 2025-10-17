@@ -426,93 +426,6 @@ function emmovimento_customizer_register( $wp_customize ) {
 }
 add_action( 'customize_register', 'emmovimento_customizer_register' );
 
-/**
- * Enfileira o script para a funcionalidade "Carregar Mais".
- */
-function newspack_child_enqueue_load_more_scripts() {
-    // Só carrega o script em páginas de arquivo (categorias, tags, arquivos de autor, etc.)
-    if ( is_archive() || is_home() || is_search()) {
-        global $wp_query;
-
-        // Define qual template part deve ser usado por padrão
-        $template_to_use = 'excerpt';
-
-        // Se estivermos no arquivo de 'revista', mudamos para 'revista'
-        if ( is_post_type_archive('revista') ) {
-            $template_to_use = 'revista';
-        }
-
-        elseif ( is_search() || $is_custom_search_page ) {
-            $template_to_use = 'search';
-        }
-
-        elseif ( is_post_type_archive('blog' )) {
-            $template_to_use = 'blog';
-        }
-
-        elseif ( is_post_type_archive('transparencia' ) ) {
-            $template_to_use = 'transparencia';
-        }
-
-        // Registra e enfileira o script
-        wp_enqueue_script(
-            'newspack-load-more',
-            get_stylesheet_directory_uri() . '/assets/javascript/load-more.js',
-            array( 'jquery' ),
-            '1.0',
-            true
-        );
-
-        // Passa variáveis do PHP para o JavaScript
-        wp_localize_script(
-            'newspack-load-more',
-            'load_more_params',
-            array(
-                'ajaxurl'       => admin_url( 'admin-ajax.php' ),
-                'query'         => json_encode( $wp_query->query_vars ), // Mude 'posts' para 'query'
-                'current_page'  => get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1,
-                'max_pages'     => $wp_query->max_num_pages, // Mude 'max_page' para 'max_pages'
-                'nonce'         => wp_create_nonce('load_more_posts_nonce'),
-                'template_part' => $template_to_use // ADICIONE ESTA LINHA
-            )
-
-        );
-    }
-}
-add_action( 'wp_enqueue_scripts', 'newspack_child_enqueue_load_more_scripts' );
-
-/**
- * Manipulador AJAX para carregar mais posts.
- */
-function newspack_child_load_more_handler() {
-    // Verifica o nonce de segurança
-    check_ajax_referer('load_more_posts_nonce', 'nonce');
-
-    // Prepara os argumentos da query
-    $args = json_decode( stripslashes( $_POST['query'] ), true );
-    $args['paged'] = $_POST['page'] + 1; // Carrega a próxima página
-    $args['post_status'] = 'publish';
-
-    $query = new WP_Query( $args );
-
-    if ( $query->have_posts() ) {
-        // Inicia o loop para buscar os posts
-        while ( $query->have_posts() ) : $query->the_post();
-            // Pega o nome do template que o JS enviou e o valida por segurança
-            $template_part_name = 'excerpt'; // Valor padrão de segurança
-            if ( isset($_POST['template_part']) ) {
-                $template_part_name = sanitize_file_name($_POST['template_part']);
-            }
-
-            // Usa a variável para carregar o template correto
-            get_template_part( 'template-parts/content/content', $template_part_name );
-        endwhile;
-    }
-
-    wp_die(); // Termina a execução do AJAX
-}
-add_action( 'wp_ajax_load_more_posts', 'newspack_child_load_more_handler' );
-add_action( 'wp_ajax_nopriv_load_more_posts', 'newspack_child_load_more_handler' ); // Para usuários não logados
 
 /**
  * Altera o número de posts por página no arquivo de "Revistas".
@@ -812,195 +725,6 @@ function traduzir_botao_by_newspack( $translated_text, $text, $context, $domain 
 }
 
 /**
- * Enfileira o script "Carregar Mais" e passa as variáveis corretas
- * para as páginas de busca E de arquivo.
- */
-function meu_tema_unificar_script_load_more() {
-    
-    // Só executa esta função em páginas de busca OU de arquivo
-    if ( is_search() || is_archive() ) {
-        
-        global $wp_query;
-
-        // --- PREPARA AS VARIÁVEIS DE ACORDO COM A PÁGINA ---
-        $container_selector = '';
-        $template_part      = '';
-
-        if ( is_search() ) {
-            // Configurações para a página de busca
-            $container_selector = '#custom-search-results-container';
-            $template_part      = 'template-parts/content/content-search'; // Substitua pelo seu template de busca, se for diferente
-        } elseif ( is_archive() ) {
-            // Configurações para a página de arquivo
-            $container_selector = '.archive-posts-grid';
-            $template_part      = 'template-parts/content/content-excerpt';
-        }
-        // --- FIM DA PREPARAÇÃO ---
-
-        // Registra e enfileira o seu script JavaScript principal
-        wp_enqueue_script(
-            'meu-load-more-script', // Nome único para o seu script
-            get_stylesheet_directory_uri() . '/assets/javascript/load-more.js', // Caminho para o seu arquivo JS
-            array('jquery'),
-            '1.1', // Nova versão para evitar cache
-            true
-        );
-
-        // Passa as variáveis do PHP para o JavaScript
-        wp_localize_script(
-            'meu-load-more-script',
-            'load_more_params', // Nome do objeto que o JS irá usar
-            array(
-                'ajaxurl'       => admin_url( 'admin-ajax.php' ),
-                'nonce'         => wp_create_nonce( 'load_more_nonce' ),
-                'current_page'  => get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1,
-                'max_pages'     => $wp_query->max_num_pages,
-                'query'         => $wp_query->query_vars, 
-                'template_part' => $template_part,
-                'container'     => $container_selector, // Envia o seletor do contêiner correto
-            )
-        );
-    }
-}
-add_action( 'wp_enqueue_scripts', 'meu_tema_unificar_script_load_more' );
-
-/**
- * LÓGICA DE FILTROS AJAX PARA PÁGINA DE BLOG (TEMA FILHO)
- * As categorias são separadas dinamicamente:
- * - Filtro "Assunto": todas as categorias, EXCETO as de Formato.
- * - Filtro "Formato": apenas as categorias listadas abaixo.
- */
-
-// Define a lista fixa de slugs de categorias de FORMATO.
-$GLOBALS['lv_format_slugs'] = array( 'opiniao', 'noticia', 'artigo' );
-
-// 1. FUNÇÃO PARA RENDERIZAR OS POSTS
-// Nenhuma meta de comentário ou link de comentário será exibido aqui.
-function lv_render_posts( $args = array() ) {
-    $default_args = array(
-        'post_type'      => 'post',
-        'post_status'    => 'publish',
-        'posts_per_page' => 9, // Número de posts a exibir por vez
-        'orderby'        => 'date',
-        'order'          => 'DESC',
-        'paged'          => 1,
-    );
-    
-    $query_args = wp_parse_args( $args, $default_args );
-    $query = new WP_Query( $query_args );
-
-    if ( $query->have_posts() ) :
-        while ( $query->have_posts() ) :
-            $query->the_post();
-            
-            // Obtém os termos da taxonomia "formato"
-            $format_terms = get_the_term_list( get_the_ID(), 'formato', '', ', ' ); 
-            
-            ?>
-            <article id="post-<?php the_ID(); ?>" <?php post_class( 'filtered-post-item' ); ?>>
-                <?php if ( has_post_thumbnail() ) : ?>
-                    <a href="<?php the_permalink(); ?>"><?php the_post_thumbnail( 'medium' ); ?></a>
-                <?php endif; ?>
-                
-                <div class="entry-meta">
-                    <?php 
-                    // Exibe a Categoria (Assunto)
-                    the_category(', ');
-
-                    // Exibe o Formato, se existir
-                    if ( ! empty( $format_terms ) ) {
-                        // Separador visual entre Categoria e Formato
-                        echo '<span class="separator">  </span>'; 
-                        echo $format_terms;
-                    }
-                    ?>
-                </div>
-
-                <h2><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
-                <div class="entry-excerpt">
-                    <?php the_excerpt(); ?>
-                </div>
-            </article>
-            <?php
-
-        endwhile;
-    else :
-        echo '<p>Nenhum post encontrado com os filtros selecionados.</p>';
-    endif;
-    
-    wp_reset_postdata();
-}
-
-
-function lv_filter_posts_callback() {
-    check_ajax_referer( 'lv_filter_nonce', 'nonce' );
-
-    $filters = isset( $_POST['filters'] ) ? wp_unslash( $_POST['filters'] ) : array();
-    
-    // A query base usará 'AND'
-    $tax_query_final = array( 'relation' => 'AND' );
-    
-    // 1. Itera sobre os filtros e monta a tax_query
-    foreach ( $filters as $filter_data ) {
-        $taxonomy  = sanitize_key( $filter_data['taxonomy'] ); // 'category' OU 'formato'
-        $term_slug = sanitize_text_field( $filter_data['term'] );
-        
-        // Ignora termos vazios e slugs especiais (que não devem existir mais aqui)
-        if ( empty( $term_slug ) ) {
-            continue;
-        }
-
-        // Adiciona um filtro INCLUSIVO para a taxonomia específica
-        $tax_query_final[] = array(
-            'taxonomy' => $taxonomy,
-            'field'    => 'slug',
-            'terms'    => $term_slug,
-            'operator' => 'IN',
-        );
-    }
-    
-    // 2. Configuração Final do WP_Query
-    $args = array(
-        'post_type'      => 'post',
-        'post_status'    => 'publish',
-        'posts_per_page' => 9, 
-        'orderby'        => 'date',
-        'order'          => 'DESC',
-    );
-
-    // Aplica a tax_query se houver filtros (mais de uma entrada no array)
-    if ( count( $tax_query_final ) > 1 ) {
-        $args['tax_query'] = $tax_query_final;
-    }
-    
-    // ... (restante da renderização e wp_die)
-    ob_start();
-    lv_render_posts( $args ); 
-    $output_html = ob_get_clean();
-
-    wp_send_json_success( array( 'html' => $output_html ) );
-    wp_die();
-}
-
-// Registra os hooks para usuários logados e não logados
-add_action( 'wp_ajax_lv_filter_posts', 'lv_filter_posts_callback' );
-add_action( 'wp_ajax_nopriv_lv_filter_posts', 'lv_filter_posts_callback' );
-
-
-// 3. ENFILEIRAMENTO DE SCRIPTS (Obrigatório)
-function lopes_vasconcelos_enqueue_filter_scripts() {
-    // Certifique-se de que a pasta 'js' e o arquivo 'post-filter.js' existem no seu tema filho
-    wp_enqueue_script( 'custom-post-filter', get_stylesheet_directory_uri() . '/assets/javascript/post-filter.js', array( 'jquery' ), '1.0', true );
-    
-    // Passa a URL do AJAX e o nonce para o JavaScript
-    wp_localize_script( 'custom-post-filter', 'lv_ajax', array(
-        'ajax_url' => admin_url( 'admin-ajax.php' ),
-        'nonce'    => wp_create_nonce( 'lv_filter_nonce' ) 
-    ) );
-}
-add_action( 'wp_enqueue_scripts', 'lopes_vasconcelos_enqueue_filter_scripts' );
-
-/**
  * Adiciona o termo da taxonomia 'formato' ao lado da categoria no bloco Newspack.
  */
 function adicionar_taxonomia_formato_newspack() {
@@ -1130,3 +854,138 @@ function exibir_posts_relacionados_por_categoria( $args = [] ) {
 // O WordPress por padrão adiciona [...] ao final do resumo. 
 // Vamos remover isso para um visual mais limpo como na imagem.
 add_filter( 'excerpt_more', '__return_empty_string' );
+
+/**
+ * ===================================================================
+ * SISTEMA UNIFICADO DE AJAX: FILTROS E CARREGAR MAIS (VERSÃO FINAL)
+ * Este bloco de código gerencia todas as listagens de posts dinâmicas.
+ * ===================================================================
+ */
+
+/**
+ * 1. Enfileira o script e passa os parâmetros corretos para cada tipo de página.
+ */
+function tema_unificado_ajax_scripts() {
+
+    // Condição: Só carrega o script se for a página de filtros ou um arquivo.
+    if ( is_page_template('template-blog-com-filtros.php') || is_archive() ) {
+
+        global $wp_query;
+
+        $params = [
+            'ajax_url'          => admin_url( 'admin-ajax.php' ),
+            'nonce'             => wp_create_nonce( 'unificado_ajax_nonce' ),
+            'posts_per_page'    => get_option('posts_per_page'),
+            'max_pages'         => 1,
+            'current_page'      => get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1,
+            'is_filter_page'    => false,
+            'initial_query'     => [], // Começa como um array vazio por padrão
+            'template_part'     => 'template-parts/content/content-excerpt',
+            'container'         => '.archive-posts-grid', // Padrão para archive.php
+        ];
+
+        // Se for uma página de arquivo, nós preenchemos a initial_query.
+        if ( is_archive() ) {
+            $params['max_pages']     = $wp_query->max_num_pages;
+            $params['initial_query'] = $wp_query->query_vars;
+
+        // Se for a página de filtros, a initial_query permanece vazia.
+        } elseif ( is_page_template('template-blog-com-filtros.php') ) {
+            $posts_query = new WP_Query([
+                'post_type'      => 'post',
+                'post_status'    => 'publish',
+                'posts_per_page' => get_option('posts_per_page'),
+            ]);
+            $params['max_pages'] = $posts_query->max_num_pages;
+            wp_reset_postdata();
+
+            // Personaliza os parâmetros para o template de filtros
+            $params['is_filter_page'] = true;
+            $params['template_part']  = 'template-parts/content/content-excerpt';
+            $params['container']      = '#posts-list-container';
+        }
+        
+        // Enfileira o script (verifique o caminho!)
+        wp_enqueue_script(
+            'unificado-ajax-script',
+            get_stylesheet_directory_uri() . '/assets/javascript/ajax-unificado.js', // VERIFIQUE SE ESTE CAMINHO ESTÁ CORRETO
+            ['jquery'],
+            '1.5', // Versão incrementada para evitar cache
+            true
+        );
+
+        wp_localize_script( 'unificado-ajax-script', 'ajax_params', $params );
+    }
+}
+add_action( 'wp_enqueue_scripts', 'tema_unificado_ajax_scripts' );
+
+
+/**
+ * ===================================================================
+ * SISTEMA UNIFICADO DE AJAX - VERSÃO FINAL E FUNCIONAL
+ * ===================================================================
+ */
+
+// A função tema_unificado_ajax_scripts() continua a mesma, não precisa mexer.
+
+/**
+ * Manipulador AJAX unificado que responde a todas as requisições.
+ * VERSÃO COM CATEGORIAS E FORMATOS ANTES DO TÍTULO
+ */
+function tema_unificado_ajax_handler() {
+    ob_clean(); // ADICIONE ESTA LINHA PARA LIMPAR QUALQUER SAÍDA ANTERIOR
+
+    // check_ajax_referer( 'unificado_ajax_nonce', 'nonce' );
+
+    $paged    = isset($_POST['page']) ? intval($_POST['page']) : 1;
+    $category = isset($_POST['category']) ? sanitize_text_field($_POST['category']) : '';
+    $formato  = isset($_POST['formato']) ? sanitize_text_field($_POST['formato']) : '';
+
+    $args = [
+        'paged'               => $paged,
+        'post_status'         => 'publish',
+        'post_type'           => 'post',
+        'posts_per_page'      => get_option('posts_per_page'),
+        'ignore_sticky_posts' => 1,
+    ];
+
+    $tax_query = ['relation' => 'AND'];
+    if ( !empty($category) ) {
+        $tax_query[] = ['taxonomy' => 'category', 'field' => 'slug', 'terms' => $category];
+    }
+    if ( !empty($formato) ) {
+        $tax_query[] = ['taxonomy' => 'formato', 'field' => 'slug', 'terms' => $formato];
+    }
+
+    if ( count($tax_query) > 1 ) {
+        $args['tax_query'] = $tax_query;
+    }
+    
+    $query = new WP_Query( $args );
+
+    ob_start();
+
+    if ( $query->have_posts() ) {
+        while ( $query->have_posts() ) {
+            $query->the_post();
+            get_template_part( 'template-parts/content/content-excerpt' );
+        }
+    } else {
+        if ( 1 === $paged ) {
+            echo '<p style="text-align: center; width: 100%;">Nenhum post encontrado com estes filtros.</p>';
+        }
+    }
+
+    wp_reset_postdata();
+    $html = ob_get_clean();
+
+    $data_to_send = [
+        'html' => $html,
+        'max_pages' => $query->max_num_pages,
+    ];
+
+    wp_send_json_success( $data_to_send );
+}
+// Mantenha os add_action abaixo da função
+add_action( 'wp_ajax_unificado_load_posts', 'tema_unificado_ajax_handler' );
+add_action( 'wp_ajax_nopriv_unificado_load_posts', 'tema_unificado_ajax_handler' );

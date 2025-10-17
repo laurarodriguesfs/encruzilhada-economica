@@ -4,20 +4,16 @@
  * Description: Template customizado para a página de blog com filtros AJAX.
  */
 
-// A lista de Formato agora é apenas informativa, não de exclusão
-$format_slugs_to_include = array( 'opiniao', 'noticia', 'artigo' ); 
-
-// 1. Obtém as categorias de ASSUNTO (Dynamicamente TODAS as categorias exceto 'sem-categoria' - NENHUMA EXCLUSÃO POR SLUG)
+// Obtém as categorias para os filtros
 $subject_categories = get_categories( array(
-    'taxonomy'   => 'category', // Taxonomia Padrão
+    'taxonomy'   => 'category',
     'orderby'    => 'name',
-    'exclude'    => array( 'sem-categoria' ), // Exclui APENAS o slug padrão
+    'exclude'    => array( 1 ), // Exclui a categoria "Sem categoria" (ID 1)
     'hide_empty' => true,
 ) );
 
-// 2. Obtém as categorias de FORMATO (Totalmente Separada)
 $format_categories = get_categories( array(
-    'taxonomy'   => 'formato', // <--- NOVA TAXONOMIA
+    'taxonomy'   => 'formato',
     'orderby'    => 'name',
     'hide_empty' => true,
 ) );
@@ -37,11 +33,7 @@ get_header();
                 <h3>por assunto</h3>
                 <div class="filter-group" data-taxonomy="category">
                     <button class="filter-button active" data-term="">Todos</button> 
-                    
-                    <?php 
-                    // Se você criar uma nova categoria, ela aparecerá aqui.
-                    foreach ( $subject_categories as $category ) : 
-                    ?>
+                    <?php foreach ( $subject_categories as $category ) : ?>
                         <button class="filter-button" data-term="<?php echo esc_attr( $category->slug ); ?>">
                             <?php echo esc_html( $category->name ); ?>
                         </button>
@@ -51,11 +43,9 @@ get_header();
 
             <div>
                 <h3>por formato</h3>
-                <div class="filter-group" data-taxonomy="formato"> <button class="filter-button" data-term="">Todos os Formatos</button>
-                    
-                    <?php 
-                    foreach ( $format_categories as $format_term ) : 
-                    ?>
+                <div class="filter-group" data-taxonomy="formato">
+                    <button class="filter-button active" data-term="">Todos os Formatos</button>
+                    <?php foreach ( $format_categories as $format_term ) : ?>
                         <button class="filter-button" data-term="<?php echo esc_attr( $format_term->slug ); ?>">
                             <?php echo esc_html( $format_term->name ); ?>
                         </button>
@@ -66,13 +56,33 @@ get_header();
 
         <div id="posts-list-container" class="posts-grid-layout">
             <?php
-            lv_render_posts(); 
-            ?>
-        </div>
+            // CÓDIGO FINAL: Carrega os posts iniciais de forma limpa.
+            $initial_args = array(
+                'post_type'        => 'post',
+                'post_status'      => 'publish',
+                'posts_per_page'   => get_option('posts_per_page'),
+                'suppress_filters' => true, // Importante para evitar conflitos
+            );
+            $query = new WP_Query( $initial_args );
 
-        <div class="load-more-container">
-            <button id="load-more-button" class="button"><?php _e( 'Carregar mais', 'newspack' ); ?></button>
-        </div>
+            if ( $query->have_posts() ) :
+                while ( $query->have_posts() ) : $query->the_post();
+                    // Usamos o template part padrão do seu tema que sabemos que existe
+					get_template_part( 'template-parts/content/content', 'excerpt' );
+                endwhile;
+            endif;
+            wp_reset_postdata();
+            ?>
+        </div><?php
+        // Exibe o botão "Carregar Mais" se houver mais páginas
+        if ( $query->max_num_pages > 1 ) :
+        ?>
+            <div class="load-more-container">
+                <button id="load-more-button" class="button"><?php _e( 'Carregar mais', 'newspack' ); ?></button>
+            </div>
+        <?php 
+        endif;
+        ?>
 
     </main>
 </div>

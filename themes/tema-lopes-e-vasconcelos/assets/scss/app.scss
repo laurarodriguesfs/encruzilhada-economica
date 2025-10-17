@@ -235,7 +235,44 @@ body .page-template-single-wide .entry .entry-content .wp-block-group.alignwide 
     left: 0;             
 }
 
+}
 
+//Entry meta para categorias e formatos
+/* Estilo para a área de categorias/formatos */
+.entry-meta {
+    /* --- NOVO --- */
+    display: flex;          /* Coloca os itens filhos (os <span>) em linha */
+    flex-wrap: wrap;        /* Permite que quebrem a linha em telas pequenas, se necessário */
+    align-items: center;    /* Alinha verticalmente o texto e a bolinha do separador */
+    /* --- FIM DO NOVO --- */
+
+    margin-bottom: 0.5em; /* Espaço abaixo das categorias */
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.entry-meta a {
+    text-decoration: none; /* Remove o sublinhado */
+    color: #555; /* Cor cinza escuro, ajuste se precisar */
+}
+
+.entry-meta a:hover {
+    color: #000; /* Cor ao passar o mouse */
+}
+
+/* O separador já tem espaçamento, então não precisa de mais */
+.meta-separator {
+    margin: 0 0.5em; /* Apenas um pequeno ajuste no espaçamento lateral */
+}
+
+/* Garante que os spans internos não ocupem a linha toda */
+.entry-meta span {
+    display: inline;
+}
+
+.cat-links{
+    margin:0;
 }
 
 //Categorias
@@ -1035,14 +1072,13 @@ body.admin-bar .bottom-header-contain{
             color: var(--azul-escuro)
         }
         h2{
-            @media (max-width: 768px) {
-                line-height:1 !important;
-            }
+            line-height:0.5 !important;
         }
 
         h2 a{
             font-weight: bold !important; 
             color: var(--azul-escuro);
+            font-size: 28px;
 
             @media (max-width: 768px) {
                 font-size: 22px !important;
