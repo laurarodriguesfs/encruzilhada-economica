@@ -70,6 +70,10 @@ get_header();
             ?>
         </div>
 
+        <div class="load-more-container">
+            <button id="load-more-button" class="button"><?php _e( 'Carregar mais', 'newspack' ); ?></button>
+        </div>
+
     </main>
 </div>
 

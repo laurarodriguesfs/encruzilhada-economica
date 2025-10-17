@@ -67,9 +67,6 @@ $subtitle = get_post_meta( $post->ID, 'newspack_post_subtitle', true );
             </div>
         <?php endif; 
         if ( has_excerpt() ) : ?>
-            <div class="entry-summary">
-                <?php the_excerpt(); ?>
-            </div>
         <?php endif; ?>
     <?php else : ?>
         <h2 class="entry-title">

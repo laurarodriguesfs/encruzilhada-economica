@@ -53,6 +53,9 @@ get_header();
 
 					newspack_previous_next();
 
+					// Chama a nossa nova função para exibir os posts relacionados
+                    exibir_posts_relacionados_por_categoria();
+
 					// If comments are open or we have at least one comment, load up the comment template.
 					if ( comments_open() || get_comments_number() ) {
 						newspack_comments_template();

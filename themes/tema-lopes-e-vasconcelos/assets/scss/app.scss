@@ -110,6 +110,11 @@ strong a{
    font-weight: 700 !important; 
 }
 
+@media (max-width: 781px) {
+    body p{
+        font-size: 18px !important;
+    }
+}
 
 body a:hover{
     opacity: 1;
@@ -158,10 +163,57 @@ html body a:hover{
 
 .margin-left-maiorainda{
     margin-left: -100px !important;
+
+    @media (max-width: 1199px) {
+        margin-left: -20px !important;
+    }
 }
+
+
+body .page-template-single-wide .entry .entry-content .wp-block-group.alignwide > div > :not(.alignfull):not(.alignwide) .margin-left-maiorainda{
+    margin-left: -100px !important;
+
+    @media (max-width: 1199px) {
+        margin-left: -100px !important;
+    }
+}
+
+.margin-left-enorme{
+    margin-left: -150px !important;
+
+    @media (max-width: 1199px) {
+        margin-left: -90px !important;
+    }
+}
+
+.margin-left-enorme-blog{
+    margin-left: -170px !important;
+
+    @media (max-width: 1199px) {
+        margin-left: -80px !important;
+    }
+}
+
+.newspack-front-page .margin-left-enorme{
+    margin-left: -130px !important;
+}
+
 .margin-right{
     margin-right: -30px !important;
 }
+
+.page-template-single-wide .entry .entry-content .wp-block-cover.alignwide > div > :not(.alignfull):not(.alignwide).margin-left-enorme{
+    margin-left: 0px !important;
+}
+
+.newspack-front-page .entry .entry-content .wp-block-cover.alignwide > div > :not(.alignfull):not(.alignwide).margin-left-enorme{
+    margin-left: 60px !important;
+
+    @media (max-width: 768px) {
+        margin-left: 20px !important;
+    }
+}
+
 
 .dourado{
     color: var(--dourado-principal) !important;
@@ -238,6 +290,33 @@ html body a:hover{
 
 //Header
 
+@media (max-width: 781px) {
+    body .site-header .custom-logo {
+        max-width: 250px;
+        max-height: 100px;
+    }
+}
+
+@media only screen and (max-width: 781px) {
+    body .custom-logo-link {
+        line-height: 1;
+        margin: 0;
+        margin-left: 50px;
+    }
+}
+
+@media only screen and (max-width: 781px) {
+    body .site-header .custom-logo-link .custom-logo {
+
+        height: 100px;
+        min-height: 100px;
+    }
+}
+
+.mobile-sidebar .mobile-menu-toggle{
+    margin-right: 40px;
+}
+
 /* 1. Estilo do cabeçalho no topo da página (transparente) */
 .home #masthead.site-header,
 .page-id-27543 #masthead.site-header { 
@@ -304,7 +383,7 @@ nav .main-navigation .nav1 .dd-menu svg{
     justify-content: flex-end; /* Alinha o menu (ul) à direita */
     margin-top: 0px;
 
-    @media (max-width: 768px) {
+    @media (max-width: 1200px) {
         display: none; /* Esta regra é crucial para que o menu desktop SUMA no mobile */
     }
 }
@@ -312,7 +391,7 @@ nav .main-navigation .nav1 .dd-menu svg{
 #site-navigation .main-navigation {
     margin-top: 20px;
 
-    @media (max-width: 768px) {
+    @media (max-width: 1200px) {
         display: none; /* Esta regra é crucial para que o menu desktop SUMA no mobile */
     }
 }
@@ -389,7 +468,7 @@ ul.sub-menu li a {
     width: 90%;
 
 
-    @media (max-width: 768px) {
+    @media (max-width: 1199px) {
         border-bottom: none;
         color: var(--branco)!important;/* Cor do texto */
     }
@@ -435,6 +514,17 @@ button.mobile-menu-toggle{
     color: var(--branco) !important;
 }
 
+@media only screen and (min-width: 1199px) {
+  .h-sh .site-header .mobile-menu-toggle{
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 1199px) {
+  .h-sh .site-header .mobile-menu-toggle{
+    display: block;
+  }
+}
 .mobile-sidebar{
     .nav1 a{
         font-family: $text !important;
@@ -471,15 +561,15 @@ body:not(.home, .front-page, .page-template-single-wide) #primary.content-area{
     margin-top: 220px;
 
     @media only screen and (max-width: 782px) {
-        margin-top: 70px !important;
+        margin-top: 150px !important;
     }
 }
 
 .single #primary.content-area, .search #primary.content-area, .archive #primary.content-area {
-    margin-top: 170px !important;
+    margin-top: 220px !important;
 
     @media only screen and (max-width: 782px) {
-        margin-top: 70px !important;
+        margin-top: 150px !important;
     }
 }
 
@@ -487,7 +577,15 @@ body:not(.home, .front-page, .page-template-single-wide) #primary.content-area{
     margin-top: 220px;
 
     @media only screen and (max-width: 782px) {
-        margin-top: 30px !important;
+        margin-top: 100px !important;
+    }
+}
+
+.page-id-27543 #primary.content-area{
+    margin-top: 220px;
+
+    @media only screen and (max-width: 782px) {
+        margin-top: 40px !important;
     }
 }
 
@@ -508,14 +606,16 @@ margin-left: auto !important;
 margin-right: auto !important;
 max-width: 80% !important;
 
-} 
-
+    @media only screen and (max-width: 782px) {
+        max-width: 90% !important;
+    } 
+}
 // Título principal das páginas
 .page .entry-header .entry-title{
     font-family: $titles-pages !important;
     color: var(--azul-escuro);
     text-transform: initial;
-    font-size: 70px !important;
+    font-size: 50px !important;
 }
 
 // Títulos de conteúdo (dentro do bloco de título)
@@ -524,6 +624,7 @@ max-width: 80% !important;
 
     h1, h2, h3, h4, h5, h6{
         font-weight: 400;
+        margin: 0 !important;
     }
 }
 
@@ -687,6 +788,17 @@ body.admin-bar .bottom-header-contain{
     margin: auto;
 }
 
+//Bloco de posts com fundo
+.wp-block-newspack-blocks-homepage-articles article{ 
+    @media (max-width: 1199px) {
+        margin-bottom: 50px !important;
+    }
+}
+
+.page-template .post-thumbnail{
+    display: none;
+}
+
 //home
 .home{
 
@@ -747,10 +859,18 @@ body.admin-bar .bottom-header-contain{
         max-width: 800px;
         font-weight: 400 !important;
 
-        @media (max-width: 768px) {
+        @media (max-width: 1199px) {
+            max-width: 500px;
+            top: 65%;
+            padding-left: 100px;
+            max-width: 70vw;
+        }
+
+
+        @media (max-width: 499px) {
             top: 55%;
             padding-left: 10px;
-            max-width: 100%;
+            max-width: 90vw;
         }
     }
     .wp-block-newspack-blocks-carousel article .entry-wrapper {
@@ -787,6 +907,30 @@ body.admin-bar .bottom-header-contain{
         max-height: 900px;
     }
 
+    .wp-block-columns .servicos-colunas{
+        @media (max-width: 1199px) {
+            display: block !important;
+
+        }
+    }
+
+    .newspack-front-page .entry .entry-content .wp-block-group.servicos {
+        @media (max-width: 1199px) {
+            /*
+            Anulamos a regra do tema definindo um max-width igual
+            ou maior que a nossa largura desejada.
+            O !important é necessário para vencer o !important do tema.
+            */
+            max-width: 90% !important;
+            width: 90% !important;
+
+            /* Centralização e espaçamento */
+            margin-left: auto !important;
+            margin-right: auto !important;
+            margin-bottom: 15px;
+        }
+    }
+
     .servicos{
         margin: 10px;
         border-bottom: solid 2px var(--azul-escuro);
@@ -817,16 +961,14 @@ body.admin-bar .bottom-header-contain{
     .tab-pane h2{
         font-size: 60px;
 
-         @media (max-width: 768px) {
+         @media (max-width: 1199px) {
             font-size: 32px !important;
         }
     }
 
-    //Bloco de posts com fundo
-    .wp-block-newspack-blocks-homepage-articles article{ 
-
-        @media (max-width: 768px) {
-            margin-bottom: 50px !important;
+    .tab-pane p{
+        @media (max-width: 1199px) {
+            font-size: 16px !important;
         }
     }
 
@@ -834,7 +976,7 @@ body.admin-bar .bottom-header-contain{
         font-weight: bolder;
         color: var(--azul-escuro);
 
-        @media (max-width: 768px) {
+        @media (max-width: 1199px) {
             font-size: 14px !important;
         }
     }
@@ -842,7 +984,7 @@ body.admin-bar .bottom-header-contain{
     .wp-block-group .servicos p{
         font-size: 24px;
 
-        @media (max-width: 768px) {
+        @media (max-width: 1199px) {
             font-size: 16px !important;
         }
     }
@@ -892,10 +1034,19 @@ body.admin-bar .bottom-header-contain{
             font-weight: 400;
             color: var(--azul-escuro)
         }
+        h2{
+            @media (max-width: 768px) {
+                line-height:1 !important;
+            }
+        }
 
         h2 a{
             font-weight: bold !important; 
             color: var(--azul-escuro);
+
+            @media (max-width: 768px) {
+                font-size: 22px !important;
+            }
         }
     }
 
@@ -931,6 +1082,10 @@ body.admin-bar .bottom-header-contain{
             width: 100%; // Garante que o título 'Encontre o que você precisa...' ocupe toda a largura
             margin-bottom: 20px;
             font-family: $text !important;
+
+            @media only screen and (max-width: 782px) {
+                font-size: 20px !important;
+            }
         }
 
         // Estilo para CADA GRUPO de filtro ("por assunto" e "por formato")
@@ -948,6 +1103,10 @@ body.admin-bar .bottom-header-contain{
                 font-size: 1.2rem;
                 font-family: $text !important;
                 padding-bottom: 8px; 
+
+                    @media only screen and (max-width: 782px) {
+                        font-size: 18px !important;
+                    }
 
                 &::after {
                     content: "";
@@ -1102,6 +1261,10 @@ body {
 
 //archive
 
+.archive .entry-title a{
+    font-weight: bold !important;
+}
+
 .archive .archive-posts-grid{
     grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
 }
@@ -1136,6 +1299,11 @@ body {
     
     .entry-title, h2{
         font-size: 1.4em !important;
+
+        @media only screen and (max-width: 782px) {
+            margin-top:20px;
+            margin-bottom:10px;
+        }
     }
 
     @media only screen and (max-width: 782px) {
@@ -1239,6 +1407,10 @@ body.single-post{
         font-weight: bold !important;
         font-size: 44px;
         color: var(--azul-escuro);
+
+        @media (max-width: 768px) {
+            font-size: 24px !important;
+        }
     }
 
     .entry-content{
@@ -1267,6 +1439,11 @@ body.single-post{
         padding-top: 6px;
         padding-bottom: 6px;
         box-sizing: border-box; 
+
+        @media (max-width: 768px) {
+            width: 90%;
+            margin-bottom: 5px ;
+        }
     }
 
     .entry-header-inner {
@@ -1274,6 +1451,10 @@ body.single-post{
         margin-left: auto;
         margin-right: 5%;
         padding: 2em 0;
+
+        @media (max-width: 768px) {
+            max-width: 100%;
+        }
     }
 
     .entry-header .entry-title {
@@ -1317,7 +1498,7 @@ body.single-post{
   width: 100%;
 
   #load-more-button{
-    background-color: var(--verde-vibrante);
+    background-color: var(--azul-escuro);
     color: #fff;
     font-size: 22px;
     font-family: $text;
@@ -1419,100 +1600,136 @@ body.single-post{
 
 
 /* Footer */
+
 .footer-area {
     width: 80%;
     margin: auto;
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
+    font-size: 18px !important;
 
-    @media (max-width: 767px) {
+    @media (max-width: 1199px) {
         display: block;
+    }
 
-        .wp-block-spacer{
-            display: none;
+    .wp-block-columns .wp-block-column > *{
+        
+        @media (max-width: 767px) {
+            margin-top: 0px;
+            margin-bottom: 0px;
         }
+    }
+
+    &:where(.wp-block-columns){
+        margin-bottom: 0px;
     }
 
 }
 
 .widget .widget_nav_menu a,
 .widget p {
-    font-size: 20px !important;
+    font-size: 18px !important;
     font-weight: 400;
 
-    @media (max-width: 767px) {
+    @media (max-width: 1199px) {
         font-size: 16px !important;
     }
     
 }
 
 .site-footer .widget-area {
-    width: 80% !important;
+    min-width:85% !important;
     margin: 0 !important;
 }
 
+/* Container principal do rodapé */
+.footer-area {
+    display: flex;
+    justify-content: space-between; /* Espaça os widgets da coluna direita */
+    align-items: center; /* Alinha verticalmente os itens no centro */
+    gap: 20px; /* Adiciona um espaço entre os itens */
+}
+
+.site-footer .footer-widgets{
+    @media (max-width: 991px) {
+        padding-bottom: 10px !important;
+    }
+}
+
+/* A nova coluna da direita que agrupa redes e "desenvolvido por" */
+.footer-right-column {
+    display: flex;
+    flex-direction: column; /* Coloca os itens um embaixo do outro */
+    justify-content: space-between; /* Empurra um item para cima e outro para baixo */
+    align-items: flex-end; /* Alinha os itens à direita dentro da coluna */
+    height: 100%; /* Ocupa a altura total disponível */
+    min-height: 300px; /* Garante uma altura mínima para o alinhamento funcionar */
+    padding: 20px 0; /* Adiciona um respiro vertical */
+
+    @media (max-width: 499px) {
+        display: block;
+        min-height: 200px;
+    }
+}
+
+.footer-branding .wrapper{
+    margin: 0;
+}
+
+/* Container das redes sociais */
+.footer-social-branding-wrapper {
+    margin-bottom: 20px; /* Adiciona um espaço abaixo das redes */
+}
+
+/* Container do "Desenvolvido por" */
+.desenvolvido-por-container {
+    text-align: right; /* Garante que o texto dentro esteja alinhado à direita */
+}
+
+.desenvolvido-por {
+    display: block; /* Alinha o texto e a logo na mesma linha */
+    align-items: center; 
+    gap: 8px; 
+    font-size: 14px; 
+    color: #ffffff; /* Cor do texto, ajuste se necessário */
+    text-decoration: none; 
+
+    @media (max-width: 499px) {
+        padding-top: 20px;
+    }
+}
+
+.custom-logo-lr {
+    height: 30px;
+    width: auto;
+}
+
+/* Remove margens desnecessárias do tema */
 .site-footer .widget-area .wrapper {
     margin: 0 !important;
     min-width: 100% !important;
-}
-
-.site-footer .social-links-menu {
-    margin-top: 0;
+    max-width: 100% !important;
 }
 
 .footer-area aside.footer-widgets {
     flex-grow: 1;
-    height: 100%;
 }
 
-/* Coluna de Redes/Branding (O Wrapper Vertical) */
-.footer-social-branding-wrapper {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    align-items: center;
-    margin-left: 20px;
-}
-
-.footer-branding {
-    margin-bottom: 200px;  
-    
-    @media (max-width: 767px) {
-        margin-bottom: 30px;
+/* Ajustes para telas menores (ex: tablets e celulares) */
+@media (max-width: 991px) {
+    .footer-area {
+        flex-direction: column; /* Empilha tudo verticalmente */
+        align-items: flex-start; /* Alinha tudo à esquerda */
     }
-}
 
-.site-footer .footer-branding .wrapper {
-    justify-content: center;
-}
-
-.site-footer .wp-block-column{
-    @media (max-width: 767px) {
-        margin-top: 0px;
-        padding: 0px;
+    .footer-right-column {
+        align-items: flex-start; /* Alinha a coluna da direita à esquerda */
+        padding: 0;
+        min-height: auto;
+        flex-direction: initial;
+        width: 100%;
     }
-}
-
-.desenvolvido-por-container {
-    margin-top: auto;
-    text-align: center;
-    padding: 0;
-    margin-bottom: 60px;
-}
-
-.desenvolvido-por {
-    display: flex;
-    align-items: baseline; 
-    gap: 8px; 
-    font-size: 16px; 
-    text-decoration: none; 
-    min-width: 400px;
-}
-
-.custom-logo-lr{
-    height: 50px !important;
-    width: auto;
 }
 
 //Archive de categorias
@@ -1674,4 +1891,144 @@ form p{
 
 .wp-block-newspack-blocks-homepage-articles article h2.entry-title a{
     font-weight: bolder;
+}
+
+button.mobile-menu-toggle:nth-child(4) > span:nth-child(2) {
+    display: none;
+}
+
+/*
+ * Estilos para a Seção de Posts Relacionados
+ * Inspirado no layout enviado.
+*/
+
+/* Container principal da seção */
+.related-posts-section {
+    font-family: $text;
+    background-color: var(--azul-medio);
+    color: #ffffff;
+    padding: 60px 0;
+    margin-top: 50px;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+    overflow: hidden; /* Garante que o conteúdo respeite os cantos arredondados */
+    min-width: 100vw;
+    margin-left: -300px;
+}
+
+/* Container do conteúdo interno para alinhar com o site */
+.related-posts-container {
+    max-width: 1200px; /* Ajuste para a largura do seu site */
+    margin: 0 auto;
+    padding: 0 20px;
+    max-width: 77%;
+    margin-left: 280px;
+}
+
+/* Título principal "Relacionados" */
+.related-posts-title {
+    font-family: $text;
+    color: #ffffff;
+    font-size: 48px;
+    font-weight: 200 !important; /* Uma fonte mais leve, como na imagem */
+    margin-bottom: 40px;
+    border: none;
+    padding: 0;
+}
+
+/* Grid que segura os cards dos posts */
+.related-posts-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 colunas */
+    gap: 40px; /* Espaçamento entre os cards */
+    width: 100%;
+}
+
+/* Card individual de cada post */
+.related-post-item a {
+    text-decoration: none;
+    color: #ffffff;
+    display: block;
+    transition: transform 0.2s ease-in-out;
+    font-family: $text;
+}
+
+.related-post-item a:hover {
+    transform: translateY(-5px); /* Efeito sutil ao passar o mouse */
+}
+
+/* Estilo da Categoria com sublinhado personalizado */
+.related-post-category {
+    font-size: 15px;
+    font-weight: 500;
+    padding-bottom: 5px;   
+    margin-bottom: 20px;
+    display: inline-block; 
+    position: relative;   
+}
+
+/* A linha customizada abaixo da categoria */
+.related-post-category::after {
+    content: ""; 
+    
+    display: block;
+    width: 30px;               
+    height: 1px;              
+    background-color: #ffffff; 
+    
+    position: absolute;
+    bottom: 0;                 /* Posiciona na base do elemento */
+    left: 0;                   /* Posiciona no início do elemento */
+}
+
+/* Título do post no card */
+.related-post-item-title {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 0 0 15px 0;
+    font-family: $text;
+    font-weight: bold !important;
+
+}
+
+/* Resumo do post no card */
+.related-post-excerpt p {
+    font-size: 16px;
+    line-height: 1.6;
+    opacity: 0.85; /* Deixa o texto do resumo um pouco mais sutil */
+    margin: 0;
+}
+
+/* --- Responsividade para Tablets e Celulares --- */
+
+/* Para tablets */
+@media (max-width: 1400px) {
+    .related-posts-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 colunas */
+    }
+
+    /* Oculta especificamente o TERCEIRO item da grade */
+    .related-post-item:nth-child(3) {
+        display: none;
+    }
+
+    .related-posts-title {
+        font-size: 40px;
+    }
+}
+
+/* Para celulares */
+@media (max-width: 768px) {
+    .related-posts-grid {
+        grid-template-columns: 1fr; /* 1 coluna */
+    }
+    .related-posts-title {
+        font-size: 32px;
+    }
+    .related-posts-section {
+        padding: 40px 0;
+        /* Remove os cantos arredondados em telas pequenas para um visual mais limpo */
+        border-radius: 30px;
+    }
 }

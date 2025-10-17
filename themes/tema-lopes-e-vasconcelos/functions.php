@@ -1048,3 +1048,85 @@ function enfileirar_script_formato_newspack() {
     );
 }
 add_action( 'wp_enqueue_scripts', 'enfileirar_script_formato_newspack' );
+
+/**
+ * Exibe uma seção de posts relacionados com base na primeira categoria do post atual.
+ *
+ * @param array $args Argumentos para personalizar a saída.
+ * 'posts_per_page' => (int) Número de posts a serem exibidos. Padrão 3.
+ * 'title'          => (string) O título da seção. Padrão 'Relacionados'.
+ */
+function exibir_posts_relacionados_por_categoria( $args = [] ) {
+    // Garante que a função só execute em páginas de post
+    if ( ! is_single() ) {
+        return;
+    }
+
+    global $post;
+    $current_post_id = $post->ID;
+
+    // Define os valores padrão para corresponder ao novo layout
+    $defaults = [
+        'posts_per_page' => 3, // O layout de exemplo tem 3 colunas
+        'title'          => 'Relacionados', // O título na imagem
+    ];
+    // Mescla os argumentos passados com os padrões
+    $args = wp_parse_args( $args, $defaults );
+
+    // Pega as categorias do post atual
+    $categories = get_the_category( $current_post_id );
+
+    if ( empty( $categories ) ) {
+        return; // Sai da função se o post não tiver categorias
+    }
+
+    $first_category_id = $categories[0]->term_id;
+
+    // Argumentos para a consulta WP_Query
+    $query_args = [
+        'category__in'        => [ $first_category_id ],
+        'post__not_in'        => [ $current_post_id ],
+        'posts_per_page'      => intval( $args['posts_per_page'] ),
+        'ignore_sticky_posts' => 1,
+    ];
+
+    $related_posts = new WP_Query( $query_args );
+
+    // Se encontrar posts, exibe o HTML
+    if ( $related_posts->have_posts() ) {
+        echo '<section class="related-posts-section">'; // Usamos <section> para semântica
+        echo '<div class="related-posts-container">';
+        echo '<h2 class="related-posts-title">' . esc_html( $args['title'] ) . '</h2>';
+        echo '<div class="related-posts-grid">';
+
+        while ( $related_posts->have_posts() ) {
+            $related_posts->the_post();
+            // Pega a primeira categoria do post relacionado
+            $related_post_categories = get_the_category();
+            ?>
+            <article class="related-post-item">
+                <a href="<?php the_permalink(); ?>">
+                    <?php if ( ! empty( $related_post_categories ) ) : ?>
+                        <span class="related-post-category"><?php echo esc_html( $related_post_categories[0]->name ); ?></span>
+                    <?php endif; ?>
+                    <h3 class="related-post-item-title"><?php the_title(); ?></h3>
+                    <div class="related-post-excerpt">
+                        <?php the_excerpt(); // Adiciona o resumo do post ?>
+                    </div>
+                </a>
+            </article>
+            <?php
+        }
+
+        echo '</div>';
+        echo '</div>';
+        echo '</section>';
+    }
+
+    // Restaura os dados do post original
+    wp_reset_postdata();
+}
+
+// O WordPress por padrão adiciona [...] ao final do resumo. 
+// Vamos remover isso para um visual mais limpo como na imagem.
+add_filter( 'excerpt_more', '__return_empty_string' );
