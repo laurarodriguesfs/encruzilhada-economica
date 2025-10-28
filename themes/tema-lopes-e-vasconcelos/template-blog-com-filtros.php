@@ -8,7 +8,7 @@
 $subject_categories = get_categories( array(
     'taxonomy'   => 'category',
     'orderby'    => 'name',
-    'exclude'    => array( 1 ), // Exclui a categoria "Sem categoria" (ID 1)
+    'exclude'    => array( 1 ),
     'hide_empty' => true,
 ) );
 
@@ -26,6 +26,7 @@ get_header();
         <header class="entry-header">
             <?php get_template_part( 'template-parts/header/entry', 'header' ); ?>
         </header>
+        
         <div class="custom-filters-container">
             <h2>Encontre o que você precisa usando os filtros:</h2>
 
@@ -56,35 +57,107 @@ get_header();
 
         <div id="posts-list-container" class="posts-grid-layout">
             <?php
-            // CÓDIGO FINAL: Carrega os posts iniciais de forma limpa.
+            $paged = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1;
+            
             $initial_args = array(
-                'post_type'        => 'post',
-                'post_status'      => 'publish',
-                'posts_per_page'   => get_option('posts_per_page'),
-                'suppress_filters' => true, // Importante para evitar conflitos
+                'post_type'      => 'post',
+                'post_status'    => 'publish',
+                'posts_per_page' => 6,
+                'paged'          => $paged,
+                'no_found_rows'  => false,
             );
-            $query = new WP_Query( $initial_args );
+            
+            $custom_query = new WP_Query( $initial_args );
+            $max_pages = $custom_query->max_num_pages;
 
-            if ( $query->have_posts() ) :
-                while ( $query->have_posts() ) : $query->the_post();
-                    // Usamos o template part padrão do seu tema que sabemos que existe
-					get_template_part( 'template-parts/content/content', 'excerpt' );
+            if ( $custom_query->have_posts() ) :
+                while ( $custom_query->have_posts() ) : $custom_query->the_post();
+                    get_template_part( 'template-parts/content/content', 'excerpt' );
                 endwhile;
+            else :
+                echo '<p class="no-posts">Nenhum post encontrado.</p>';
             endif;
+            
             wp_reset_postdata();
             ?>
-        </div><?php
-        // Exibe o botão "Carregar Mais" se houver mais páginas
-        if ( $query->max_num_pages > 1 ) :
-        ?>
+        </div>
+        
+        <?php if ( $max_pages > 1 ) : ?>
             <div class="load-more-container">
-                <button id="load-more-button" class="button"><?php _e( 'Carregar mais', 'newspack' ); ?></button>
+                <button id="load-more-button" class="button" data-max-pages="<?php echo esc_attr( $max_pages ); ?>" data-current-page="1">
+                    <?php _e( 'Carregar mais', 'newspack' ); ?>
+                </button>
+                <div id="loading-spinner" style="display: none;">Carregando...</div>
             </div>
-        <?php 
-        endif;
-        ?>
+        <?php endif; ?>
 
     </main>
 </div>
+
+<script type="text/javascript">
+// DEBUG CORRIGIDO - sem erros
+console.log('=== DEBUG BLOG FILTROS ===');
+console.log('Taxonomia formato:', '<?php echo taxonomy_exists('formato') ? 'existe' : 'NÃO EXISTE'; ?>');
+console.log('Categorias formato:', <?php echo count($format_categories); ?>);
+console.log('Categorias assunto:', <?php echo count($subject_categories); ?>);
+
+// Contar posts visíveis
+function updatePostsDebug() {
+    const posts = document.querySelectorAll('#posts-list-container article');
+    const debugElement = document.getElementById('debug-posts-count');
+    if (debugElement) {
+        debugElement.textContent = `Posts: ${posts.length}`;
+    }
+    console.log('Posts encontrados no container:', posts.length);
+}
+
+// Inicializar quando DOM carregar
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM carregado - iniciando debug...');
+    updatePostsDebug();
+    
+    // Elementos críticos
+    const postsContainer = document.getElementById('posts-list-container');
+    const filterButtons = document.querySelectorAll('.filter-button');
+    const loadMoreBtn = document.getElementById('load-more-button');
+    
+    console.log('Container de posts:', postsContainer ? 'OK' : 'NÃO ENCONTRADO');
+    console.log('Botões de filtro:', filterButtons.length);
+    console.log('Botão load more:', loadMoreBtn ? 'OK' : 'NÃO ENCONTRADO');
+    
+    // Observar mudanças nos posts
+    if (postsContainer) {
+        const postsObserver = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'childList') {
+                    console.log('Container de posts modificado - atualizando contagem');
+                    updatePostsDebug();
+                }
+            });
+        });
+        
+        postsObserver.observe(postsContainer, { 
+            childList: true, 
+            subtree: true 
+        });
+    }
+    
+    // Testar cliques nos filtros
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const taxonomy = this.parentElement.dataset.taxonomy;
+            const term = this.dataset.term;
+            console.log('Filtro clicado:', taxonomy, term);
+            document.getElementById('debug-ajax-status').textContent = `Filtro: ${taxonomy} - ${term}`;
+        });
+    });
+});
+
+// Verificar se há scripts externos com erro
+window.addEventListener('error', function(e) {
+    console.error('Erro global capturado:', e.error);
+    document.getElementById('debug-ajax-status').textContent = 'ERRO JS: ' + e.message;
+});
+</script>
 
 <?php get_footer(); ?>
