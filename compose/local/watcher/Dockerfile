@@ -1,7 +1,5 @@
 FROM node:14
 
-LABEL mantainer "hacklab/ <contato@hacklab.com.br>"
-
 COPY compose/local/watcher/entrypoint.sh /entrypoint.sh
 
 ENTRYPOINT /entrypoint.sh

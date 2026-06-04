@@ -1,0 +1,22 @@
+/* Importando Merriweather do Google Fonts (Opcional, se não tiver o arquivo local) */
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700;900&display=swap');
+
+/* Fonte: TT Curve (Arquivo Local) */
+@font-face {
+  font-family: "TT Curve";
+  src: url("/wp-content/themes/tema-encruzilhada-economica/assets/fonts/Curve-Regular.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Fonte: TT Curve Black/Bold */
+@font-face {
+  font-family: "TT Curve Black";
+  src: url("/wp-content/themes/tema-encruzilhada-economica/assets/fonts/Curve-ExtraBold.woff") format("woff");
+  font-weight: 900;
+  font-style: normal;
+}
+
+// Variáveis de fontes atualizadas
+$text: "Merriweather", serif; // Merriweather é excelente para leitura de corpo de texto
+$text-black: "TT Curve Black", "TT Curve", sans-serif; // Curve funciona bem para títulos impactantes

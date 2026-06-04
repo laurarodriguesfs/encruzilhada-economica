@@ -1,4 +1,4 @@
-# Tema para o site Lopes e Vasconcelos
+# Tema para o site Encruzilhada econômica
 
 Este repositório contém os arquivos iniciais para se ter um projeto WordPress, as ferramentas de desenvolvimento e deploy estão protegidas por um padrão.
 
@@ -27,21 +27,10 @@ Para o desenvolvimento é requisito ter instaladas ao menos as seguintes ferrame
 - **node** e **npm**
 
 ## Clonando o repositório
-Clone o repositório e seus submódulos recursivamente:
-
-```
-$ git clone git@git.hacklab.com.br:open-source/base-wordpress-project.git --recursive
-```
-
-## Adicionando submódulos
-Exemplo aplicando o plugin Hacklab Blocks como submódulo na pasta /plugins. O -f é necessário quando a pasta plugins está no .gitignore
-
-```
-$ git submodule add -f git@gitlab.hacklab.com.br:open-source/hacklab-blocks.git plugins/hacklab-blocks
-```
+Clone o repositório e seus submódulos recursivamente
 
 ## Compilando os assets do tema
-Abra um terminal, vá até a a pasta `themes/tema-lopes-e-vasconcelos/` e execute os comandos abaixo:
+Abra um terminal, vá até a a pasta `themes/tema-encruzilhada-economica/` e execute os comandos abaixo:
 
 ```
 $ npm install
@@ -76,7 +65,7 @@ docker-compose up
 ```
 
 ## Substituir strings e renomear arquivos/pastas:
-- **tema-lopes-e-vasconcelos** pela slug nova ex: fpa-theme
+- **tema-encruzilhada-economica** pela slug nova ex: fpa-theme
 - **base-theme-name** pelo nome (exemplo Tema FPA )
 - alterar nome da pasta para corresponder ao slug
 - alterar nome do arquivo /languages/*.pot
@@ -98,36 +87,6 @@ Exemplo: desativando avisos de recursos depreciados do PHP
 
     error_reporting = E_ALL & ~E_NOTICE & ~E_DEPRECATED
 
-## Debug utilizando PSY
-1. Você ja deve ter rodado o docker-compose up pelo menos uma vez
-2. Instale e ative o plugin hacklab-dev-utils (esse plugin é um submódulo desse repositório, caso não tenha clonado o repositório com --recursive, rode `git submodule init` e depois `git submodule update`)
-
-Para iniciar o ambiente de debug, rode o script `./dev-scripts/dev.sh`
-
-Adicione `<?php eval(\psy\sh()); ?>` na linha onde deseja debugar. No terminal, o código será interrompido exatamente no lugar onde adicionou o comando e você terá às variavés declaradas, classes instanciadas, funções disponíveis e etc.
-
-**Exemplo:** 
-Ao adicionar `eval(\psy\sh());` dentro do loop você pode chamar a função get_the_title() no terminal.
-
-### Adicione um snippet no VSCode para facilitar:
-
-- Pressione `ctrl+shift+p`, va em *Configure User Snippets*
-- Selecione PHP
-- E adicione:
-```
-"psy": {
-    "scope": "php",
-    "prefix": "psy",
-    "body": [
-        "eval(\\psy\\sh());",
-    ],
-}
-```
-
-Com isso, ao digitar `psy` e pressionar a tecla Tab, o VSCode vai imprimir o códígo `eval(\\psy\\sh());`
-
-Para sair desbloquear o processo de debug no terminal, utilize o comando `exit`.
-
 # Instalando plugins e temas
 
 ## Copiando arquivos para dentro do repositório
@@ -136,4 +95,3 @@ O conteúdo de `wp-content` está excluído do versionamento por padrão. Para a
 # Traduções
 
 Quando utilizar o comando `wp i18n make-json languages/` para gerar as traduções de arquivos .js e as traduções não funcionarem, uma das possíveis soluções pode ser renomear o arquivo gerado de {locale}-{hash}.json para {domain}-{locale}-{script-handle}.json
-

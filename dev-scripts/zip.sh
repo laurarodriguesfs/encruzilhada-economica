@@ -2,4 +2,4 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 CDIR=$( pwd )
 cd $DIR/../themes
-zip -r ../zips/tema-lopes-e-vasconcelos.zip tema-lopes-e-vasconcelos -x "tema-lopes-e-vasconcelos/node_modules/*"
+zip -r ../zips/tema-encruzilhada-economica.zip tema-encruzilhada-economica -x "tema-encruzilhada-economica/node_modules/*"

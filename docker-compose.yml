@@ -18,10 +18,8 @@ services:
       WORDPRESS_DEBUG: 1
     volumes:
       - ./wp-root:/var/www/html/
-      - ./themes/tema-lopes-e-vasconcelos:/var/www/html/wp-content/themes/tema-lopes-e-vasconcelos
+      - ./themes/tema-encruzilhada-economica:/var/www/html/wp-content/themes/tema-encruzilhada-economica
       - ./themes/newspack-theme:/var/www/html/wp-content/themes/newspack-theme
-      - ./plugins/hacklab-dev-utils:/var/www/html/wp-content/plugins/hacklab-dev-utils
-      - ./plugins/hacklab-blocks:/var/www/html/wp-content/plugins/hacklab-blocks
       - ./compose/local/wordpress/htaccess:/var/www/html/.htaccess
       - ./compose/local/wordpress/php/extra.ini:/usr/local/etc/php/conf.d/extra.ini
 
@@ -30,14 +28,7 @@ services:
       context: .
       dockerfile: ./compose/local/watcher/Dockerfile
     volumes:
-      - ./themes/tema-lopes-e-vasconcelos:/app
-
-  watcher-plugin:
-    build:
-      context: .
-      dockerfile: ./compose/local/watcher/Dockerfile
-    volumes:
-      - ./plugins/hacklab-blocks:/app
+      - ./themes/tema-encruzilhada-economica:/app
 
   mariadb:
     image: mariadb:10.4

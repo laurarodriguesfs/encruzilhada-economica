@@ -1,7 +1,5 @@
 FROM wordpress:php8.2
 
-LABEL mantainer "hacklab/ <contato@hacklab.com.br>"
-
 USER www-data
 
 # Insert our data and dependencies

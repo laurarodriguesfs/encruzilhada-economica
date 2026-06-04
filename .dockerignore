@@ -1,8 +1,8 @@
 .git/
 mariadb_data/
 mariadb_data/*
-themes/tema-lopes-e-vasconcelos/node_modules/
+themes/tema-encruzilhada-economica/node_modules/
 *.sql*
-themes/tema-lopes-e-vasconcelos/dist/app.js
-themes/tema-lopes-e-vasconcelos/dist/app.css
+themes/tema-encruzilhada-economica/dist/app.js
+themes/tema-encruzilhada-economica/dist/app.css
 

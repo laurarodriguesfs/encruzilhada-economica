@@ -1,5 +1,5 @@
 #!/bin/bash
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 CDIR=$( pwd )
-cd $DIR/../themes/tema-lopes-e-vasconcelos
+cd $DIR/../themes/tema-encruzilhada-economica
 docker run -it -v `pwd`:/compilar node:12 bash -c "cd compilar && npm install && npm run production"
