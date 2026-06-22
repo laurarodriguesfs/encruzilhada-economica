@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const btn = document.getElementById('menuToggle');
     const body = document.body;
     const primary = document.querySelector('section#primary'); 
+    const mainLinks = document.querySelectorAll('.menu-title');
     
     if (!menu || !btn) return;
 
@@ -52,6 +53,16 @@ document.addEventListener('DOMContentLoaded', function() {
     btn.addEventListener('click', () => {
         const currentlyClosed = menu.classList.contains('is-closed');
         applyMenuState(!currentlyClosed, true);
+    });
+
+    // Novo: Abre o menu ao clicar nos títulos se ele estiver fechado
+    mainLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            if (menu.classList.contains('is-closed')) {
+                e.preventDefault(); // Evita navegar antes de abrir o menu
+                applyMenuState(false, true); // Força a abertura
+            }
+        });
     });
 
     window.addEventListener('scroll', () => {

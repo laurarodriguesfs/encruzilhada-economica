@@ -845,6 +845,7 @@ add_action( 'show_user_profile', 'exibir_campo_principais_artigos' );
 add_action( 'edit_user_profile', 'exibir_campo_principais_artigos' );
 
 
+
 /**
  * 3. Salva a seleção dos artigos no banco de dados
  */
