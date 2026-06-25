@@ -2318,15 +2318,31 @@ input[type="submit"],input[type="submit"]:hover{
    CONTROLE DO CONTEÚDO PRINCIPAL (#PRIMARY)
    ========================================================================== */
 
-   #primary {
-    // Sem margens fixas aqui! 
-    // Deixamos apenas a transição para que a mudança de tamanho seja suave
-    transition: none; 
+    #primary {
+        // Sem margens fixas aqui! 
+        // Deixamos apenas a transição para que a mudança de tamanho seja suave
+        transition: none; 
 
-    body.is-ready & {
-        transition: margin-top 0.35s ease-in-out; 
+        body.is-ready & {
+            transition: margin-top 0.35s ease-in-out; 
+        }
     }
-}
+
+    /* Aplica o padding apenas quando o body NÃO for a home */
+    body:not(.home) {
+        #primary {
+            padding-top: 40px; /* Altere este valor para o tamanho do espaço que você deseja */
+        }
+    }
+
+    /* Caso você precise de um valor diferente para o mobile (telas menores que 782px) */
+    @media (max-width: 782px) {
+        body:not(.home) {
+            #primary {
+                padding-top: 30px; /* Espaço menor no mobile, se necessário */
+            }
+        }
+    }
 
 //Titulos especiais
 
