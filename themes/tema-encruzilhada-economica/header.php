@@ -309,7 +309,7 @@ endif;
 		<nav class="mega-menu" id="megaMenu">
 			<div class="menu-container">
 				
-				<div class="menu-column">
+				<div class="menu-column col-conteudo">
 				<h2 class="menu-title">Navegue pelo conteúdo</h2>
 				<?php 
 					wp_nav_menu( array(
@@ -320,7 +320,7 @@ endif;
 				?>
 				</div>
 
-				<div class="menu-column">
+				<div class="menu-column col-eixos">
 				<h2 class="menu-title">Eixos temáticos</h2>
 				<?php 
 					wp_nav_menu( array(

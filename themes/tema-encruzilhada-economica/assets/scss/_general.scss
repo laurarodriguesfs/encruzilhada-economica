@@ -467,8 +467,37 @@ ul.sub-menu li a:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   .menu-title {
     font-size: 24px !important;
+
+    @media (max-width: 799px) {
+        font-size: 18px !important;
+    }
   }
   
+  #megaMenu {
+    position: relative; /* Ou 'sticky' se você quiser que ele acompanhe o topo no scroll */
+    width: 100%;
+    overflow: hidden; /* Garante que os links sumam ao diminuir a altura */
+    
+    /* 1. CONFIGURAÇÃO DE ALTURA DINÂMICA */
+    /* Quando aberto, ele se adapta ao conteúdo interno (pode usar um valor alto como garantia) */
+    max-height: 1000px; 
+
+    /* 2. TRANSIÇÃO SUAVE NA ALTURA (Ativada pelo seu JS quando pronto) */
+    body.is-ready & {
+        transition: max-height 0.3s ease-in-out;
+    }
+    
+    /* 3. ESTADO FECHADO (O JS aplica .is-closed) */
+    &.is-closed {
+        max-height: 0; /* Encolhe totalmente e o #primary sobe sozinho */
+    }
+}
+
+/* 4. BLOQUEIO INSTANTÂNEO (Substitui sua lógica antiga anti-pulo) */
+html.menu-is-closed-instant #megaMenu {
+    transition: none !important;
+    max-height: 0 !important;
+}
   // 1. IMPORTANTE: Removemos qualquer transition base.
   transition: none !important;
 
@@ -508,7 +537,7 @@ ul.sub-menu li a:hover {
         }
 
         @media (max-width: 799px) {
-            font-size: 20px !important;
+            font-size: 18px !important;
         }
     }
   }
@@ -520,12 +549,13 @@ ul.sub-menu li a:hover {
     gap: 80px;
     max-width: 80%;
     margin: 0 auto;
-    padding: 20px;
+    padding: 5px 5px 5px 10PX;
     
     @media (max-width: 1100px) {
         flex-direction: column;
         gap: 5px;
-        padding: 20px 0px;
+        padding: 10px 0px 0px 0px;
+        max-width: 95%;
     }
   }
 
@@ -544,7 +574,8 @@ ul.sub-menu li a:hover {
     }
     
     h2{
-        margin-top: 0px;
+        margin-top: 5px;
+        margin-bottom: 5px;
     }
   }
 
@@ -615,8 +646,8 @@ ul.sub-menu li a:hover {
 
 .menu-toggle-container {
     min-width: fit-content;
+    margin-top: 10px;
 }
-
 
 #masthead {
     position: fixed;
@@ -2157,9 +2188,9 @@ input[type="submit"],input[type="submit"]:hover{
 
         .author-name {
             color: var(--azul-escuro);
-            font-size: 1.8rem;
+            font-size: 22px;
             font-weight: 800;
-            margin: 0 0 15px 0;
+            margin: 0 0 5px 0;
             line-height: 1.2;
 
             @media (max-width: 768px) {
@@ -2169,8 +2200,7 @@ input[type="submit"],input[type="submit"]:hover{
 
         .author-description {
             color: var(--azul-escuro);
-            font-size: 1.1rem;
-            line-height: 1.6;
+            font-size: 16px;
             margin-bottom: 20px;
 
             @media (max-width: 768px) {
@@ -2182,7 +2212,7 @@ input[type="submit"],input[type="submit"]:hover{
             color: var(--vermelho);
             font-weight: 900;
             text-decoration: none;
-            font-size: 0.9rem;
+            font-size: 18px;
             letter-spacing: 0.5px;
             display: inline-block;
 
@@ -2288,43 +2318,13 @@ input[type="submit"],input[type="submit"]:hover{
    CONTROLE DO CONTEÚDO PRINCIPAL (#PRIMARY)
    ========================================================================== */
 
-#primary {
-    /* 1. ESTADO INICIAL: Sem nenhuma transição por padrão */
-    transition: none !important; 
-    margin-top: 480px; /* Padrão aberto */
+   #primary {
+    // Sem margens fixas aqui! 
+    // Deixamos apenas a transição para que a mudança de tamanho seja suave
+    transition: none; 
 
-    /* 2. SÓ ATIVA A ANIMAÇÃO QUANDO O JS DISSER QUE ESTÁ PRONTO */
     body.is-ready & {
-        transition: margin-top 0.3s ease !important;
-    }
-    
-    /* Valor para a home as páginas fechadas */
-    body.menu-is-closed & {
-        margin-top: 270px !important;
-    }
-}
-
-
-/* 4. BLOQUEIO ABSOLUTO NO CARREGAMENTO (Garante que o pulo não ocorra) */
-html.menu-is-closed-instant #primary {
-    transition: none !important;
-    /* Força a margem correta antes mesmo do JS principal rodar */
-    margin-top: 250px !important; 
-}
-
-html.menu-is-closed-instant body.home #primary {
-    margin-top: 200px !important;
-}
-
-/* 5. AJUSTE MOBILE GERAL */
-@media (max-width: 782px) {
-    #primary {
-        margin-top: 220px;
-        
-        body.menu-is-closed & {
-            margin-top: 250px !important;
-            transition: none !important; 
-        }
+        transition: margin-top 0.35s ease-in-out; 
     }
 }
 
@@ -2410,20 +2410,29 @@ html.menu-is-closed-instant body.home #primary {
 //Bio author
 
 /* 1. Alinhamento Geral (Ajuste o seletor pai conforme seu HTML) */
+
 .author-box-container {
-    display: flex;
-    width: 100%;
     align-items: center;
     gap: 10px; /* Espaço entre a foto e o texto */
-    margin: 30px 0;
-    border-top: solid 2px var(--azul-escuro);
-    border-bottom: solid 2px var(--azul-escuro);
+    margin: 0;
     padding: 30px ;
+    display: flex;
+}
+
+.single .author-box-container {
+    width: 100%;
+    background-color: #c7d1e7;
+    border-radius: 20px;
 
     @media (max-width: 737px) {
         display: block;
     }
 }
+
+.archive .author .author-box-container {
+    background-color: transparent;
+}
+
 .author-bio .author-bio-text{
     @media (max-width: 737px) {
         width: 100%;
@@ -2435,8 +2444,8 @@ html.menu-is-closed-instant body.home #primary {
     object-fit: cover;
     flex-shrink: 0; /* Impede a imagem de amassar */
     border: 2px solid #eee; /* Opcional: bordinha suave */
-    width: 200px;
-    height: 200px;
+    width: 150px;
+    height: 150px;
     margin-right:10px;
 
     img{
@@ -2476,6 +2485,39 @@ html.menu-is-closed-instant body.home #primary {
     display: flex;
     gap: 30px;
     margin-bottom: 40px;
+}
+
+.author-featured-articles {
+    margin-top: 25px;
+    padding-top: 15px;
+
+    h3 {
+        font-size: 22px;
+        margin-bottom: 15px;
+        color: var(--azul-escuro);
+    }
+    .articles-list {
+        list-style-type: square;
+        padding-left: 20px;
+        li {
+            margin-bottom: 8px;
+
+            a {
+                text-decoration: none;
+                color: var(--azul-escuro);
+                font-weight: 500;
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+
+            .article-date {
+                color: var(--azul-escuro);
+                font-size: 0.85rem;
+                margin-left: 5px;
+            }
+        }
+    }
 }
 
 .author-page-header {
@@ -2533,7 +2575,8 @@ html.menu-is-closed-instant body.home #primary {
                 transition: background-color 0.2s ease;
 
                 &:hover {
-                    background-color: var(--azul-escuro, #f5f5f5);
+                    background-color: var(--azul-escuro);
+                    color: var(--branco);
                 }
             }
         }
@@ -2543,43 +2586,6 @@ html.menu-is-closed-instant body.home #primary {
 
             a {
                 margin-right: 10px;
-            }
-        }
-
-        .author-featured-articles {
-            margin-top: 25px;
-            border-top: 1px solid var(--azul-escuro);
-            padding-top: 15px;
-
-            h3 {
-                font-size: 1.3rem;
-                margin-bottom: 15px;
-            }
-
-            .articles-list {
-                list-style-type: square;
-                padding-left: 20px;
-                line-height: 1.8;
-
-                li {
-                    margin-bottom: 8px;
-
-                    a {
-                        text-decoration: none;
-                        color: var(--azul-escuro);
-                        font-weight: 500;
-
-                        &:hover {
-                            text-decoration: underline;
-                        }
-                    }
-
-                    .article-date {
-                        color: var(--azul-escuro);
-                        font-size: 0.85rem;
-                        margin-left: 5px;
-                    }
-                }
             }
         }
     }
@@ -2633,3 +2639,38 @@ html.menu-is-closed-instant body.home #primary {
         margin-top: 30px;
     }
 }
+
+/* --- CONFIGURAÇÃO MOBILE (Telas menores que 782px) --- */
+
+    
+    /* 1. Esconde as listas de menu por padrão no mobile */
+    .menu-column .menu-list {
+        display: none; 
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    /* 2. A DIFERENÇA: Quando o JS injetar '.is-open', a lista aparece! */
+    .menu-column .menu-list.is-open {
+        display: block;
+        opacity: 1;
+    }
+
+    /* 3. Opcional: Muda a cor do título clicado para você ver que funcionou */
+    .menu-title.is-active {
+        color: var(--azul-opaco); /* Cor de destaque (ex: azul do WordPress) */
+    }
+
+    /* 4. Opcional: Adiciona uma setinha indicando que o menu abre */
+    .menu-title::after {
+        content: ' ▼';
+        margin-left:5px ;
+        display: inline-block;
+        transition: transform 0.2s;
+        font-size: 16px;
+    }
+    
+    /* Gira a setinha quando o menu estiver ativo */
+    .menu-title.is-active::after {
+        transform: rotate(180deg);
+    }

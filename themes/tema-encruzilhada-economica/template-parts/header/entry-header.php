@@ -60,7 +60,7 @@ $classe_layout = $tem_imagem ? 'com-imagem' : 'sem-imagem';
         endif;
             
             if ( ! $page_hide_title ) : ?>
-                <div class="titulo-container">
+                <div>
                     <h1 class="entry-title <?php echo $subtitle ? 'entry-title--with-subtitle' : ''; ?>">
                         <?php echo wp_kses_post( get_the_title() ); ?>
                     </h1>

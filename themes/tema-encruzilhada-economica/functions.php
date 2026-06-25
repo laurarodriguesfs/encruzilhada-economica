@@ -865,3 +865,146 @@ function salvar_campo_principais_artigos( $user_id ) {
 }
 add_action( 'personal_options_update', 'salvar_campo_principais_artigos' );
 add_action( 'edit_user_profile_update', 'salvar_campo_principais_artigos' );
+
+//Mais lidos
+
+/**
+ * Adiciona um widget no Painel do WordPress para mostrar o ranking real dos posts mais lidos.
+ * Esta é a nossa "fonte da verdade" para verificação.
+ */
+function adicionar_widget_ranking_views() {
+    wp_add_dashboard_widget(
+        'widget_ranking_views',         // ID do widget.
+        'Ranking Real de Posts Mais Lidos', // Título do widget.
+        'funcao_callback_widget_ranking' // Função que vai exibir o conteúdo.
+    );
+}
+add_action( 'wp_dashboard_setup', 'adicionar_widget_ranking_views' );
+
+/**
+ * Função que gera o conteúdo para o nosso widget do painel.
+ */
+function funcao_callback_widget_ranking() {
+    echo '<p>Esta é a lista oficial dos posts mais lidos, ordenada pela contagem de views no banco de dados.</p>';
+
+    // Argumentos para a consulta
+    $args = array(
+        'post_type'      => 'post',
+        'posts_per_page' => 10, // Vamos pegar o Top 10 para ter uma boa amostragem.
+        'meta_key'       => 'post_views_count',
+        'orderby'        => 'meta_value_num', // Ordenar por valor numérico!
+        'order'          => 'DESC',
+    );
+
+    $query = new WP_Query( $args );
+
+    if ( $query->have_posts() ) {
+        echo '<ol style="list-style: decimal; padding-left: 20px;">';
+        while ( $query->have_posts() ) {
+            $query->the_post();
+            $post_id = get_the_ID();
+            $contagem = get_post_meta( $post_id, 'post_views_count', true );
+            
+            // Exibimos o título do post e a contagem exata de views entre parênteses.
+            echo '<li>';
+            echo '<a href="' . get_edit_post_link($post_id) . '" target="_blank">' . get_the_title() . '</a>';
+            echo ' <strong>(' . ( ! empty( $contagem ) ? $contagem : '0' ) . ' views)</strong>';
+            echo '</li>';
+        }
+        echo '</ol>';
+    } else {
+        echo '<p>Ainda não há dados de visualização suficientes.</p>';
+    }
+    wp_reset_postdata();
+}
+
+/**
+ * Cria um shortcode [bloco_replicado_mais_lidos] que executa uma consulta
+ * para os posts mais vistos e formata o HTML para imitar o bloco do Newspack.
+ * VERSÃO FINAL - Baseada no "blueprint" do usuário.
+ */
+function replicar_bloco_mais_lidos_shortcode( $atts ) {
+    // 1. Define os atributos padrão. Ex: [bloco_replicado_mais_lidos posts="3"]
+    $atts = shortcode_atts( array(
+        'posts' => 3, // Mostrar 3 posts por padrão.
+    ), $atts, 'bloco_replicado_mais_lidos' );
+
+    // 2. Argumentos para a consulta ao banco de dados
+    $args = array(
+        'post_type'      => 'post',
+        'posts_per_page' => intval( $atts['posts'] ),
+        'meta_key'       => 'post_views_count',
+        'orderby'        => 'meta_value_num',
+        'order'          => 'DESC',
+        'ignore_sticky_posts' => 1
+    );
+
+    $query = new WP_Query( $args );
+
+    // 3. Inicia a "captura" do HTML que vamos gerar
+    ob_start();
+
+    // 4. Verifica se a consulta retornou posts
+    if ( $query->have_posts() ) {
+
+        // --- INÍCIO DA REPLICAÇÃO DO HTML ---
+        // A DIV externa que cria o grid, com todas as classes do blueprint.
+        echo '<div class="wp-block-newspack-blocks-homepage-articles wpnbha is-grid columns-3 colgap-3 show-image image-aligntop is-landscape show-category has-text-align-left bloco-post-fundo-cinza">';
+        echo '<div>'; // Essa div extra estava no seu blueprint.
+
+        // Loop para gerar cada post individual
+        while ( $query->have_posts() ) {
+            $query->the_post();
+            $post_id = get_the_ID();
+            $categories = get_the_category($post_id);
+            ?>
+
+            <article data-post-id="<?php echo esc_attr($post_id); ?>" <?php post_class(); ?>>
+                <?php if ( has_post_thumbnail() ) : ?>
+                    <figure class="post-thumbnail">
+                        <a href="<?php the_permalink(); ?>" rel="bookmark" tabindex="-1" aria-hidden="true">
+                            <?php 
+                            // Usamos 'large' para que o WordPress gere o srcset responsivo automaticamente, como no blueprint.
+                            the_post_thumbnail('large'); 
+                            ?>
+                        </a>
+                    </figure><?php endif; ?>
+
+                <div class="entry-wrapper">
+                    <?php if ( ! empty( $categories ) ) : ?>
+                        <div class="cat-links">
+                            <a href="<?php echo esc_url( get_category_link( $categories[0]->term_id ) ); ?>">
+                                <?php echo esc_html( $categories[0]->name ); ?>
+                            </a>
+                        </div>
+                    <?php endif; ?>
+                    
+                    <?php // Título do post com H2 e link com rel="bookmark", como no blueprint. ?>
+                    <h2 class="entry-title">
+                        <a href="<?php the_permalink(); ?>" rel="bookmark"><?php the_title(); ?></a>
+                    </h2>
+                    
+                    <?php // O bloco de autor e data foi REMOVIDO para corresponder ao blueprint. ?>
+
+                </div></article>
+
+            <?php
+        } // Fim do while
+
+        echo '</div>'; // Fim da div extra
+        echo '</div>'; // Fim da DIV externa
+
+    } else {
+        echo '<p>Nenhum post popular encontrado.</p>';
+    }
+
+    // 5. Restaura os dados do post original da página
+    wp_reset_postdata();
+
+    // 6. Retorna o HTML que foi "capturado"
+    return ob_get_clean();
+}
+// Registra o nosso novo shortcode, se ele já não existir
+if ( ! shortcode_exists( 'bloco_replicado_mais_lidos' ) ) {
+    add_shortcode( 'bloco_replicado_mais_lidos', 'replicar_bloco_mais_lidos_shortcode' );
+}
