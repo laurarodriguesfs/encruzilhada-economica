@@ -1008,3 +1008,14 @@ function replicar_bloco_mais_lidos_shortcode( $atts ) {
 if ( ! shortcode_exists( 'bloco_replicado_mais_lidos' ) ) {
     add_shortcode( 'bloco_replicado_mais_lidos', 'replicar_bloco_mais_lidos_shortcode' );
 }
+
+function incluir_cpts_no_arquivo_de_autor( $query ) {
+    // Garante que isso só afete o front-end, a query principal e apenas páginas de arquivo de autor
+    if ( ! is_admin() && $query->is_main_query() && $query->is_author() ) {
+        
+        // Defina aqui quais CPTs você quer incluir junto com os posts normais
+        // Exemplo: 'post', 'artigos', 'livros', 'noticias'
+        $query->set( 'post_type', array( 'post', 'item_da_agenda', 'dado_ou_evidencia', 'dossie', 'livro_ou_resenha', 'publicacao_ou_analis', 'video_ou_podcast'  ) );
+    }
+}
+add_action( 'pre_get_posts', 'incluir_cpts_no_arquivo_de_autor' );

@@ -5,7 +5,7 @@
 
 get_header(); ?>
 
-<main id="primary" class="site-main container">
+<section id="primary" class="site-main container">
 
     <?php
     // Obtém com precisão o ID do autor da página de arquivo atual
@@ -123,40 +123,66 @@ get_header(); ?>
     <?php endif; ?>
 
 
-    <div class="author-posts-list">
-        <h2>
+ <div class="author-posts-list">
+        <h2 class="titulo-decorado titulo-azul">
             Todos os posts publicados por <?php echo esc_html(explode(' ', $author_data->display_name)[0]); ?>
         </h2>
 
-        <?php if ( have_posts() ) : ?>
-            <div class="posts-grid">
-                <?php while ( have_posts() ) : the_post(); ?>
-                    <article id="post-<?php the_ID(); ?>" <?php post_class('mb-4'); ?>>
-                        <header class="entry-header">
-                            <h3 class="entry-title">
-                                <a href="<?php the_permalink(); ?>" rel="bookmark"><?php the_title(); ?></a>
-                            </h3>
-                            <div class="entry-meta text-muted">
-                                <?php echo get_the_date(); ?>
-                            </div>
-                        </header>
-                        <div class="entry-summary">
-                            <?php the_excerpt(); ?>
-                        </div>
-                    </article>
-                <?php endwhile; ?>
-            </div>
-            
-            <div class="posts-navigation">
-                <?php the_posts_navigation(); ?>
-            </div>
+        <?php 
+        $paged = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1;
 
-        <?php else : ?>
-            <p>Este autor ainda não possui publicações.</p>
+        // Montamos a query exatamente como o backend espera receber
+        $author_query_args = array(
+            'author'         => $author_id,
+            'paged'          => $paged,
+            'posts_per_page' => get_option( 'posts_per_page' ),
+            'post_type' => array( 'post', 'post', 'item_da_agenda', 'dado_ou_evidencia', 'dossie', 'livro_ou_resenha', 'publicacao_ou_analis', 'video_ou_podcast' ), // Adicione seus CPTs aqui
+            'post_status'    => 'publish'
+        );
+
+        $author_query = new WP_Query( $author_query_args );
+        ?>
+
+        <main id="main" class="site-main">
+            <?php if ( $author_query->have_posts() ) : ?>
+                <div class="archive-posts-grid">
+                    <?php 
+                    while ( $author_query->have_posts() ) : $author_query->the_post(); 
+                        
+                        // Mudamos para usar o mesmo padrão visual do seu arquivo original (content-blog.php)
+                        get_template_part( 'template-parts/content/content', 'blog' );
+
+                    endwhile; 
+                    ?>
+                </div>
+            <?php else : ?>
+                <?php get_template_part( 'template-parts/content/content', 'none' ); ?>
+            <?php endif; ?>
+        </main>
+        
+        <?php if ( $author_query->max_num_pages > 1 ) : ?>
+            <div class="load-more-container">
+                <button id="load-more-button" class="button"><?php _e( 'Carregar mais', 'newspack' ); ?></button>
+            </div>
         <?php endif; ?>
+
+        <script type="text/javascript">
+            var ajax_params = ajax_params || {};
+            ajax_params.container     = '.archive-posts-grid'; // Aponta para a classe padrão do tema
+            ajax_params.current_page   = <?php echo $paged; ?>;
+            ajax_params.max_pages      = <?php echo $author_query->max_num_pages; ?>;
+            ajax_params.template_part  = 'blog'; // Indica que deve buscar o 'content-blog.php' no AJAX
+            ajax_params.initial_query  = <?php echo json_encode( $author_query->query_vars ); ?>;
+            
+            // Fallbacks de segurança caso o core não tenha injetado globalmente
+            ajax_params.ajax_url       = ajax_params.ajax_url || '<?php echo admin_url( 'admin-ajax.php' ); ?>';
+            ajax_params.nonce          = ajax_params.nonce || '<?php echo wp_create_nonce( "unificado_load_posts_nonce" ); ?>'; 
+        </script>
+
+        <?php 
+        wp_reset_postdata(); 
+        ?>
     </div>
 
-</main>
-
-<?php
+</section> <?php
 get_footer();

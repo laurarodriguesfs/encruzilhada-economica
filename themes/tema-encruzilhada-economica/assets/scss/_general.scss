@@ -549,7 +549,7 @@ html.menu-is-closed-instant #megaMenu {
     gap: 80px;
     max-width: 80%;
     margin: 0 auto;
-    padding: 5px 5px 5px 10PX;
+    padding: 5px 20px 5px 10px;
     
     @media (max-width: 1100px) {
         flex-direction: column;
@@ -1143,6 +1143,9 @@ body {
     }
 }
 
+.archive:not(.paged) article.entry:first-of-type .entry-title,.archive article.entry:first-of-type .entry-title, h2 {
+    font-size: 1.25em;
+}
 .archive #main{
     width: 100%;
     margin: auto;
@@ -2370,7 +2373,7 @@ input[type="submit"],input[type="submit"]:hover{
 .titulo-azul::after {
     background: var(--azul-escuro, #0044ff);
 }
-.titulo-azul h2 { color: var(--azul-escuro, #0044ff); }
+.titulo-azul { color: var(--azul-escuro, #0044ff); }
 
 /* Branco */
 .titulo-branco::before,
@@ -2431,7 +2434,7 @@ input[type="submit"],input[type="submit"]:hover{
     align-items: center;
     gap: 10px; /* Espaço entre a foto e o texto */
     margin: 0;
-    padding: 30px ;
+    padding: 30px 0 0 0  ;
     display: flex;
 }
 
@@ -2439,6 +2442,7 @@ input[type="submit"],input[type="submit"]:hover{
     width: 100%;
     background-color: #c7d1e7;
     border-radius: 20px;
+     padding: 30px;
 
     @media (max-width: 737px) {
         display: block;
@@ -2449,13 +2453,18 @@ input[type="submit"],input[type="submit"]:hover{
     background-color: transparent;
 }
 
+@media only screen and (min-width: 782px) {
+  .archive .has-post-thumbnail{
+    display: block;
+  }
+}
 .author-bio .author-bio-text{
     @media (max-width: 737px) {
         width: 100%;
     }
 }
 /* 2. Foto Redonda */
-.author-image {
+.single .author-image {
     border-radius: 50%; /* Faz o círculo perfeito */
     object-fit: cover;
     flex-shrink: 0; /* Impede a imagem de amassar */
@@ -2476,6 +2485,26 @@ input[type="submit"],input[type="submit"]:hover{
     }
 }
 
+.archive .author-image {
+    border-radius: 50%; /* Faz o círculo perfeito */
+    object-fit: cover;
+    flex-shrink: 0; /* Impede a imagem de amassar */
+    border: 2px solid #eee; /* Opcional: bordinha suave */
+    width: 300px;
+    height: 300px;
+    margin-right:10px;
+
+    img{
+        border-radius: 50%; /* Faz o círculo perfeito */
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    @media (max-width: 737px) {
+        margin-bottom: 20px;
+    }
+}
 /* 3. Nome da Pessoa em Negrito */
 .author-bio-header h2.accent-header {
     font-weight: 700 !important; /* Força o negrito */
@@ -2539,7 +2568,6 @@ input[type="submit"],input[type="submit"]:hover{
 .author-page-header {
     display: flex;
     gap: 30px;
-    margin-bottom: 40px;
 
     @media (max-width: 768px) {
         flex-direction: column;
@@ -2626,7 +2654,7 @@ input[type="submit"],input[type="submit"]:hover{
             .entry-header {
                 .entry-title {
                     margin-bottom: 5px;
-                    font-size: 1.25rem;
+                    font-size: 22px;
 
                     a {
                         text-decoration: none;
